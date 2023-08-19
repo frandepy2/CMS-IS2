@@ -25,7 +25,7 @@ Prof. Lic. Carolina Argüello
 	POSTGRES_HOST=""  
 	POSTGRES_PORT=""
 	```
- 4. Ejecutar el comando
+ 4. Ejecutar el comando (Para produccion)
 	```bash
 	docker-compose up --build  
 	```
@@ -49,4 +49,15 @@ Todo se mergea a develop, a partir de main se crea un release/x.x.x se mergea de
 	   checkout develop
 	   commit
 	   commit
+```
+
+## Ambientes de Desarrollo
+Ejecutar desarrollo
+```bash
+docker-compose -f "docker-compose-dev.yaml" up --build
+```
+
+Limpiar para produccion
+```bash 
+sh delete-migrations.sh
 ```
