@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db-dev:
+    image: postgres:13
+    volumes:
+      - ./var/data/db:/var/lib/postgresql/data
+    env_file:
+      - .env.desarrollo
+    environment:
+      POSTGRES_DB: ${POSTGRES_NAME}
+    ports:
+      - "5435:5432"
+  django-dev:
+    volumes:
+      - static:/static
+    env_file:
+      - .env.desarrollo
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db-dev
+volumes:
+  static:
