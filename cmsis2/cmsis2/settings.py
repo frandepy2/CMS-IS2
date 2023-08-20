@@ -29,6 +29,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1','*']
 
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1','http://localhost']
 
+# Site Definition
+SITE_ID = 3
 
 # Application definition
 
@@ -39,8 +41,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cmsis2'
+    'cmsis2',
+    'usuarios',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email'
+        ],
+        'AUTH_PARAMS': {'access_type': 'online'}
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -129,3 +147,17 @@ STATIC_ROOT = '/static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+]
+
+
+
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/'
