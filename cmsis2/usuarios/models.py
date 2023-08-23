@@ -14,6 +14,7 @@ class Usuario(AbstractUser):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
+    subscribed = models.BooleanField(default=True)
 
     objects = CustomUserManager()
     def __str__(self):

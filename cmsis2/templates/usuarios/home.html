@@ -9,11 +9,19 @@
 </head>
 <body>
     {% load socialaccount %}
+    {% load has_group %}
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 {% if user.is_authenticated %}
                     <p>Ingresaste como {{ user.email }}</p>
+                    {%if user|has_group:"cms_admin" %}
+                        <p>Es un Administrador</p>
+                    {% else %}
+                        {%if user.id|is_subscribed %}
+                            <p>Es subscriptor</p>
+                        {% endif %}
+                    {% endif %}
                     <a href="{% url 'account_logout' %}" class="btn btn-primary">Cerrar Sesion</a>
                 {% else %}
                     <h3>Iniciar</h3>
