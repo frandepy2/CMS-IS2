@@ -19,7 +19,7 @@
                         <p>Es un Administrador</p>
                     {% else %}
                         {%if user.id|is_subscribed %}
-                            <p>Es subscriptor</p>
+                            <p>Es suscriptor</p>
                         {% endif %}
                     {% endif %}
                     <a href="{% url 'account_logout' %}" class="btn btn-primary">Cerrar Sesion</a>
