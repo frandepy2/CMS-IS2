@@ -20,7 +20,7 @@ class UsuarioTestCase(TestCase):
 
     def test_crear_administrador(self):
         Usuario = get_user_model()
-        user = Usuario.objects.create_admin(email = 'usuario@gmail.com', password='password')
+        user = Usuario.objects.create_superuser(email = 'usuario@gmail.com', password='password')
         self.assertTrue(user.is_active)
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser)
