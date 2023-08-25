@@ -9,6 +9,11 @@ from .manager import CustomUserManager
 
 # Create your models here.
 class Usuario(AbstractUser):
+    """
+    Extiende el modelo AbstractUser para representar usuarios personalizados.
+
+    Este modelo agrega el campo `subscribed` para indicar si un usuario está suscrito.
+    """
     username = models.CharField(max_length=255, unique= True)
     email = models.CharField(max_length=255,unique=True)
     is_staff = models.BooleanField(default=False)
@@ -22,6 +27,13 @@ class Usuario(AbstractUser):
 
 @receiver(post_save, sender=Usuario)
 def crear_primer_admin(sender, instance, **kwargs):
+    """
+    Crea un grupo 'cms_admin' y agrega al usuario a este grupo si es el primer administrador.
+
+    :param sender: El modelo que envía la señal (Usuario en este caso).
+    :param instance: La instancia del usuario que fue creada o modificada.
+    :param kwargs: Argumentos adicionales de la señal (no se utilizan aquí).
+    """
     if Usuario.objects.filter(groups__name='cms_admin').count() == 0:
         admin_group, created = Group.objects.get_or_create(name='cms_admin')
         if created:
