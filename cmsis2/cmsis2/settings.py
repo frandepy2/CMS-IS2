@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1','*']
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1','http://localhost', 'http://44.218.153.247', 'http://thelittleswine.com']
 
 # Site Definition
-SITE_ID = 3
+SITE_ID = 1
 
 # Application definition
 
@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.google'
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -56,6 +56,10 @@ SOCIALACCOUNT_PROVIDERS = {
             'profile',
             'email'
         ],
+        'APP': {
+            'client_id': os.getenv("GOOGLE_CLIENT_ID"),
+            'secret': os.getenv("GOOGLE_SECRET"),
+        },
         'AUTH_PARAMS': {'access_type': 'online'}
     }
 }
