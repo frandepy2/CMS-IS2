@@ -23,12 +23,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.getenv("DEBUG"))
+#DEBUG = int(os.getenv("DEBUG"))
+debug_env = os.getenv("DEBUG")
+
+if debug_env is not None:
+    DEBUG = int(debug_env)
+else:
+    # Handle the case when "DEBUG" environment variable is not set
+    DEBUG = 0  # Default value
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1','*']
 
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1','http://localhost']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1','http://localhost', 'http://44.218.153.247', 'http://thelittleswine.com']
 
+# Site Definition
+SITE_ID = 1
 
 # Application definition
 
@@ -39,8 +48,28 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cmsis2'
+    'cmsis2',
+    'usuarios',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google'
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email'
+        ],
+        'APP': {
+            'client_id': os.getenv("GOOGLE_CLIENT_ID"),
+            'secret': os.getenv("GOOGLE_SECRET"),
+        },
+        'AUTH_PARAMS': {'access_type': 'online'}
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -129,3 +158,19 @@ STATIC_ROOT = '/static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'usuarios.Usuario'
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+]
+
+
+ACCOUNT_LOGOUT_ON_GET = True
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/'
