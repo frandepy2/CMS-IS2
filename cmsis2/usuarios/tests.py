@@ -3,6 +3,11 @@ from django.contrib.auth import get_user_model
 
 class UsuarioTestCase(TestCase):
     def test_crear_usuario(self):
+        """
+        Prueba la creación de un usuario estándar.
+
+        Se asegura de que un usuario se crea con los atributos correctos.
+        """
         Usuario = get_user_model()
         user = Usuario.objects.create_user(email = 'usuario@gmail.com', password='password')
         self.assertEquals(user.email,'usuario@gmail.com')
@@ -14,17 +19,32 @@ class UsuarioTestCase(TestCase):
             Usuario.objects.create_user()
 
     def test_usuario_subscriptor(self):
+        """
+        Prueba que un usuario se crea como subscriptor.
+
+        Verifica si un usuario se crea con la propiedad `subscribed` como verdadera.
+        """
         Usuario = get_user_model()
         user = Usuario.objects.create_user(email = 'usuario@gmail.com', password='password')
         self.assertTrue(user.subscribed)
 
     def test_crear_administrador(self):
+        """
+        Prueba la creación de un administrador.
+
+        Verifica si un administrador se crea con los atributos correctos.
+        """
         Usuario = get_user_model()
         user = Usuario.objects.create_superuser(email = 'usuario@gmail.com', password='password')
         self.assertTrue(user.is_active)
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser)
     def test_primer_usuario_admin(self):
+        """
+        Prueba que se crea un usuario administrador al ser el primer usuario.
+
+        Verifica si se crea un usuario administrador al no haber otros usuarios en la base de datos.
+        """
         Usuario = get_user_model()
         Usuario.objects.all().delete()
         self.assertEqual(Usuario.objects.all().count(), 0,
