@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cmsis2',
     'usuarios',
+    'categorias',
+    'roles',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
