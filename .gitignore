@@ -88,6 +88,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+documentation/_build
 
 # PyBuilder
 .pybuilder/
@@ -178,3 +179,4 @@ cython_debug/
 #.idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/django
+
