@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'cmsis2',
     'usuarios',
     'categorias',
+    'roles',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
