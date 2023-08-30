@@ -23,5 +23,6 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('socialaccount/', include('allauth.urls')),
     path('usuarios/',include("usuarios.urls")),
+    path('roles/',include("roles.urls")),
     path('', Home.as_view(), name='home'),
 ]
