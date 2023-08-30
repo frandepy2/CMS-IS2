@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CMS - Roles</title>
+        <!-- Include Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container mt-5">
+            <h3>{{ role.name }}</h3>
+            <p><strong>Status:</strong>
+                {% if role.is_active %}
+                    <span class="badge badge-success">Activo</span>
+                {% else %}
+                    <span class="badge badge-danger">Inactivo</span>
+                {% endif %}
+            </p>
+            <div class="row">
+                <a href="{% url 'editar_rol' role.id %}" class="btn btn-sm btn-primary">Modificar</a>
+                <form method="post" action="{% url 'inactivar_rol' role.id %}">
+                    {% csrf_token %}
+                    {% if role.is_active %}
+                        <button type="submit" class="btn btn-sm btn-danger">Inactivar</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-sm btn-success">Activar</button>
+                    {% endif %}
+                </form>
+            </div>
+            <br>
+            <br>
+            <h5>Permisos agregados</h5>
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for permision in role.permissions.all %}
+                <tr>
+                    <td>{{ permision.id }}</td>
+                    <td>{{ permision.name }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Include Bootstrap scripts if needed -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
