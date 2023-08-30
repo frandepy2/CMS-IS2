@@ -1,17 +1,22 @@
 from django import template
-
-from usuarios.models import Usuario
-from roles.models import CustomRole, UserCategoryRole
+from roles.models import UserCategoryRole
 
 register = template.Library()
 
 
 @register.filter(name='has_permission')
 def has_permission(user, permission):
-    try:
-        #user_obj = Usuario.objects.get(id=user.id)
-        #return user_obj.has_perm(permission)
+    """
+        Comprueba si un usuario tiene un permiso específico.
 
+        Args:
+            user (Usuario): El usuario cuyos permisos se verificarán.
+            permission (str): El nombre del permiso que se desea verificar.
+
+        Returns:
+            bool: True si el usuario tiene el permiso, False en caso contrario.
+        """
+    try:
         return UserCategoryRole.objects.filter(user=user, role__permissions__name=permission).exists()
     except user.DoesNotExist:
         return False
