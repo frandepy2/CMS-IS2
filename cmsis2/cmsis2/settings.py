@@ -37,7 +37,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1','*']
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1','http://localhost', 'http://44.218.153.247', 'http://thelittleswine.com']
 
 # Site Definition
-SITE_ID = 3
+SITE_ID = 1
 
 # Application definition
 
