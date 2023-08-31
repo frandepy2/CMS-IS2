@@ -11,6 +11,8 @@ from categorias.models import Categoria
 class CustomRole(models.Model):
     name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
+    is_system_role = models.BooleanField(default=False)
+    can_modify = models.BooleanField(default=True)
     permissions = models.ManyToManyField('CustomPermission', through= 'RolePermission')
 
     def __str__(self):
@@ -19,6 +21,7 @@ class CustomRole(models.Model):
 class CustomPermission(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
+    is_system_permission = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
