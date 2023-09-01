@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomRole, CustomPermission,RolePermission,UserCategoryRole
+from .models import CustomRole, CustomPermission, RolePermission, UserCategoryRole
 
 # Register your models here.
 
