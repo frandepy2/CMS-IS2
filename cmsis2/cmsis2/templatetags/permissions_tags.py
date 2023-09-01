@@ -20,3 +20,12 @@ def has_permission(user, permission):
         return UserCategoryRole.objects.filter(user=user, role__permissions__name=permission).exists()
     except user.DoesNotExist:
         return False
+
+
+@register.filter(name='has_category_permission')
+def has_category_permission(user, category_id, permission_name):
+    try:
+        user_category_role = UserCategoryRole.objects.get(user=user, category_id=category_id)
+        return user_category_role.role.permissions.filter(name=permission_name).exists()
+    except UserCategoryRole.DoesNotExist:
+        return False
