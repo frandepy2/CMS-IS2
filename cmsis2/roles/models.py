@@ -27,7 +27,7 @@ class RolePermission(models.Model):
 
 class UserCategoryRole(models.Model):
     user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    category = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    category = models.ForeignKey(Categoria, on_delete=models.CASCADE, null=True, blank=True)
     role = models.ForeignKey(CustomRole, on_delete=models.CASCADE)
 
     def __str__(self):

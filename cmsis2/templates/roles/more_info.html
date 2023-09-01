@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     </head>
     <body>
+        {% load permissions_tags %}
         <div class="container mt-5">
             <h3>{{ role.name }}</h3>
             <p><strong>Status:</strong>
@@ -16,15 +17,19 @@
                 {% endif %}
             </p>
             <div class="row">
-                <a href="{% url 'editar_rol' role.id %}" class="btn btn-sm btn-primary">Modificar</a>
-                <form method="post" action="{% url 'inactivar_rol' role.id %}">
-                    {% csrf_token %}
-                    {% if role.is_active %}
-                        <button type="submit" class="btn btn-sm btn-danger">Inactivar</button>
-                    {% else %}
-                        <button type="submit" class="btn btn-sm btn-success">Activar</button>
-                    {% endif %}
-                </form>
+                {% if user|has_permission:'edit_roles' %}
+                    <a href="{% url 'editar_rol' role.id %}" class="btn btn-sm btn-primary">Modificar</a>
+                {% endif %}
+                {% if user|has_permission:'delete_roles' %}
+                    <form method="post" action="{% url 'inactivar_rol' role.id %}">
+                        {% csrf_token %}
+                        {% if role.is_active %}
+                            <button type="submit" class="btn btn-sm btn-danger">Inactivar</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-sm btn-success">Activar</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
             </div>
             <br>
             <br>
