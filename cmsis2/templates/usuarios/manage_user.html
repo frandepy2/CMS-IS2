@@ -8,24 +8,17 @@
     <body>
         {% load permissions_tags %}
         <div class="container mt-5">
-            <h3>{{ user.email }}</h3>
+            <h3>{{ usuario.email }}</h3>
             <p><strong>Status:</strong>
-                {% if user.is_active %}
+                {% if usuario.is_active %}
                     <span class="badge badge-success">Activo</span>
                 {% else %}
                     <span class="badge badge-danger">Inactivo</span>
                 {% endif %}
             </p>
             <div class="row">
-                {% if user|has_permission:'inactivate_users' %}
-                    <form method="post" action="{% url 'inactivar_rol' user.id %}">
-                        {% csrf_token %}
-                        {% if user.is_active %}
-                            <button type="submit" class="btn btn-sm btn-danger">Inactivar</button>
-                        {% else %}
-                            <button type="submit" class="btn btn-sm btn-success">Activar</button>
-                        {% endif %}
-                    </form>
+                {% if user|has_permission:'asign_roles' %}
+                    <a href="{% url 'asignar_rol_usuario' usuario.id %}" class="btn btn-sm btn-primary">Asignar roles</a>
                 {% endif %}
             </div>
             <br>
@@ -35,8 +28,9 @@
                 <thead class="thead-light">
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Category</th>
+                        <th>Rol</th>
+                        <th>Categoria</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,7 +43,17 @@
                     {% else %}
                         <td>{{ role.category }}</td>
                     {% endif %}
+                    <td>
+                        {% if role.role.name != 'Admin'  %}
+                            <a href="{% url 'manage_user' usuario.id %}" class="btn btn-sm btn-danger">Quitar</a>
+                        {% else %}
+                            {% if user.email != usuario.email %}
+                                 <a href="{% url 'manage_user' usuario.id %}" class="btn btn-sm btn-danger">Quitar</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
                 </tr>
+
                 {% endfor %}
                 </tbody>
             </table>
