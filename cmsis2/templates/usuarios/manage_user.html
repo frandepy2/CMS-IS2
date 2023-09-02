@@ -45,10 +45,10 @@
                     {% endif %}
                     <td>
                         {% if role.role.name != 'Admin'  %}
-                            <a href="{% url 'manage_user' usuario.id %}" class="btn btn-sm btn-danger">Quitar</a>
+                            <a href="{% url 'desasignar_rol_usuario'  role.id %}" class="btn btn-sm btn-danger">Quitar</a>
                         {% else %}
                             {% if user.email != usuario.email %}
-                                 <a href="{% url 'manage_user' usuario.id %}" class="btn btn-sm btn-danger">Quitar</a>
+                                 <a href="{% url 'desasignar_rol_usuario'  role.id %}" class="btn btn-sm btn-danger">Quitar</a>
                             {% endif %}
                         {% endif %}
                     </td>

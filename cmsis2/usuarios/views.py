@@ -35,3 +35,7 @@ def asignar_rol(request, user_id):
         form.fields['user'].initial = user
         form.fields['user'].widget.attrs['disabled'] = True
     return render(request, 'usuarios/asign_user_role.html', {'form': form})
+def desasignar_rol(request,role_category_id):
+    role_category = get_object_or_404(UserCategoryRole, id=role_category_id)
+    role_category.delete()
+    return redirect('usuarios')
