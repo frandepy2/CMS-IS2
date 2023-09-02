@@ -7,6 +7,8 @@ from categorias.models import Categoria
 
 class HasPermissionFilterTestCase(TestCase):
     def setUp(self):
+        # Crea el rol de ADMIN
+        CustomRole.objects.get_or_create(name='Admin', is_system_role=True)
         # Crea un CustomPermission
         self.permission = CustomPermission.objects.create(name='permission_to_test', description='Test permission')
 
