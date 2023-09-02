@@ -17,7 +17,7 @@
                 {% endif %}
             </p>
             <div class="row">
-                {% if user|has_permission:'edit_roles' %}
+                {% if user|has_permission:'edit_roles' and role.can_modify is True %}
                     <a href="{% url 'editar_rol' role.id %}" class="btn btn-sm btn-primary">Modificar</a>
                 {% endif %}
                 {% if user|has_permission:'delete_roles' %}
