@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CMS - Usuarios</title>
+        <!-- Include Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body>
+        {% load permissions_tags %}
+        <div class="container mt-5">
+            <h3>{{ user.email }}</h3>
+            <p><strong>Status:</strong>
+                {% if user.is_active %}
+                    <span class="badge badge-success">Activo</span>
+                {% else %}
+                    <span class="badge badge-danger">Inactivo</span>
+                {% endif %}
+            </p>
+            <div class="row">
+                {% if user|has_permission:'inactivate_users' %}
+                    <form method="post" action="{% url 'inactivar_rol' user.id %}">
+                        {% csrf_token %}
+                        {% if user.is_active %}
+                            <button type="submit" class="btn btn-sm btn-danger">Inactivar</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-sm btn-success">Activar</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
+            </div>
+            <br>
+            <br>
+            <h5>Roles de Usuario</h5>
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for role in roles %}
+                <tr>
+                    <td>{{ role.id }}</td>
+                    <td>{{ role.role.name }}</td>
+                    {% if role.category is None %}
+                        <td> Es un rol de sistema </td>
+                    {% else %}
+                        <td>{{ role.category }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Include Bootstrap scripts if needed -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
