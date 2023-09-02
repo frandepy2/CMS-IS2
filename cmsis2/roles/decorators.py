@@ -1,5 +1,3 @@
-# yourapp/decorators.py
-
 from functools import wraps
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseRedirect
@@ -37,7 +35,11 @@ def has_category_permission_decorator(category_id, permission_name):
 
 def has_permission(user, permission_name):
     try:
-        return UserCategoryRole.objects.filter(user=user, role__permissions__name=permission_name).exists()
+        return UserCategoryRole.objects.filter(
+            user=user,  # Filtra por usuario
+            role__is_active=True,  # Filtra por roles activos
+            role__permissions__name=permission_name  # Busca el permiso
+        ).exists()
     except user.DoesNotExist:
         return False
 
