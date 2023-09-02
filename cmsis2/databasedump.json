@@ -6,7 +6,7 @@
          "name":"Admin",
          "is_active":true,
          "is_system_role":true,
-         "can_modify":true
+         "can_modify":false
       }
    },
    {

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomRoleForm
-from .models import CustomRole
+from .models import CustomRole, CustomPermission
 from django.core.paginator import Paginator, Page
 from django.contrib.auth.decorators import login_required
 from .decorators import has_permission_decorator, has_category_permission_decorator
@@ -44,6 +44,14 @@ def mas_informacion_rol(request, role_id):
 @has_permission_decorator('edit_roles')
 def editar_rol(request,role_id):
     role = get_object_or_404(CustomRole, id=role_id)
+
+    # Check if it's a system role
+    if role.is_system_role:
+        # Filter permissions for system roles
+        permissions = CustomPermission.objects.filter(is_system_permission=True)
+    else:
+        # Show all permissions for non-system roles
+        permissions = CustomPermission.objects.all()
 
     if request.method == 'POST':
         form = CustomRoleForm(request.POST, instance=role)
