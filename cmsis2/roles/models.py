@@ -41,6 +41,9 @@ class UserCategoryRole(models.Model):
     def __str__(self):
         return f"{self.user} - {self.category} - {self.role}"
 
+    class Meta:
+        unique_together = ['user', 'category', 'role']
+
 @receiver(post_save, sender=Usuario)
 def crear_primer_admin(sender, instance, **kwargs):
     """

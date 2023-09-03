@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CMS- Crear Nuevo Rol</title>
+    <title>CMS- Asignar Categoria </title>
     <!-- Incluye los enlaces a Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     {% load permissions_tags %}
-    {% if user|has_permission:'create_roles' %}
+    {% if user|has_permission:'asign_roles' %}
         <div class="container mt-5">
-            <h2>Crear Nuevo Rol</h2>
+            <h2>Asignar Categoria</h2>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
@@ -17,16 +17,12 @@
             </form>
         </div>
     {% else %}
-        <h3>No tiene permiso para crear roles. Será redirigido en unos segundos.</h3>
-        <script>
-            setTimeout(function() {
-                window.history.back();
-            }, 3000); // Redirect the user back after 3 seconds
-        </script>
+        <h3>No tiene permiso para asignar categoria</h3>
     {% endif %}
     <!-- Incluye los enlaces a los scripts de Bootstrap si es necesario -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

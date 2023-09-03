@@ -7,12 +7,17 @@ from categorias.models import Categoria
 
 class HasPermissionFilterTestCase(TestCase):
     def setUp(self):
+        # Crea el rol de ADMIN
+        CustomRole.objects.get_or_create(name='Admin', is_system_role=True)
         # Crea un CustomPermission
         self.permission = CustomPermission.objects.create(name='permission_to_test', description='Test permission')
 
         # Crea un CustomRole con el permiso
         self.role = CustomRole.objects.create(name='test_role')
         RolePermission.objects.create(role=self.role, permission=self.permission)
+
+        # Crea un usuario personalizado y asigna el rol al usuario
+        self.superuser = Usuario.objects.create_user(username='testAdmin', email='testAdmin@example.com', password='testpassword')
 
         # Crea un usuario personalizado y asigna el rol al usuario
         self.user = Usuario.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
@@ -43,6 +48,9 @@ class HasPermissionFilterTestCase(TestCase):
 class CategoryPermissionTest(TestCase):
 
     def setUp(self):
+        # Crea el rol de ADMIN
+        CustomRole.objects.get_or_create(name='Admin', is_system_role=True)
+
         # Configuración de datos de prueba
         self.user = Usuario.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
         self.category = Categoria.objects.create(nombre='Test Category')

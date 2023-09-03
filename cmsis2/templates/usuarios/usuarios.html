@@ -1,47 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CMS - Roles </title>
+    <title>CMS - Usuarios </title>
     <!-- Incluye los enlaces a Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     {% load socialaccount %}
     {% load permissions_tags %}
-    {% if user|has_permission:'view_roles' %}
+    {% if user|has_permission:'view_users' %}
         <div class="container mt-5">
-            <h2>Roles y Permisos</h2>
-            <div class="row mb-3">
-                <div class="col">
-                    {% if user|has_permission:'create_roles' %}
-                        <a href="{% url 'crear_rol' %}" class="btn btn-primary">Agregar Rol</a>
-                    {% endif %}
-                </div>
-            </div>
+            <h2>Usuarios</h2>
             <table class="table table-bordered">
                 <thead class="thead-light">
                     <tr>
                         <th>id</th>
-                        <th>Name</th>
-                        <th>Active</th>
+                        <th>username</th>
+                        <th>email</th>
+                        <th>estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for role in page %}
+                    {% for user in page %}
                     <tr>
-                        <td>{{ role.id }}</td>
-                        <td>{{ role.name }}</td>
-                        {% if role.is_active is True %}
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        {% if user.is_active is True %}
                             <td>ACTIVO</td>
                         {% else %}
                             <td>INACTIVO</td>
                         {% endif %}
                         <td>
-                            {% if user|has_permission:'edit_roles' and role.can_modify is True %}
-                                <a href="{% url 'editar_rol' role.id %}" class="btn btn-sm btn-primary">Modificar</a>
-                            {% endif %}
-                            <a href="{% url 'mas_informacion_rol' role.id %}" class="btn btn-sm btn-primary">Mas Informacion</a>
+                            <a href="{% url 'manage_user' user.id %}" class="btn btn-sm btn-primary">Gestionar</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -67,12 +59,7 @@
             </div>
         </div>
     {% else %}
-        <h3>No tiene permiso para ver roles. Será redirigido en unos segundos.</h3>
-        <script>
-            setTimeout(function() {
-                window.history.back();
-            }, 3000); // Redirect the user back after 3 seconds
-        </script>
+        <h3>No tiene permiso para ver usuarios</h3>
     {% endif %}
 
     <!-- Incluye los enlaces a los scripts de Bootstrap si es necesario -->

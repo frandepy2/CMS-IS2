@@ -17,7 +17,11 @@ def has_permission(user, permission):
             bool: True si el usuario tiene el permiso, False en caso contrario.
         """
     try:
-        return UserCategoryRole.objects.filter(user=user, role__permissions__name=permission).exists()
+        return UserCategoryRole.objects.filter(
+            user=user,  # Filtra por usuario
+            role__is_active=True,  # Filtra por roles activos
+            role__permissions__name=permission  # Filtra por nombre de permisos
+        ).exists()
     except user.DoesNotExist:
         return False
 
