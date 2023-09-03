@@ -1,5 +1,5 @@
 from django import forms
-from .models import CustomRole, UserCategoryRole
+from .models import CustomRole, UserCategoryRole, CustomPermission
 from usuarios.models import Usuario
 from categorias.models import Categoria
 
@@ -10,6 +10,24 @@ class CustomRoleForm(forms.ModelForm):
         widgets = {
             'permissions': forms.CheckboxSelectMultiple,  # Use CheckboxSelectMultiple widget
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        is_system_role = cleaned_data.get('is_system_role', False)
+        permissions = cleaned_data.get('permissions')
+
+        if is_system_role and permissions:
+            non_system_permissions = permissions.filter(is_system_permission=False)
+            if non_system_permissions:
+                raise forms.ValidationError("No puedes asignar permisos que no son del sistema")
+
+        if not is_system_role and permissions:
+            system_permissions = permissions.filter(is_system_permission=True)
+            if system_permissions:
+                raise forms.ValidationError("No puedes asignar permisos que son del sistema")
+
+        return cleaned_data
+
 
 class UserCategoryRoleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
