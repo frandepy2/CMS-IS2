@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load socialaccount %}
+    {% load permissions_tags %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+    <!-- Our project just needs Font Awesome Free's Solid and Brand files -->
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+
+    <style>
+        body {
+            background-color: #1f1f1f;
+            color: #f3f3f3;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #f3f3f3;
+        }
+        hr {
+            color: #2e2e2e;
+        }
+        i {
+            text-align: right;
+            margin-right: 0;
+        }
+
+        .title {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-subtitle {
+            color: #8e8e8e;
+            font-size: small;
+            margin-top: 20px;
+            margin-left: 2px;
+        }
+        .username-top {
+            margin-left: 10px;
+        }
+        .top-right {
+            margin-top: 15px;
+        }
+        .bottom-line {
+            margin-top: 5px;
+            background-color: #3b3b3b;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between; /* Distribute items evenly */
+            align-items: center; /* Vertically align items */
+            margin-top: 30px;
+        }
+
+        .navbar-flex-container {
+            display: flex;
+            justify-content: space-between; /* Distribute items evenly */
+            align-items: center; /* Vertically align items */
+        }
+
+        .flex-item {
+            margin-left: 50px;
+            margin-right: 100px;
+        }
+
+        .autor {
+            font-size: medium;
+            color: #ffffff;
+        }
+        .cat-sub {
+            font-size: large;
+            color: #8e8e8e;
+        }
+        .date-time {
+            margin-bottom: 0;
+            color: #8e8e8e;
+            font-size: medium;
+        }
+        .int-icon {
+            margin-right: 30px;
+            font-size: medium;
+        }
+        .dropdown-menu {
+            background-color: #3b3b3b;
+        }
+        .dropdown-item {
+            color: #f3f3f3;
+        }
+        .drop-btn {
+            background-color: #1f1f1f;
+            color: #ffffff;
+        }
+
+        .sidebar-item {
+            color: #ffffff;
+        }
+        .sidebar-preference {
+            position: sticky;
+            bottom: 0;
+        }
+        .hidden-item {
+            margin-left: 20px;
+            color: #ffffff;
+        }
+
+
+
+        #sidebar {
+            height: 100vh;
+            background-color: #1f1f1f;
+            border-right: 2px solid #3b3b3b;
+        }
+
+
+    </style>
+
+    <title>CMS-IS2</title>
+
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark" style="background-color: #1f1f1f; border-bottom: 2px solid #3b3b3b;">
+        <a class="navbar-brand" style="color:#874ddb; font-size: xx-large; margin-top: 0px;" href="{% url 'home' %}">TheLittleSwine</a>
+        <div class="navbar-user navbar-flex-container">
+            {% if user.is_authenticated %}
+                <div class="navbar-flex-item" style="margin-right: 20px;">
+                    <a href="#"><i class="fa-solid fa-bell mr-auto" style="color: #ffffff;"></i></a>
+                </div>
+                <div class="navbar-flex-item">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle drop-btn" type="button" data-toggle="dropdown" aria-expanded="false">
+                            {{ user.username }}
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">Mi perfil</a>
+                            <a class="dropdown-item" href="#">Configuraciones</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'account_logout' %}">
+                                Cerrar Sesion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <a class="btn btn-primary" href="{% provider_login_url "google" %}">Iniciar Sesión</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
+                <!-- Sidebar content goes here -->
+                <div class="position-sticky sidebar-menu">
+                    <ul class="nav flex-column">
+                        <li class="sidebar-subtitle">
+                            Menú
+                            <hr class="bottom-line">
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active sidebar-item" href="{% url 'home' %}">
+                                Inicio
+                            </a>
+                        </li>
+                        <!-- Dropdown Sidebar Item -->
+                        <li class="nav-item">
+                            <a class="nav-link collapsed sidebar-item" href="#dropdownSidebar" data-toggle="collapse">
+                                Categorias
+                            </a>
+                            <div class="collapse" id="dropdownSidebar">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link hidden-item" href="#">Deportes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link hidden-item" href="#">Informática</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link hidden-item" href="#">Deportes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link hidden-item" href="#">Informática</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link sidebar-item" href="#">
+                                    Usuarios
+                                </a>
+                            </li>
+                            {% if user|has_permission:'view_roles' %}
+                                <li class="nav-item">
+                                    <a class="nav-link sidebar-item" href="{% url 'roles' %}">
+                                        Roles
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+
+                        <!-- Add more sidebar items here -->
+                    </ul>
+                </div>
+
+                <div class="position-sticky sidebar-preference">
+                    <ul class="nav flex-column">
+                        <li class="sidebar-subtitle">
+                            Preferencias
+                            <hr class="bottom-line">
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active sidebar-item" href="#">
+                                Mi Perfil
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-item" href="#">
+                                Configuraciones
+                            </a>
+                        </li>
+
+                        <!-- Add more sidebar items here -->
+                    </ul>
+                </div>
+            </nav>
+
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                <div class="title">
+                    <h2>{{ page_title }}</h2>
+                </div>
+
+                {% block content %}
+
+                {% endblock %}
+
+
+
+            </main>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</body>
+</html>
