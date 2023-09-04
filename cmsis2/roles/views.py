@@ -63,6 +63,8 @@ def editar_rol(request,role_id):
 
     return render(request, 'roles/editar_rol.html', {'form': form, 'role': role})
 
+@login_required
+@has_permission_decorator('asign_roles')
 def inactivar_rol(request,role_id):
     role = get_object_or_404(CustomRole, id=role_id)
     if role.is_active :
