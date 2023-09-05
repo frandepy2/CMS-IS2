@@ -97,6 +97,9 @@
         .dropdown-item {
             color: #f0f0f0;
         }
+        .dropdown-divider {
+            border-top-color: #f0f0f0;
+        }
         .table-dark {
             background-color: #1f1f1f;
         }
@@ -123,6 +126,7 @@
             border-color: #bb86fc;
             color: #1f1f1f;
         }
+
         .table-dark, .thead-dark {
             color: #f0f0f0;
         }
@@ -179,12 +183,12 @@
                     </div>
                 </div>
             {% else %}
-                <a class="btn btn-dark" href="{% provider_login_url "google" %}">Iniciar Sesión</a>
+                <a class="btn btn-primary" href="{% provider_login_url "google" %}">Iniciar Sesión</a>
             {% endif %}
         </div>
     </nav>
 
-    <div class="container-fluid" style="padding-top: 80px;">
+    <div class="container-fluid" style="padding-top: 75px;">
         <div class="row">
             <!-- Sidebar -->
             <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">

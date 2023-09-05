@@ -28,12 +28,19 @@ def usuarios(request):
 def manage_user(request, user_id):
     user = Usuario.objects.get(id=user_id)
     user_roles = UserCategoryRole.objects.filter(user=user)
-    return render(request, 'usuarios/manage_user.html', {'usuario': user, 'roles':user_roles})
+    page_title = user.email
+    return render(request, 'usuarios/manage_user.html',
+                  {
+                      'page_title': page_title,
+                      'usuario': user,
+                      'roles': user_roles
+                  })
 
 @login_required
 @has_permission_decorator('asign_roles')
 def asignar_rol(request, user_id):
     user = Usuario.objects.get(id=user_id)
+    page_title = 'Asignar Rol'
     if request.method == 'POST':
         form = UserCategoryRoleForm(request.POST, user=user)
         if form.is_valid():
@@ -43,7 +50,11 @@ def asignar_rol(request, user_id):
         form = UserCategoryRoleForm()
         form.fields['user'].initial = user
         form.fields['user'].widget.attrs['disabled'] = True
-    return render(request, 'usuarios/asign_user_role.html', {'form': form})
+    return render(request, 'usuarios/asign_user_role.html',
+                  {
+                      'page_title': page_title,
+                      'form': form
+                  })
 
 @login_required
 @has_permission_decorator('asign_roles')
