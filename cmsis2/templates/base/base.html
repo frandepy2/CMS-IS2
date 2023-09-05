@@ -215,18 +215,11 @@
                                             </li>
                                         {% endif %}
                                     {% endif %}
-                                    <li class="nav-item">
-                                        <a class="nav-link hidden-item" href="#">Deportes</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link hidden-item" href="#">Informática</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link hidden-item" href="#">Deportes</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link hidden-item" href="#">Informática</a>
-                                    </li>
+                                    {% for categoria in categorias %}
+                                        <li class="nav-item">
+                                            <a class="nav-link hidden-item" href="#">{{ categoria }}</a>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </li>
