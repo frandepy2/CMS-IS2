@@ -5,27 +5,33 @@ from .models import Usuario
 from roles.models import CustomRole, UserCategoryRole
 from roles.forms import UserCategoryRoleForm
 from django.core.paginator import Paginator, Page
+from decorators import has_permission_decorator
 
-# Create your views here.
-def home(request):
-    return render(request, 'usuarios/home.html')
 
 @login_required
+@has_permission_decorator('view_users')
 def usuarios(request):
+    page_title = 'Usuarios'
     usuario_list = Usuario.objects.all().order_by('id')  # Obtén todos los roles
     paginator = Paginator(usuario_list,5)
 
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
-    return render(request, 'usuarios/usuarios.html', {'page': page})
+    return render(request, 'usuarios/usuarios.html',
+                  {
+                      'page_title': page_title,
+                      'page': page,
+                  })
 @login_required
+@has_permission_decorator('asign_roles')
 def manage_user(request, user_id):
     user = Usuario.objects.get(id=user_id)
     user_roles = UserCategoryRole.objects.filter(user=user)
     return render(request, 'usuarios/manage_user.html', {'usuario': user, 'roles':user_roles})
 
 @login_required
+@has_permission_decorator('asign_roles')
 def asignar_rol(request, user_id):
     user = Usuario.objects.get(id=user_id)
     if request.method == 'POST':
@@ -40,8 +46,8 @@ def asignar_rol(request, user_id):
     return render(request, 'usuarios/asign_user_role.html', {'form': form})
 
 @login_required
+@has_permission_decorator('asign_roles')
 def desasignar_rol(request,role_category_id):
     role_category = get_object_or_404(UserCategoryRole, id=role_category_id)
     role_category.delete()
     return redirect('usuarios')
->>>>>>> feature/roles-categorias

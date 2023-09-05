@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>CMS - Usuarios</title>
-        <!-- Include Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    </head>
-    <body>
+{% extends 'base/base.html' %}
+
+{% block content %}
         {% load permissions_tags %}
         <div class="container mt-5">
             <h3>{{ usuario.email }}</h3>
@@ -24,8 +19,8 @@
             <br>
             <br>
             <h5>Roles de Usuario</h5>
-            <table class="table table-bordered">
-                <thead class="thead-light">
+            <table class="table table-dark">
+                <thead class="thead-dark">
                     <tr>
                         <th>#</th>
                         <th>Rol</th>
@@ -58,9 +53,5 @@
                 </tbody>
             </table>
         </div>
-        <!-- Include Bootstrap scripts if needed -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
-</html>
+
+{% endblock %}

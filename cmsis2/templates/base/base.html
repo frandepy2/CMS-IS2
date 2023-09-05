@@ -19,10 +19,10 @@
     <style>
         body {
             background-color: #1f1f1f;
-            color: #f3f3f3;
+            color: #f0f0f0;
         }
-        h1, h2, h3, h4, h5, h6 {
-            color: #f3f3f3;
+        h1, h2, h3, h4, h5, h6, p {
+            color: #f0f0f0;
         }
         hr {
             color: #2e2e2e;
@@ -30,6 +30,15 @@
         i {
             text-align: right;
             margin-right: 0;
+        }
+        a:hover {
+            color: #bb86fc; /* Change the color to red */
+        }
+        a:focus {
+            color: #bb86fc; /* Change the color to purple */
+        }
+        ul li.active a {
+            color: #bb86fc; /* Change color to red for the active link */
         }
 
         .title {
@@ -43,12 +52,7 @@
             margin-top: 20px;
             margin-left: 2px;
         }
-        .username-top {
-            margin-left: 10px;
-        }
-        .top-right {
-            margin-top: 15px;
-        }
+
         .bottom-line {
             margin-top: 5px;
             background-color: #3b3b3b;
@@ -66,15 +70,13 @@
             justify-content: space-between; /* Distribute items evenly */
             align-items: center; /* Vertically align items */
         }
-
         .flex-item {
             margin-left: 50px;
             margin-right: 100px;
         }
-
         .autor {
             font-size: medium;
-            color: #ffffff;
+            color: #f0f0f0;
         }
         .cat-sub {
             font-size: large;
@@ -93,15 +95,20 @@
             background-color: #3b3b3b;
         }
         .dropdown-item {
-            color: #f3f3f3;
+            color: #f0f0f0;
+        }
+        .table-dark {
+            background-color: #1f1f1f;
         }
         .drop-btn {
             background-color: #1f1f1f;
-            color: #ffffff;
+            color: #f0f0f0;
         }
-
+        .btn-submit {
+            margin-right: 100px;
+        }
         .sidebar-item {
-            color: #ffffff;
+            color: #f0f0f0;
         }
         .sidebar-preference {
             position: sticky;
@@ -109,17 +116,37 @@
         }
         .hidden-item {
             margin-left: 20px;
-            color: #ffffff;
+            color: #f0f0f0;
         }
-
-
-
+        .btn-primary, .btn-primary:active, .btn-primary:hover, .btn-primary:focus {
+            background-color: #bb86fc;
+            border-color: #bb86fc;
+            color: #1f1f1f;
+        }
+        .table-dark, .thead-dark {
+            color: #f0f0f0;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* To ensure it's above other elements */
+        }
         #sidebar {
+            position: fixed;
             height: 100vh;
             background-color: #1f1f1f;
             border-right: 2px solid #3b3b3b;
         }
 
+        .back-btn {
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        .btn-secondary {
+            color: #f0f0f0;
+        }
 
     </style>
 
@@ -130,11 +157,11 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-dark" style="background-color: #1f1f1f; border-bottom: 2px solid #3b3b3b;">
-        <a class="navbar-brand" style="color:#874ddb; font-size: xx-large; margin-top: 0px;" href="{% url 'home' %}">TheLittleSwine</a>
+        <a class="navbar-brand" style="color:#bb86fc; font-size: xx-large; margin-top: 0px;" href="{% url 'home' %}">TheLittleSwine</a>
         <div class="navbar-user navbar-flex-container">
             {% if user.is_authenticated %}
                 <div class="navbar-flex-item" style="margin-right: 20px;">
-                    <a href="#"><i class="fa-solid fa-bell mr-auto" style="color: #ffffff;"></i></a>
+                    <a href="#"><i class="fa-solid fa-bell mr-auto" style="color: #e0e0e0;"></i></a>
                 </div>
                 <div class="navbar-flex-item">
                     <div class="dropdown">
@@ -152,12 +179,12 @@
                     </div>
                 </div>
             {% else %}
-                <a class="btn btn-primary" href="{% provider_login_url "google" %}">Iniciar Sesión</a>
+                <a class="btn btn-dark" href="{% provider_login_url "google" %}">Iniciar Sesión</a>
             {% endif %}
         </div>
     </nav>
 
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-top: 80px;">
         <div class="row">
             <!-- Sidebar -->
             <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
@@ -168,18 +195,26 @@
                             Menú
                             <hr class="bottom-line">
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {% if request.path == '/' %}active{% endif %}">
                             <a class="nav-link active sidebar-item" href="{% url 'home' %}">
                                 Inicio
                             </a>
                         </li>
                         <!-- Dropdown Sidebar Item -->
-                        <li class="nav-item">
+                        <li class="nav-item {% if request.path == '/categorias/' %}active{% endif %}">
                             <a class="nav-link collapsed sidebar-item" href="#dropdownSidebar" data-toggle="collapse">
                                 Categorias
                             </a>
                             <div class="collapse" id="dropdownSidebar">
                                 <ul class="nav flex-column">
+                                    {% if user.is_authenticated %}
+                                        {% if user|has_permission:'manage_categories' %}
+                                            <li class="nav-item">
+                                                <a class="nav-link hidden-item" href="#">Gestionar categorias</a>
+                                                <hr class="bottom-line hidden-item" style="margin-bottom: 0px; margin-top: 0px;">
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
                                     <li class="nav-item">
                                         <a class="nav-link hidden-item" href="#">Deportes</a>
                                     </li>
@@ -195,45 +230,35 @@
                                 </ul>
                             </div>
                         </li>
-                        {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link sidebar-item" href="#">
-                                    Usuarios
-                                </a>
+                        <!-- Add more sidebar items here -->
+                    </ul>
+                </div>
+                {% if user.is_authenticated %}
+                    <div class="position-sticky admin-conf">
+                        <ul class="nav flex-column">
+                            <li class="sidebar-subtitle">
+                                Configuraciones
+                                <hr class="bottom-line">
                             </li>
+                            {% if user|has_permission:'view_users' %}
+                                <li class="nav-item {% if request.path == '/usuarios/' %}active{% endif %}">
+                                    <a class="nav-link sidebar-item" href="{% url 'usuarios' %}">
+                                        Usuarios
+                                    </a>
+                                </li>
+                            {% endif %}
                             {% if user|has_permission:'view_roles' %}
-                                <li class="nav-item">
+                                <li class="nav-item {% if request.path == '/roles/' %}active{% endif %}">
                                     <a class="nav-link sidebar-item" href="{% url 'roles' %}">
                                         Roles
                                     </a>
                                 </li>
                             {% endif %}
-                        {% endif %}
 
-                        <!-- Add more sidebar items here -->
-                    </ul>
-                </div>
-
-                <div class="position-sticky sidebar-preference">
-                    <ul class="nav flex-column">
-                        <li class="sidebar-subtitle">
-                            Preferencias
-                            <hr class="bottom-line">
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active sidebar-item" href="#">
-                                Mi Perfil
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-item" href="#">
-                                Configuraciones
-                            </a>
-                        </li>
-
-                        <!-- Add more sidebar items here -->
-                    </ul>
-                </div>
+                            <!-- Add more sidebar items here -->
+                        </ul>
+                    </div>
+                {% endif %}
             </nav>
 
 
@@ -246,12 +271,22 @@
 
                 {% endblock %}
 
-
+            {% if request.path != '/' %}
+                <div class="back-btn">
+                    <button id="goBackButton" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver</button>
+                </div>
+            {% endif %}
 
             </main>
         </div>
     </div>
 
+
+    <script>
+        document.getElementById('goBackButton').addEventListener('click', function () {
+            window.history.back();
+        });
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
