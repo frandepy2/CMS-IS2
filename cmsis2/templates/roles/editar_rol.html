@@ -1,20 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CMS - Roles</title>
-    <!-- Include Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
+{% extends 'base/base.html' %}
+
+{% block content %}
     {% load permissions_tags %}
     {% if user|has_permission:'edit_roles' %}
-        <div class="container mt-5">
-            <h2>Modificar Rol</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Save</button>
-            </form>
+        <div class="container mt-5 ml-5">
+            <div class="d-flex">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     {% else %}
         <h3>No tiene permiso para modificar roles. Será redirigido en unos segundos.</h3>
@@ -24,9 +22,4 @@
             }, 3000); // Redirect the user back after 3 seconds
         </script>
     {% endif %}
-    <!-- Include Bootstrap scripts if needed -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+{% endblock %}

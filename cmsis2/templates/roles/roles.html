@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CMS - Roles </title>
-    <!-- Incluye los enlaces a Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
+{% extends 'base/base.html' %}
+
+{% block content %}
     {% load socialaccount %}
     {% load permissions_tags %}
     {% if user|has_permission:'view_roles' %}
         <div class="container mt-5">
-            <h2>Roles y Permisos</h2>
             <div class="row mb-3">
                 <div class="col">
                     {% if user|has_permission:'create_roles' %}
@@ -18,8 +12,8 @@
                     {% endif %}
                 </div>
             </div>
-            <table class="table table-bordered">
-                <thead class="thead-light">
+            <table class="table table-dark">
+                <thead class="thead-dark">
                     <tr>
                         <th>id</th>
                         <th>Name</th>
@@ -75,9 +69,4 @@
         </script>
     {% endif %}
 
-    <!-- Incluye los enlaces a los scripts de Bootstrap si es necesario -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+{% endblock %}
