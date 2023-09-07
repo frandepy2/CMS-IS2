@@ -1,35 +1,29 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>CMS - Subcategorias</title>
-        <!-- Include Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    </head>
-    <body>
-{#        {% load permissions_tags %}#}
-        <div class="container mt-5">
-            <h3>{{ subcategoria.nombre }}</h3>
-            <p><strong>Status:</strong>
+{% extends 'base/base.html' %}
+
+{% block content %}
+        {% load permissions_tags %}
+        <div class="container">
+            <h5 style="margin-bottom: 30px;">Status:
                 {% if subcategoria.is_active %}
                     <span class="badge badge-success">Activo</span>
                 {% else %}
                     <span class="badge badge-danger">Inactivo</span>
                 {% endif %}
-            </p>
+            </h5>
             <div class="row">
-{#                {% if user|has_permission:'edit_roles' %}#}
+                {% if user|has_permission:'edit_category' %}
                     <a href="{% url 'editar_subcategoria' subcategoria.id %}" class="btn btn-sm btn-primary">Modificar</a>
-{#                {% endif %}#}
-{#                {% if user|has_permission:'delete_roles' %}#}
+                {% endif %}
+                {% if user|has_permission:'inactivate_category' %}
                     <form method="post" action="{% url 'inactivar_subcategoria' subcategoria.id %}">
                         {% csrf_token %}
-                        {% if role.is_active %}
+                        {% if subcategoria.is_active %}
                             <button type="submit" class="btn btn-sm btn-danger">Inactivar</button>
                         {% else %}
                             <button type="submit" class="btn btn-sm btn-success">Activar</button>
                         {% endif %}
                     </form>
-{#                {% endif %}#}
+                {% endif %}
             </div>
             <br>
             <br>
@@ -51,9 +45,4 @@
 {#                </tbody>#}
 {#            </table>#}
         </div>
-        <!-- Include Bootstrap scripts if needed -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
-</html>
+{% endblock %}
