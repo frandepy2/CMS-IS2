@@ -1,14 +1,6 @@
 roles package
 =============
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   roles.migrations
-
 Submodules
 ----------
 
@@ -28,6 +20,22 @@ roles.apps module
    :undoc-members:
    :show-inheritance:
 
+roles.decorators module
+-----------------------
+
+.. automodule:: roles.decorators
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+roles.forms module
+------------------
+
+.. automodule:: roles.forms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 roles.models module
 -------------------
 
@@ -40,6 +48,14 @@ roles.tests module
 ------------------
 
 .. automodule:: roles.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+roles.urls module
+-----------------
+
+.. automodule:: roles.urls
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,6 +1,7 @@
 from django import forms
 from .models import Categoria, Subcategoria
 
+"""Implementamos los modelos de Categoría y Subcategoría"""
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria

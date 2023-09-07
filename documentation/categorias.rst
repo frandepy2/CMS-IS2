@@ -1,14 +1,6 @@
 categorias package
 ==================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   categorias.migrations
-
 Submodules
 ----------
 
@@ -28,6 +20,14 @@ categorias.apps module
    :undoc-members:
    :show-inheritance:
 
+categorias.forms module
+-----------------------
+
+.. automodule:: categorias.forms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 categorias.models module
 ------------------------
 
@@ -40,6 +40,14 @@ categorias.tests module
 -----------------------
 
 .. automodule:: categorias.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+categorias.urls module
+----------------------
+
+.. automodule:: categorias.urls
    :members:
    :undoc-members:
    :show-inheritance:
