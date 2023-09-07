@@ -81,9 +81,7 @@
                         <td>{{ user_role.user.username }}</td>
                         <td>{{ user_role.role }}</td>
                         <td>
-                         {#   <a href="{% url 'editar_rol_user_category' usuario.id categoria.id %}" class="btn btn-sm btn-primary">Modificar</a>   #}
-                         {#   <a href="{% url 'mas_informacion_subcategoria' subcategoria.id %}" class="btn btn-sm btn-primary">Más Información</a> #}
-                            <a class="btn btn-sm btn-danger" href="{% url 'quitar_usuario' user_role.id %}">Quitar</a>
+                             <a class="btn btn-sm btn-danger" href="{% url 'quitar_usuario' user_role.id %}">Quitar</a>
                         </td>
                     </tr>
                     {% endfor %}
