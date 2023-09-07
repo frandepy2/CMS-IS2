@@ -24,5 +24,6 @@ urlpatterns = [
     path('socialaccount/', include('allauth.urls')),
     path('usuarios/',include("usuarios.urls")),
     path('roles/',include("roles.urls")),
+    path('categorias/',include("categorias.urls")),
     path('', HomeView, name='home'),
 ]

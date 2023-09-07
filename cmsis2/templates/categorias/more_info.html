@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CMS - Categorias</title>
+        <!-- Include Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body>
+        {% load permissions_tags %}
+        <div class="container mt-5">
+            <h3>{{ categoria.nombre }}</h3>
+            <p><strong>Status:</strong>
+                {% if categoria.is_active %}
+                    <span class="badge badge-success">Activo</span>
+                {% else %}
+                    <span class="badge badge-danger">Inactivo</span>
+                {% endif %}
+            </p>
+            <div class="row">
+                {% if user|has_permission:'edit_roles' %}
+                    <a href="{% url 'editar_categoria' categoria.id %}" class="btn btn-sm btn-primary">Modificar</a>
+                {% endif %}
+                {% if user|has_permission:'delete_roles' %}
+                    <form method="post" action="{% url 'inactivar_categoria' categoria.id %}">
+                        {% csrf_token %}
+                        {% if role.is_active %}
+                            <button type="submit" class="btn btn-sm btn-danger">Inactivar</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-sm btn-success">Activar</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
+            </div>
+            <br>
+            <br>
+            <h5>Subcategorias agregadas</h5>
+            <a href="{% url 'crear_subcategoria' %}" class="btn btn-sm btn-success">Agregar Nueva Subcategoría</a>
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for subcategoria in subcategorias %}
+                <tr>
+                    <td>{{ subcategoria.id }}</td>
+                    <td>{{ subcategoria.nombre }}</td>
+                    <td>
+                        <a href="{% url 'mas_informacion_subcategoria' subcategoria.id %}" class="btn btn-sm btn-info">Más Información</a>
+                        <a href="{% url 'editar_subcategoria' subcategoria.id %}" class="btn btn-sm btn-primary">Modificar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Include Bootstrap scripts if needed -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>

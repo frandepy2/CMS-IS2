@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CMS- Crear Nueva Categoria</title>
+    <!-- Incluye los enlaces a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+{#    {% load permissions_tags %}#}
+{#    {% if user|has_permission:'edit_roles' %}#}
+        <div class="container mt-5">
+            <h2>Crear Nueva Categoria</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+        </div>
+{#    {% else %}#}
+{#        <h3>No tiene permiso para crear roles</h3>#}
+{#    {% endif %}#}
+    <!-- Incluye los enlaces a los scripts de Bootstrap si es necesario -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

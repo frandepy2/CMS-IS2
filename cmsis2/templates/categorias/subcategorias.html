@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CMS - Subcategorias </title>
+    <!-- Incluye los enlaces a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    {% load socialaccount %}
+    {% load permissions_tags %}
+    {% if user|has_permission:'view_category' %}
+        <div class="container mt-5">
+            <h2>Subcategorias</h2>
+            <div class="row mb-3">
+                <div class="col">
+                    {% if user|has_permission:'create_category' %}
+                        <a href="{% url 'crear_subcategoria' %}" class="btn btn-primary">Agregar Subcategoria</a>
+                    {% endif %}
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>id</th>
+                        <th>Nombre</th>
+                        <th>Categoria</th>
+                        <th>Activo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subcategorias in page %}
+                    <tr>
+                        <td>{{ subcategorias.id }}</td>
+                        <td>{{ subcategorias.nombre }}</td>
+                        <td>{{ subcategorias.categoria }}</td>
+                        {% if subcategorias.is_active is True %}
+                            <td>ACTIVO</td>
+                        {% else %}
+                            <td>INACTIVO</td>
+                        {% endif %}
+                        <td>
+                            {% if user|has_permission:'edit_category' %}
+                            <a href="{% url 'editar_subcategoria' subcategorias.id %}" class="btn btn-sm btn-primary">Modificar</a>
+                            {% endif %}
+                            <a href="{% url 'mas_informacion_subcategoria' subcategorias.id %}" class="btn btn-sm btn-primary">Mas Informacion</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+{#            <div class="pagination">#}
+{#                <span class="step-links">#}
+{#                    {% if page.has_previous %}#}
+{#                        <a href="?page=1">&laquo; primero</a>#}
+{#                        <a href="?page={{ page.previous_page_number }}">anterior</a>#}
+{#                    {% endif %}#}
+{##}
+{#                    <span class="current">#}
+{#                        Pagina {{ page.number }} de {{ page.paginator.num_pages }}.#}
+{#                    </span>#}
+{##}
+{#                    {% if page.has_next %}#}
+{#                        <a href="?page={{ page.next_page_number }}">siguiente</a>#}
+{#                        <a href="?page={{ page.paginator.num_pages }}">ultimo &raquo;</a>#}
+{#                    {% endif %}#}
+{#                </span>#}
+{#            </div>#}
+        </div>
+    {% else %}
+        <h3>No tiene permiso para ver categorias</h3>
+    {% endif %}
+
+    <!-- Incluye los enlaces a los scripts de Bootstrap si es necesario -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -12,6 +12,14 @@ cmsis2.templatetags.has\_group module
    :undoc-members:
    :show-inheritance:
 
+cmsis2.templatetags.permissions\_tags module
+--------------------------------------------
+
+.. automodule:: cmsis2.templatetags.permissions_tags
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
