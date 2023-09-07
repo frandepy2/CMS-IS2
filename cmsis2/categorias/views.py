@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+
 from .forms import CategoriaForm, SubcategoriaForm
 from .models import Categoria, Subcategoria
 from django.core.paginator import Paginator, Page
 from decorators import has_permission_decorator
 from django.contrib.auth.decorators import login_required
+from roles.models import UserCategoryRole
+from roles.forms import UserCategoryRoleForm
 
 """Crea la vista de la pantalla inicial de la sección categorías, donde se se listan todas las categorías existentes"""
 @login_required
@@ -47,11 +51,16 @@ def mas_informacion_categoria(request, categoria_id):
     categoria = Categoria.objects.get(id=categoria_id)
     page_title = categoria.nombre
     subcategorias = Subcategoria.objects.filter(categoria=categoria)
+
+#    usuarios = Usuario.objects.filter(usercategoryrole__category_id=categoria_id)
+    usuarios_roles = UserCategoryRole.objects.filter(category_id=categoria_id)
+
     return render(request, 'categorias/more_info.html',
                   {
                       'page_title': page_title,
                       'categoria': categoria,
-                      'subcategorias': subcategorias
+                      'subcategorias': subcategorias,
+                      'users_roles': usuarios_roles
                   })
 
 """Permite cambiar los detalles de la categpría seleccionada como descripción, inactivar o el nombre"""
@@ -170,3 +179,33 @@ def inactivar_subcategoria(request,subcategoria_id):
     subcategoria.save()
     return redirect('subcategorias')
 
+
+def agregar_usuario(request, categoria_id):
+    category = Categoria.objects.get(id=categoria_id)
+    page_title = 'Agregar usuario a categoria'
+
+    if request.method == 'POST':
+        form = UserCategoryRoleForm(request.POST, category=category)
+        if form.is_valid():
+            form.save()
+            target_url = reverse('mas_informacion_categoria', kwargs={'categoria_id': categoria_id})
+            return redirect(target_url)
+    else:
+        form = UserCategoryRoleForm()
+        form.fields['category'].initial = category
+        form.fields['category'].widget.attrs['disabled'] = True
+    return render(request, 'usuarios/asign_user_role.html',
+                      {
+                          'page_title': page_title,
+                          'form': form
+                      })
+
+def quitar_usuario(request, role_category_id):
+    role_category = get_object_or_404(UserCategoryRole, id=role_category_id)
+
+    categoria_id = role_category.category.id
+
+    role_category.delete()
+
+    target_url = reverse('mas_informacion_categoria', kwargs={'categoria_id': categoria_id})
+    return redirect(target_url)

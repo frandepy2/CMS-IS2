@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Usuario
 from roles.models import CustomRole, UserCategoryRole
-from roles.forms import UserCategoryRoleForm
+from roles.forms import UserSystemRoleFormAg
 from django.core.paginator import Paginator, Page
 from decorators import has_permission_decorator
 
@@ -76,12 +76,12 @@ def asignar_rol(request, user_id):
     user = Usuario.objects.get(id=user_id)
     page_title = 'Asignar Rol'
     if request.method == 'POST':
-        form = UserCategoryRoleForm(request.POST, user=user)
+        form = UserSystemRoleForm(request.POST, user=user)
         if form.is_valid():
             form.save()
             return redirect('usuarios')  # Redirige a la vista deseada después de crear el rol
     else:
-        form = UserCategoryRoleForm()
+        form = UserSystemRoleForm()
         form.fields['user'].initial = user
         form.fields['user'].widget.attrs['disabled'] = True
     return render(request, 'usuarios/asign_user_role.html',
@@ -92,7 +92,7 @@ def asignar_rol(request, user_id):
 
 @login_required
 @has_permission_decorator('asign_roles')
-def desasignar_rol(request,role_category_id):
+def desasignar_rol(request, role_category_id):
     """
     Vista para desasignar un rol de un usuario.
 

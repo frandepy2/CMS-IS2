@@ -25,36 +25,70 @@
                     </form>
                 {% endif %}
             </div>
-            <br>
-            <br>
-            <h5>Subcategorias agregadas</h5>
-            <a href="{% url 'crear_subcategoria' %}" class="btn btn-sm btn-primary" style="margin-bottom: 10px;">Agregar Nueva Subcategoría</a>
-            <table class="table table-dark">
-                <thead class="thead-dark">
+
+            <div class="subcategorias">
+                <div class="d-flex justify-content-between mt-5 mb-3">
+                    <div class="p-2"><h5>Subcategorias agregadas</h5></div>
+                    <div class="p-2"><a href="{% url 'crear_subcategoria' %}" class="btn btn-sm btn-primary mr-auto" style="margin-bottom: 10px;">Agregar Nueva Subcategoría</a></div>
+                </div>
+
+                <table class="table table-dark">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Activo</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for subcategoria in subcategorias %}
                     <tr>
-                        <th>#</th>
-                        <th>Nombre</th>
-                        <th>Activo</th>
-                        <th></th>
+                        <td>{{ subcategoria.id }}</td>
+                        <td>{{ subcategoria.nombre }}</td>
+                        {% if subcategoria.is_active is True %}
+                                <td>ACTIVO</td>
+                            {% else %}
+                                <td>INACTIVO</td>
+                            {% endif %}
+                        <td>
+                            <a href="{% url 'editar_subcategoria' subcategoria.id %}" class="btn btn-sm btn-primary">Modificar</a>
+                            <a href="{% url 'mas_informacion_subcategoria' subcategoria.id %}" class="btn btn-sm btn-primary">Más Información</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                {% for subcategoria in subcategorias %}
-                <tr>
-                    <td>{{ subcategoria.id }}</td>
-                    <td>{{ subcategoria.nombre }}</td>
-                    {% if subcategoria.is_active is True %}
-                            <td>ACTIVO</td>
-                        {% else %}
-                            <td>INACTIVO</td>
-                        {% endif %}
-                    <td>
-                        <a href="{% url 'editar_subcategoria' subcategoria.id %}" class="btn btn-sm btn-primary">Modificar</a>
-                        <a href="{% url 'mas_informacion_subcategoria' subcategoria.id %}" class="btn btn-sm btn-primary">Más Información</a>
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="usuarios">
+                <div class="d-flex justify-content-between mt-5 mb-3">
+                    <div class="p-2"><h5>Miembros del equipo</h5></div>
+                    <div class="p-2"><a href="{% url 'agregar_usuario' categoria.id %}" class="btn btn-sm btn-primary mr-auto" style="margin-bottom: 10px;">Agregar Usuario</a></div>
+                </div>
+
+                <table class="table table-dark">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for user_role in users_roles %}
+                    <tr>
+                        <td>{{ user_role.user.username }}</td>
+                        <td>{{ user_role.role }}</td>
+                        <td>
+                         {#   <a href="{% url 'editar_rol_user_category' usuario.id categoria.id %}" class="btn btn-sm btn-primary">Modificar</a>   #}
+                         {#   <a href="{% url 'mas_informacion_subcategoria' subcategoria.id %}" class="btn btn-sm btn-primary">Más Información</a> #}
+                            <a class="btn btn-sm btn-danger" href="{% url 'quitar_usuario' user_role.id %}">Quitar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
 {% endblock %}
