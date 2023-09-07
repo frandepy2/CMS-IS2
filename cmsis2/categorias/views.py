@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CategoriaForm, SubcategoriaForm
 from .models import Categoria, Subcategoria
 from django.core.paginator import Paginator, Page
-from roles.decorators import has_permission_decorator
+from decorators import has_permission_decorator
 from django.contrib.auth.decorators import login_required
 
 """Crea la vista de la pantalla inicial de la sección categorías, donde se se listan todas las categorías existentes"""
