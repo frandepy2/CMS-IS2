@@ -1,8 +1,12 @@
+from django.http import HttpResponse
 from django.test import TestCase
+from django.urls import reverse
 from roles.models import CustomRole, CustomPermission, RolePermission, UserCategoryRole
 from cmsis2.templatetags.permissions_tags import has_permission, has_category_permission
 from usuarios.models import Usuario
 from categorias.models import Categoria
+from functools import wraps
+from decorators import has_permission_decorator, has_category_permission_decorator
 
 
 class HasPermissionFilterTestCase(TestCase):
@@ -128,3 +132,102 @@ class CategoryPermissionTest(TestCase):
         other_category = Categoria.objects.create(nombre='Other Category')
         has_permission = has_category_permission(self.user, other_category.id, 'view_category')
         self.assertFalse(has_permission)
+
+
+# Create a custom decorator for testing purposes
+def dummy_decorator(view_func):
+    """
+    Un decorador de prueba que simplemente pasa la llamada a la vista sin modificarla.
+
+    :param view_func: La función de vista original.
+    :type view_func: callable
+    :return: La función de vista original sin cambios.
+    :rtype: callable
+    """
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        return view_func(request, *args, **kwargs)
+
+    return _wrapped_view
+
+
+class PermissionsTest(TestCase):
+    def setUp(self):
+        # Crea el rol de Admin
+        CustomRole.objects.get_or_create(name='Admin', is_system_role=True)
+
+        # Crea un usuario personalizado
+        self.user = Usuario.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        # Crea roles y permisos personalizados
+        self.role = CustomRole.objects.create(name='Test Role', is_active=True)
+        self.permission = CustomPermission.objects.create(name='view_roles', description='Test Description')
+        self.role_permission = RolePermission.objects.create(role=self.role, permission=self.permission)
+
+        # Crea un UserCategoryRole para el usuario
+        self.user_category_role = UserCategoryRole.objects.create(user=self.user, role=self.role)
+
+        # Crea otro usuario para pruebas adicionales
+        self.user = Usuario.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword')
+
+    def test_has_permission_decorator(self):
+        """
+        Prueba el decorador has_permission_decorator con un usuario que tiene el permiso.
+        """
+        @has_permission_decorator('view_roles')
+        @dummy_decorator
+        def view_with_permission(request):
+            return HttpResponse('Permission granted')
+
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.get(reverse('roles'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_has_permission_decorator_no_permission(self):
+        """
+        Prueba el decorador has_permission_decorator con un usuario que no tiene el permiso.
+        """
+        @has_permission_decorator('view_roles')
+        @dummy_decorator
+        def view_without_permission(request):
+            return HttpResponse('Permission denied')
+
+        self.client.login(username='testuser2', password='testpassword')
+        response = self.client.get(reverse('roles'))
+        self.assertEqual(response.status_code, 302)  # Debe ser redirigido
+
+    def test_has_category_permission_decorator(self):
+        """
+        Prueba el decorador has_category_permission_decorator con un usuario que tiene el permiso en la categoría.
+        """
+        @has_category_permission_decorator(category_id=1, permission_name='view_roles')
+        @dummy_decorator
+        def view_with_category_permission(request):
+            return HttpResponse('Category permission granted')
+
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.get(reverse('roles'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_has_category_permission_decorator_no_permission(self):
+        """
+        Prueba el decorador has_category_permission_decorator con un usuario que no tiene el permiso en la categoría.
+        """
+        # Prueba el decorador has_category_permission_decorator con un usuario que no tiene el permiso en la categoría.
+        @has_category_permission_decorator(category_id=1, permission_name='view_roles')
+        @dummy_decorator
+        def view_without_category_permission(request):
+            return HttpResponse('roles')
+
+        self.client.login(username='testuser2', password='testpassword')
+        response = self.client.get(reverse('roles'))
+        self.assertEqual(response.status_code, 302)  # Debe ser redirigido
+
+    def tearDown(self):
+        self.client.logout()
+        self.user.delete()
+        self.role.delete()
+        self.permission.delete()
+        self.role_permission.delete()
+        self.user_category_role.delete()
+
+
