@@ -1,7 +1,13 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
+from roles.models import CustomRole
+
+
 class UsuarioTestCase(TestCase):
+    def setUp(self):
+        # Crea el rol de ADMIN
+        CustomRole.objects.get_or_create(name='Admin', is_system_role=True)
     def test_crear_usuario(self):
         """
         Prueba la creación de un usuario estándar.
@@ -9,8 +15,15 @@ class UsuarioTestCase(TestCase):
         Se asegura de que un usuario se crea con los atributos correctos.
         """
         Usuario = get_user_model()
-        user = Usuario.objects.create_user(email = 'usuario@gmail.com', password='password')
-        self.assertEquals(user.email,'usuario@gmail.com')
+
+        first_user = Usuario.objects.create_user(username = 'user_1', email = 'usuario1@gmail.com', password='password')
+        self.assertEquals(first_user.email,'usuario1@gmail.com')
+        self.assertTrue(first_user.is_active)
+        self.assertTrue(first_user.is_staff)
+        self.assertFalse(first_user.is_superuser)
+
+        user = Usuario.objects.create_user(username = 'user_2', email = 'usuario2@gmail.com', password='password')
+        self.assertEquals(user.email,'usuario2@gmail.com')
         self.assertTrue(user.is_active)
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)

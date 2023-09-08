@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+        {% load permissions_tags %}
+        <div class="container">
+            <h5 style="margin-bottom: 30px;">Status:
+                {% if usuario.is_active %}
+                    <span class="badge badge-success">Activo</span>
+                {% else %}
+                    <span class="badge badge-danger">Inactivo</span>
+                {% endif %}
+            </h5>
+            {% if user|has_permission:'asign_roles' %}
+                <a href="{% url 'asignar_rol_usuario' usuario.id %}" class="btn btn-sm btn-primary">Asignar roles</a>
+            {% endif %}
+            <br>
+            <br>
+            <h5>Roles de Usuario</h5>
+            <table class="table table-dark">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Rol</th>
+                        <th>Categoria</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for role in roles %}
+                <tr>
+                    <td>{{ role.id }}</td>
+                    <td>{{ role.role.name }}</td>
+                    {% if role.category is None %}
+                        <td> Es un rol de sistema </td>
+                    {% else %}
+                        <td>{{ role.category }}</td>
+                    {% endif %}
+                    <td>
+                        {% if role.role.name != 'Admin'  %}
+                            <a href="{% url 'desasignar_rol_usuario'  role.id %}" class="btn btn-sm btn-danger">Quitar</a>
+                        {% else %}
+                            {% if user.email != usuario.email %}
+                                 <a href="{% url 'desasignar_rol_usuario'  role.id %}" class="btn btn-sm btn-danger">Quitar</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+{% endblock %}

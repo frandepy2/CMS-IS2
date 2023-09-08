@@ -1,0 +1,72 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {% load socialaccount %}
+    {% load permissions_tags %}
+    {% if user|has_permission:'view_roles' %}
+        <div class="container mt-5">
+            <div class="row mb-3">
+                <div class="col">
+                    {% if user|has_permission:'create_roles' %}
+                        <a href="{% url 'crear_rol' %}" class="btn btn-primary">Agregar Rol</a>
+                    {% endif %}
+                </div>
+            </div>
+            <table class="table table-dark">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>id</th>
+                        <th>Name</th>
+                        <th>Active</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for role in page %}
+                    <tr>
+                        <td>{{ role.id }}</td>
+                        <td>{{ role.name }}</td>
+                        {% if role.is_active is True %}
+                            <td>ACTIVO</td>
+                        {% else %}
+                            <td>INACTIVO</td>
+                        {% endif %}
+                        <td>
+                            {% if user|has_permission:'edit_roles' and role.can_modify is True %}
+                                <a href="{% url 'editar_rol' role.id %}" class="btn btn-sm btn-primary">Modificar</a>
+                            {% endif %}
+                            <a href="{% url 'mas_informacion_rol' role.id %}" class="btn btn-sm btn-primary">Mas Informacion</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page.has_previous %}
+                        <a href="?page=1">&laquo; primero</a>
+                        <a href="?page={{ page.previous_page_number }}">anterior</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Pagina {{ page.number }} de {{ page.paginator.num_pages }}.
+                    </span>
+
+                    {% if page.has_next %}
+                        <a href="?page={{ page.next_page_number }}">siguiente</a>
+                        <a href="?page={{ page.paginator.num_pages }}">ultimo &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    {% else %}
+        <h3>No tiene permiso para ver roles. Será redirigido en unos segundos.</h3>
+        <script>
+            setTimeout(function() {
+                window.history.back();
+            }, 3000); // Redirect the user back after 3 seconds
+        </script>
+    {% endif %}
+
+{% endblock %}

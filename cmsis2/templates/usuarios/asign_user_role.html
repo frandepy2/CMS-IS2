@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {% load permissions_tags %}
+    {% if user|has_permission:'asign_roles' %}
+        <div class="container mt-5">
+            <div class="d-flex">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <h3>No tiene permiso para asignar categoria</h3>
+    {% endif %}
+
+{% endblock %}
