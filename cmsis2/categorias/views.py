@@ -179,6 +179,8 @@ def inactivar_subcategoria(request,subcategoria_id):
     subcategoria.save()
     return redirect('subcategorias')
 
+
+"""Permite agregar usuarios a una categoria"""
 @login_required
 @has_permission_decorator('add_user')
 def agregar_usuario(request, categoria_id):
@@ -202,6 +204,7 @@ def agregar_usuario(request, categoria_id):
                       })
 
 
+"""Permite quitar a usuarios de una categoria"""
 @login_required
 @has_permission_decorator('delete_user')
 def quitar_usuario(request, role_category_id):
