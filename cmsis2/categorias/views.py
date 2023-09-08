@@ -179,7 +179,8 @@ def inactivar_subcategoria(request,subcategoria_id):
     subcategoria.save()
     return redirect('subcategorias')
 
-
+@login_required
+@has_permission_decorator('add_user')
 def agregar_usuario(request, categoria_id):
     category = Categoria.objects.get(id=categoria_id)
     page_title = 'Agregar usuario a categoria'
@@ -200,6 +201,9 @@ def agregar_usuario(request, categoria_id):
                           'form': form
                       })
 
+
+@login_required
+@has_permission_decorator('delete_user')
 def quitar_usuario(request, role_category_id):
     role_category = get_object_or_404(UserCategoryRole, id=role_category_id)
 
