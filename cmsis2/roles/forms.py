@@ -88,10 +88,10 @@ class UserSystemRoleForm(forms.ModelForm):
         category = cleaned_data.get('category')
 
         if role and role.is_system_role and category:
-            raise forms.ValidationError("Category cannot be set for system roles.")
+            raise forms.ValidationError("No se puede asignar una categoria para roles del sistema.")
 
         if role and not role.is_system_role and not category:
-            raise forms.ValidationError("Please select a category for this role.")
+            raise forms.ValidationError("Por favor seleccione una categoria para este rol.")
 
         if role and role.is_system_role and not category:
             # Verificar si ya existe un registro con el mismo usuario y rol
@@ -99,18 +99,18 @@ class UserSystemRoleForm(forms.ModelForm):
 
             existing_record = UserCategoryRole.objects.filter(user=user, category=None).first()
             if existing_record:
-                raise forms.ValidationError("You can not get two system roles")
+                raise forms.ValidationError("No se pueden asignar dos roles de sistema a un mismo usuario.")
 
             existing_record = UserCategoryRole.objects.filter(user=user, role=role).first()
 
             if existing_record:
-                raise forms.ValidationError("A record with the same user and role already exists.")
+                raise forms.ValidationError("Ya existe un registro con el mismo usuario y rol.")
 
         if role and not role.is_system_role and category:
             user = cleaned_data.get('user')
             existing_record = UserCategoryRole.objects.filter(user=user, category=category).first()
             if existing_record:
-                raise forms.ValidationError("This user have a role in this category already")
+                raise forms.ValidationError("Este usuario ya tiene un rol en la categoria.")
 
 
         return cleaned_data
@@ -159,10 +159,10 @@ class UserCategoryRoleForm(forms.ModelForm):
         category = cleaned_data.get('category')
 
         if role and role.is_system_role and category:
-            raise forms.ValidationError("Category cannot be set for system roles.")
+            raise forms.ValidationError("No se puede asignar una categoria para roles del sistema.")
 
         if role and not role.is_system_role and not category:
-            raise forms.ValidationError("Please select a category for this role.")
+            raise forms.ValidationError("Por favor seleccione una categoria para este rol.")
 
         if role and role.is_system_role and not category:
             # Verificar si ya existe un registro con el mismo usuario y rol
@@ -170,18 +170,17 @@ class UserCategoryRoleForm(forms.ModelForm):
 
             existing_record = UserCategoryRole.objects.filter(user=user, category=None).first()
             if existing_record:
-                raise forms.ValidationError("You can not get two system roles")
+                raise forms.ValidationError("No se pueden asignar dos roles de sistema a un mismo usuario.")
 
             existing_record = UserCategoryRole.objects.filter(user=user, role=role).first()
 
             if existing_record:
-                raise forms.ValidationError("A record with the same user and role already exists.")
+                raise forms.ValidationError("Ya existe un registro con el mismo usuario y rol.")
 
         if role and not role.is_system_role and category:
             user = cleaned_data.get('user')
             existing_record = UserCategoryRole.objects.filter(user=user, category=category).first()
             if existing_record:
-                raise forms.ValidationError("This user have a role in this category already")
-
+                raise forms.ValidationError("Este usuario ya tiene un rol en la categoria.")
 
         return cleaned_data
