@@ -36,6 +36,10 @@ class CategoriaViewTests(TestCase):
 
 
     def test_crear_categoria_view(self):
+        """
+        Probamos la creacion de una nueva categoria desde la vista
+        :return:
+        """
         self.client.login(username='user_1', password='password')
         datos_categoria = {
             'nombre': 'Nueva Categoría',
