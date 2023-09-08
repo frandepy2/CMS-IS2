@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {% load socialaccount %}
+    {% load permissions_tags %}
+    {% if user|has_permission:'view_users' %}
+        <div class="container mt-5">
+            <table class="table table-dark">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>id</th>
+                        <th>username</th>
+                        <th>email</th>
+                        <th>estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in page %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        {% if user.is_active is True %}
+                            <td>ACTIVO</td>
+                        {% else %}
+                            <td>INACTIVO</td>
+                        {% endif %}
+                        <td>
+                            <a href="{% url 'manage_user' user.id %}" class="btn btn-sm btn-primary">Gestionar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page.has_previous %}
+                        <a href="?page=1">&laquo; primero</a>
+                        <a href="?page={{ page.previous_page_number }}">anterior</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Pagina {{ page.number }} de {{ page.paginator.num_pages }}.
+                    </span>
+
+                    {% if page.has_next %}
+                        <a href="?page={{ page.next_page_number }}">siguiente</a>
+                        <a href="?page={{ page.paginator.num_pages }}">ultimo &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    {% else %}
+        <h3>No tiene permiso para ver usuarios</h3>
+    {% endif %}
+
+{% endblock %}

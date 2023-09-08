@@ -2,3 +2,6 @@ Django==4.2.4
 gunicorn==21.0.1
 psycopg2-binary==2.9.7
 django-allauth==0.54.0
+sphinx
+sphinx-serve
+fontawesomefree==6.4.2
