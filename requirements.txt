@@ -5,3 +5,7 @@ django-allauth==0.54.0
 sphinx
 sphinx-serve
 fontawesomefree==6.4.2
+pillow==10.0.1
+django-ckeditor==6.7.0
+django-storages==1.14
+boto3==1.28.49
