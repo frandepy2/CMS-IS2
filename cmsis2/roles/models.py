@@ -8,7 +8,7 @@ from usuarios.models import Usuario
 from categorias.models import Categoria
 
 # Create your models here.
-class CustomRole(models.cd):
+class CustomRole(models.Model):
     """
     Modelo que representa roles personalizados en el sistema.
 
