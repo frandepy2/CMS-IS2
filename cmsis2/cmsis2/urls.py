@@ -28,6 +28,7 @@ urlpatterns = [
     path('usuarios/',include("usuarios.urls")),
     path('roles/',include("roles.urls")),
     path('categorias/',include("categorias.urls")),
+    path('contenidos/', include("contenidos.urls")),
     path('', HomeView, name='home'),
 ]
 

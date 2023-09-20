@@ -58,6 +58,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'fontawesomefree',
+    'ckeditor',
+    'ckeditor_uploader',
+    'contenidos',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
