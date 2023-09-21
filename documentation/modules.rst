@@ -6,6 +6,8 @@ cmsis2
 
    categorias
    cmsis2
+   conf
+   decorators
    doc
    load_database
    manage
