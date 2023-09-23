@@ -224,11 +224,13 @@ def ver_categoria(request, categoria_id):
     categoria = Categoria.objects.get(id=categoria_id)
     page_title = categoria.nombre
     subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
-    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria).order_by('-fecha_creacion')
+    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria, estado='publicado').order_by('-fecha_creacion')
+    categorias = Categoria.objects.filter(is_active=True)
 
     return render(request, 'categorias/ver_contenidos_categoria.html', {
         'page_title': page_title,
         'categoria': categoria,
         'subcategorias': subcategorias,
-        'contenidos': contenidos
+        'contenidos': contenidos,
+        'categorias': categorias
     })

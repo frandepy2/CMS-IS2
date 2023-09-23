@@ -12,7 +12,7 @@ def crear_contenido(request):
             contenido = form.save(commit=False)  # No guardes el objeto en la base de datos todavía
             if request.user.is_authenticated:
                 contenido.autor = request.user  # Asigna el usuario autenticado como autor del contenido
-                contenido.estado = 'CREATED'
+                contenido.estado = 'borrador'
                 contenido.save()  # Guarda el objeto en la base de datos
                 return redirect('preview_contenido', contenido_id=contenido.id)
     else:
@@ -46,3 +46,52 @@ def editar_contenido(request, contenido_id):
         form = ContenidoForm(instance=contenido)
 
     return render(request, 'contenidos/editar_contenido.html', {'form': form, 'contenido': contenido})
+
+
+def gest_contenidos(request):
+    page_title = 'Gestión de Contenidos'
+    return render(request, 'contenidos/gest_contenidos.html', {'page_title': page_title})
+
+
+def ver_borrador(request):
+    page_title = 'En Borrador'
+    contenidos = Contenido.objects.filter(estado='borrador').order_by('-fecha_creacion')
+
+    return render(request, 'contenidos/lista_contenidos.html',
+                  {
+                      'page_title': page_title,
+                      'contenidos': contenidos
+                  })
+
+
+def ver_revision(request):
+    page_title = 'En Revisión'
+    contenidos = Contenido.objects.filter(estado='revision').order_by('-fecha_creacion')
+
+    return render(request, 'contenidos/lista_contenidos.html',
+                  {
+                      'page_title': page_title,
+                      'contenidos': contenidos
+                  })
+
+
+def ver_rechazados(request):
+    page_title = 'Rechazados'
+    contenidos = Contenido.objects.filter(estado='rechazado').order_by('-fecha_creacion')
+
+    return render(request, 'contenidos/lista_contenidos.html',
+                  {
+                      'page_title': page_title,
+                      'contenidos': contenidos
+                  })
+
+
+def ver_inactivos(request):
+    page_title = 'Inactivos'
+    contenidos = Contenido.objects.filter(estado='inactivo').order_by('-fecha_creacion')
+
+    return render(request, 'contenidos/lista_contenidos.html',
+                  {
+                      'page_title': page_title,
+                      'contenidos': contenidos
+                  })

@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="container mt-5 ml-5">
+        <div class="d-flex flex-column ml-5">
+            <div class="d-inline-flex p-3">
+                <a href="{% url 'contenidos_borrador' %}" class="btn btn-primary">En Borrador</a>
+            </div>
+            <div class="d-inline-flex p-3">
+                <a href="{% url 'contenidos_revision' %}" class="btn btn-primary">En Revisión</a>
+            </div>
+            <div class="d-inline-flex p-3">
+                <a href="{% url 'contenidos_rechazados' %}" class="btn btn-primary">Rechazados</a>
+            </div>
+            <div class="d-inline-flex p-3">
+                <a href="{% url 'contenidos_inactivos' %}" class="btn btn-primary">Inactivos</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
