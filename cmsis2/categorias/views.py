@@ -8,6 +8,7 @@ from decorators import has_permission_decorator
 from django.contrib.auth.decorators import login_required
 from roles.models import UserCategoryRole
 from roles.forms import UserCategoryRoleForm
+from contenidos.models import Contenido
 
 """Crea la vista de la pantalla inicial de la sección categorías, donde se se listan todas las categorías existentes"""
 @login_required
@@ -216,3 +217,18 @@ def quitar_usuario(request, role_category_id):
 
     target_url = reverse('mas_informacion_categoria', kwargs={'categoria_id': categoria_id})
     return redirect(target_url)
+
+
+"""Muestra el contenido de una categoria especifica para cualquier usuario"""
+def ver_categoria(request, categoria_id):
+    categoria = Categoria.objects.get(id=categoria_id)
+    page_title = categoria.nombre
+    subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
+    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria).order_by('-fecha_creacion')
+
+    return render(request, 'categorias/ver_contenidos_categoria.html', {
+        'page_title': page_title,
+        'categoria': categoria,
+        'subcategorias': subcategorias,
+        'contenidos': contenidos
+    })

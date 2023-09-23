@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>{{ contenido.nombre }}</h1>
+        <div class="post-content">
+            {{ contenido.cuerpo|safe }}
+        </div>
+        <div class="d-flex">
+            <a href="{% url 'editar_contenido' contenido.id %}" class="btn btn-primary">Editar</a>
+        </div>
+    </div>
+
+
+
+{% endblock %}
