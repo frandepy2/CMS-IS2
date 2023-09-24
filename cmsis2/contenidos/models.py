@@ -11,6 +11,7 @@ class Contenido(models.Model):
     subcategoria = models.ForeignKey(Subcategoria, on_delete=models.PROTECT, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_caducidad = models.DateField(null=True, blank=True)
+    #fecha_publicacion = models.DateTimeField(null=True, blank=True)
 
     ESTADO_CHOICES = (
         ('borrador', 'Borrador'),
@@ -21,7 +22,7 @@ class Contenido(models.Model):
     )
     estado = models.CharField(max_length=100, choices=ESTADO_CHOICES)
 
-    # fecha_publicacion = models.DateTimeField()
+
 
     def __str__(self):
         return self.nombre

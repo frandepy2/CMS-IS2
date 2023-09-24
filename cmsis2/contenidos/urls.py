@@ -11,4 +11,8 @@ urlpatterns = [
     path('gestionar/revision/', views.ver_revision, name='contenidos_revision'),
     path('gestionar/rechazados/', views.ver_rechazados, name='contenidos_rechazados'),
     path('gestionar/inactivos/', views.ver_inactivos, name='contenidos_inactivos'),
+    path('gestionar/publicados/', views.ver_publicados, name='contenidos_publicados'),
+    path('aprobar_contenido/<int:contenido_id>/', views.aprobar_contenido, name='aprobar_contenido'),
+    path('rechazar_contenido/<int:contenido_id>/', views.rechazar_contenido, name='rechazar_contenido'),
+
 ]

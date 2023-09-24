@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'contenidos',
+    'bootstrap_datepicker_plus',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {

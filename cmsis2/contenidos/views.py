@@ -1,6 +1,8 @@
+from datetime import timezone
+
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import ContenidoForm
+from .forms import ContenidoForm, AprobarContenidoForm
 from .models import Contenido
 
 
@@ -41,7 +43,7 @@ def editar_contenido(request, contenido_id):
         form = ContenidoForm(request.POST, instance=contenido)
         if form.is_valid():
             form.save()
-            return redirect('preview_contenido', contenido_id=contenido.id)
+            return redirect('ver_contenido', contenido_id=contenido.id)
     else:
         form = ContenidoForm(instance=contenido)
 
@@ -95,3 +97,39 @@ def ver_inactivos(request):
                       'page_title': page_title,
                       'contenidos': contenidos
                   })
+
+
+def ver_publicados(request):
+    page_title = 'Publicados'
+    contenidos = Contenido.objects.filter(estado='publicado').order_by('-fecha_creacion')
+
+    return render(request, 'contenidos/lista_contenidos.html',
+                  {
+                      'page_title': page_title,
+                      'contenidos': contenidos
+                  })
+
+
+def aprobar_contenido(request, contenido_id):
+
+    contenido = Contenido.objects.get(pk=contenido_id)
+
+    if request.method == 'POST':
+        form = AprobarContenidoForm(request.POST)
+        if form.is_valid():
+            contenido.estado = 'publicado'
+            # contenido.fecha_publicacion = timezone.now()
+            contenido.fecha_caducidad = form.cleaned_data['fecha_caducidad']
+            contenido.save()
+            return redirect('ver_contenido', contenido_id=contenido_id)
+    else:
+        form = AprobarContenidoForm()
+
+    return render(request, 'contenidos/aprobar_contenido.html', {'form': form, 'contenido': contenido})
+
+
+def rechazar_contenido(request, contenido_id):
+    contenido = Contenido.objects.get(pk=contenido_id)
+    contenido.estado = 'rechazado'
+    contenido.save()
+    return redirect('preview_contenido', contenido_id=contenido_id)
