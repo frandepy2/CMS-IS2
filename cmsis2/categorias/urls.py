@@ -15,4 +15,5 @@ urlpatterns = [
     path('agregar_usuario/<int:categoria_id>/', views.agregar_usuario, name='agregar_usuario'),
     path('quitar_usuario/<int:role_category_id>/', views.quitar_usuario, name='quitar_usuario'),
     path('ver_categoria/<int:categoria_id>/', views.ver_categoria, name='ver_categoria'),
+    path('ver_subcategoria/<int:subcategoria_id>/', views.ver_subcategoria, name='ver_subcategoria'),
 ]

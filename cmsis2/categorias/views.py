@@ -221,7 +221,7 @@ def quitar_usuario(request, role_category_id):
 
 """Muestra el contenido de una categoria especifica para cualquier usuario"""
 def ver_categoria(request, categoria_id):
-    categoria = Categoria.objects.get(id=categoria_id)
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
     page_title = categoria.nombre
     subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
     contenidos = Contenido.objects.filter(subcategoria__categoria=categoria, estado='publicado').order_by('-fecha_creacion')
@@ -230,6 +230,23 @@ def ver_categoria(request, categoria_id):
     return render(request, 'categorias/ver_contenidos_categoria.html', {
         'page_title': page_title,
         'categoria': categoria,
+        'subcategorias': subcategorias,
+        'contenidos': contenidos,
+        'categorias': categorias
+    })
+
+def ver_subcategoria(request, subcategoria_id):
+    subcategoria_act = get_object_or_404(Subcategoria, pk=subcategoria_id)
+    categoria = Categoria.objects.get(id=subcategoria_act.categoria.id)
+    page_title = categoria.nombre + ': ' + subcategoria_act.nombre
+    subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
+    contenidos = Contenido.objects.filter(subcategoria=subcategoria_act, estado='publicado').order_by('-fecha_creacion')
+    categorias = Categoria.objects.filter(is_active=True)
+
+    return render(request, 'categorias/ver_contenidos_subcategoria.html', {
+        'page_title': page_title,
+        'categoria': categoria,
+        'subcategoria_act': subcategoria_act,
         'subcategorias': subcategorias,
         'contenidos': contenidos,
         'categorias': categorias
