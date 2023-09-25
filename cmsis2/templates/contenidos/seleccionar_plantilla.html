@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Elige una plantilla</h2>
+    <div class="row">
+        {% for plantilla in plantillas %}
+        <div class="col-md-4 mb-3">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title"> {{ plantilla.descripcion }}</h5>
+                    <br>
+                    <a href="#" class="btn btn-light">Seleccionar</a>
+                    <a href="{% url 'previzualizar' plantilla.id %}" class="btn btn-light">Previsualizar</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

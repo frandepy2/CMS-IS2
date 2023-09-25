@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'fontawesomefree',
+    'django_quill',
+    'contenidos',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
