@@ -7,7 +7,7 @@ from contenidos.models import Contenido
 def HomeView(request):
     page_title = "Ultimas Entradas"
     categorias = Categoria.objects.filter(is_active=True)
-    contenidos = Contenido.objects.filter(estado='publicado').order_by('-fecha_creacion')
+    contenidos = Contenido.objects.filter(estado='publicado').order_by('-fecha_publicacion')
     return render(request, 'home/home.html',
                   {
                       'page_title': page_title,

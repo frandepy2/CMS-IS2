@@ -1,9 +1,8 @@
-from datetime import timezone
-
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ContenidoForm, AprobarContenidoForm
 from .models import Contenido
+from django.utils import timezone
 
 
 # Create your views here.
@@ -118,7 +117,7 @@ def aprobar_contenido(request, contenido_id):
         form = AprobarContenidoForm(request.POST)
         if form.is_valid():
             contenido.estado = 'publicado'
-            # contenido.fecha_publicacion = timezone.now()
+            contenido.fecha_publicacion = timezone.now()
             contenido.fecha_caducidad = form.cleaned_data['fecha_caducidad']
             contenido.save()
             return redirect('ver_contenido', contenido_id=contenido_id)

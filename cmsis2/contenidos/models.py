@@ -11,7 +11,7 @@ class Contenido(models.Model):
     subcategoria = models.ForeignKey(Subcategoria, on_delete=models.PROTECT, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_caducidad = models.DateField(null=True, blank=True)
-    #fecha_publicacion = models.DateTimeField(null=True, blank=True)
+    fecha_publicacion = models.DateTimeField(null=True, blank=True)
 
     ESTADO_CHOICES = (
         ('borrador', 'Borrador'),
