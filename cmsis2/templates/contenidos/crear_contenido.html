@@ -1,0 +1,11 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <h1>Crear Contenido desde Plantilla</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+        <button type="submit">Crear Contenido</button>
+    </form>
+{% endblock %}

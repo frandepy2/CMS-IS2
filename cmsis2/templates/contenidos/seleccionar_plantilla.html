@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <h5 class="card-title"> {{ plantilla.descripcion }}</h5>
                     <br>
-                    <a href="#" class="btn btn-light">Seleccionar</a>
+                    <a href="{% url 'crear_contenido' plantilla.id categoria %}" class="btn btn-light">Seleccionar</a>
                     <a href="{% url 'previzualizar' plantilla.id %}" class="btn btn-light">Previsualizar</a>
                 </div>
             </div>
