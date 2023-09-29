@@ -3,16 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to CMS-IS2's documentation!
+
+Bienvenido a la documentacion de CMS-IS2
 ===================================
 
 .. toctree::
-   :maxdepth: 4
-   :caption: Contents:
+   :maxdepth: 3
+   :caption: Contenidos:
+   cmsis2/cmsis2
+   categorias
+   roles
+   templates
+   usuarios
 
-   modules
 
-Indices and tables
+Indices and tablas
 ==================
 
 * :ref:`genindex`

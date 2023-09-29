@@ -6,22 +6,18 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../cmsis2'))
-
 project = 'CMS-IS2'
-copyright = '2023, Camila Maidana, Francisco Sanabria, Jorge Maidana, Jovana Alvarez'
-author = 'Camila Maidana, Francisco Sanabria, Jorge Maidana, Jovana Alvarez'
-release = '1.0'
+copyright = '2023, Francisco Sanabria, Jovana Alvarez, Jorge Maidana, Camila Maidana'
+author = 'Francisco Sanabria, Jovana Alvarez, Jorge Maidana, Camila Maidana'
+release = '1.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc']
+extensions = []
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store','migrations']
 
 language = 'es'
 
