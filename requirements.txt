@@ -5,3 +5,4 @@ django-allauth==0.54.0
 sphinx
 sphinx-serve
 fontawesomefree==6.4.2
+django-quill-editor==0.1.40
