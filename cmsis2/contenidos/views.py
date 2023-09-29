@@ -1,23 +1,41 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ContenidoForm, AprobarContenidoForm
-from .models import Contenido
+from .models import Contenido, Plantilla
 from django.utils import timezone
 
 
-# Create your views here.
-def crear_contenido(request):
+def seleccionar_plantilla(request, categoria_id):
+    plantillas = Plantilla.objects.all()
+
+    return render(request, 'contenidos/seleccionar_plantilla.html', {'plantillas': plantillas, 'categoria': categoria_id})
+
+
+def previsualizar(request, plantilla_id):
+    plantilla = Plantilla.objects.get(id=plantilla_id)
+    return render(request, 'contenidos/previsualizar.html', {'plantilla': plantilla})
+
+
+def crear_contenido(request, plantilla_id, categoria_id):
+
+    #Traemos todas las subcategorias por categoria
+
+    plantilla_predefinida = Plantilla.objects.get(id=plantilla_id)
+
     if request.method == 'POST':
         form = ContenidoForm(request.POST)
+
         if form.is_valid():
-            contenido = form.save(commit=False)  # No guardes el objeto en la base de datos todavía
-            if request.user.is_authenticated:
-                contenido.autor = request.user  # Asigna el usuario autenticado como autor del contenido
-                contenido.estado = 'borrador'
-                contenido.save()  # Guarda el objeto en la base de datos
-                return redirect('preview_contenido', contenido_id=contenido.id)
+            nuevo_contenido = form.save(commit=False)
+            nuevo_contenido.autor = request.user
+            nuevo_contenido.estado = 'borrador'
+            nuevo_contenido.save()
+            return redirect('preview_contenido', contenido_id=nuevo_contenido.id)
+
     else:
-        form = ContenidoForm()
+        form = ContenidoForm(initial={
+            'cuerpo': plantilla_predefinida.plantilla,
+        }, categoria_id=categoria_id)
 
     return render(request, 'contenidos/crear_contenido.html', {'form': form})
 

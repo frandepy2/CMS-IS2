@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Contenido
+from .models import Contenido, Plantilla
 
-# Register your models here.
 admin.site.register(Contenido)
+admin.site.register(Plantilla)
