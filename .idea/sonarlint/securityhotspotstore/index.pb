@@ -55,3 +55,9 @@ f
 .cmsis2/templates/contenidos/previsualizar.html,2/a/2a1d6f3fcdfcbd6b8745f1ab3a7ec6ac2f1800be
 a
 1cmsis2/templates/categorias/editar_categoria.html,4/6/463a3a7e288db1a49fd9de4494f1cd600a22466d
+J
+cmsis2/contenidos/tests.py,b/3/b3d24db91375eb5a3376e57f38331147dfe39ada
+`
+0cmsis2/templates/contenidos/crear_contenido.html,8/9/89881cc63094f1fc2b0384aa7a09b82a521a0791
+J
+cmsis2/contenidos/forms.py,f/b/fb9f2a2750b7dda150c3cbcac596a80f4bfc363b
