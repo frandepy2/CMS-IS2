@@ -216,3 +216,25 @@ def quitar_usuario(request, role_category_id):
 
     target_url = reverse('mas_informacion_categoria', kwargs={'categoria_id': categoria_id})
     return redirect(target_url)
+
+
+def mostrar_kanban(request, categoria_id):
+    category = get_object_or_404(Categoria, id=categoria_id)
+
+    list_subcategorias = Subcategoria.objects.all().order_by('id')
+
+   # contenidos_por_subcategoria = {}
+
+    """for subcategoria in list_subcategorias:
+        contenidos = Contenido.objects.filter(subcategoria=subcategoria)
+        contenidos_por_subcategoria[subcategoria] = contenidos"""
+
+    #traer todas las subcategorias de la categoria
+    #traer todos los contenidos de cada subcategoria y a partir de eso pasar al template y dibujar los cuadros segun las categorias que haya en ese template
+
+    return render(request, 'contenidos/kanban.html',
+                      {
+                          'category': category,
+                          'list_subcategorias': list_subcategorias,
+                          #'contenidos_por_subcategoria': contenidos_por_subcategoria,
+                      })
