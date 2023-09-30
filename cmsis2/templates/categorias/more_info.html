@@ -11,20 +11,28 @@
                     <span class="badge badge-danger">Inactivo</span>
                 {% endif %}
             </h5>
-            <div class="d-flex">
-                {% if user|has_permission:'edit_category' %}
-                    <a href="{% url 'editar_categoria' categoria.id %}" class="btn btn-sm btn-primary">Modificar</a>
-                {% endif %}
-                {% if user|has_permission:'inactivate_category' %}
-                    <form method="post" action="{% url 'inactivar_categoria' categoria.id %}">
-                        {% csrf_token %}
-                        {% if categoria.is_active %}
-                            <button type="submit" class="btn btn-sm btn-danger">Inactivar</button>
-                        {% else %}
-                            <button type="submit" class="btn btn-sm btn-success">Activar</button>
-                        {% endif %}
-                    </form>
-                {% endif %}
+            <div class="d-flex flex-row justify-content-between">
+                <div>
+                    {% if user|has_permission:'edit_category' %}
+                        <a href="{% url 'editar_categoria' categoria.id %}" class="btn btn-sm btn-primary">Modificar</a>
+                    {% endif %}
+                </div>
+                <div class="mr-auto">
+                    {% if user|has_permission:'inactivate_category' %}
+                        <form method="post" action="{% url 'inactivar_categoria' categoria.id %}">
+                            {% csrf_token %}
+                            {% if categoria.is_active %}
+                                <button type="submit" class="btn btn-sm btn-danger">Inactivar</button>
+                            {% else %}
+                                <button type="submit" class="btn btn-sm btn-success">Activar</button>
+                            {% endif %}
+                        </form>
+                    {% endif %}
+                </div>
+                <div>
+                    <div class=""></div>
+                    <a href="{% url 'seleccionar_plantilla' categoria.id %}" class="btn btn-sm btn-primary">Agregar Nuevo Contenido</a>
+                </div>
             </div>
 
             <div class="subcategorias">

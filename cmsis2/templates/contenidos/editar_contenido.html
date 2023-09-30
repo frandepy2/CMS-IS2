@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+            {% for field in form %}
+            <div class="form-group">
+                <div><label for="{{ field.id_for_label }}" class="text">{{ field.label }}: </label></div>
+                {{ field }}
+            </div>
+            {% endfor %}
+            <div class="d-flex flex-row justify-content-end">
+                <div class="d-inline-flex p-2">
+                    <input type="submit" class="btn btn-primary" value="Guardar" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

@@ -8,6 +8,7 @@ from decorators import has_permission_decorator
 from django.contrib.auth.decorators import login_required
 from roles.models import UserCategoryRole
 from roles.forms import UserCategoryRoleForm
+from contenidos.models import Contenido
 
 """Crea la vista de la pantalla inicial de la sección categorías, donde se se listan todas las categorías existentes"""
 @login_required
@@ -216,3 +217,37 @@ def quitar_usuario(request, role_category_id):
 
     target_url = reverse('mas_informacion_categoria', kwargs={'categoria_id': categoria_id})
     return redirect(target_url)
+
+
+"""Muestra el contenido de una categoria especifica para cualquier usuario"""
+def ver_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
+    page_title = categoria.nombre
+    subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
+    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria, estado='PUBLICADO').order_by('-fecha_publicacion')
+    categorias = Categoria.objects.filter(is_active=True)
+
+    return render(request, 'categorias/ver_contenidos_categoria.html', {
+        'page_title': page_title,
+        'categoria': categoria,
+        'subcategorias': subcategorias,
+        'contenidos': contenidos,
+        'categorias': categorias
+    })
+
+def ver_subcategoria(request, subcategoria_id):
+    subcategoria_act = get_object_or_404(Subcategoria, pk=subcategoria_id)
+    categoria = Categoria.objects.get(id=subcategoria_act.categoria.id)
+    page_title = categoria.nombre + ': ' + subcategoria_act.nombre
+    subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
+    contenidos = Contenido.objects.filter(subcategoria=subcategoria_act, estado='PUBLICADO').order_by('-fecha_publicacion')
+    categorias = Categoria.objects.filter(is_active=True)
+
+    return render(request, 'categorias/ver_contenidos_subcategoria.html', {
+        'page_title': page_title,
+        'categoria': categoria,
+        'subcategoria_act': subcategoria_act,
+        'subcategorias': subcategorias,
+        'contenidos': contenidos,
+        'categorias': categorias
+    })

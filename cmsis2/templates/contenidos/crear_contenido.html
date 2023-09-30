@@ -1,11 +1,16 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <h1>Crear Contenido desde Plantilla</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.media }}
-        {{ form.as_p }}
-        <button type="submit">Crear Contenido</button>
-    </form>
+
+    <div class="container mt-5">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <div class="d-flex flex-row justify-content-end">
+                <div class="d-inline-flex p-2">
+                    <input type="submit" class="btn btn-primary" value="Crear Contenido" />
+                </div>
+            </div>
+        </form>
 {% endblock %}
