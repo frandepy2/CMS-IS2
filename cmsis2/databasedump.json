@@ -46,6 +46,69 @@
       }
    },
    {
+      "model":"roles.custompermission",
+      "pk":5,
+      "fields":{
+         "name":"view_category",
+         "description":"ver categorias",
+         "is_system_permission":true
+      }
+   },
+   {
+      "model":"roles.custompermission",
+      "pk":6,
+      "fields":{
+         "name":"edit_category",
+         "description":"Editar categorias",
+         "is_system_permission":true
+      }
+   },
+   {
+      "model":"roles.custompermission",
+      "pk":7,
+      "fields":{
+         "name":"create_category",
+         "description":"Crear categorias",
+         "is_system_permission":true
+      }
+   },
+   {
+      "model":"roles.custompermission",
+      "pk":8,
+      "fields":{
+         "name":"inactivate_category",
+         "description":"Inactivar categorias",
+         "is_system_permission":true
+      }
+   },
+   {
+      "model":"roles.custompermission",
+      "pk":9,
+      "fields":{
+         "name":"view_user",
+         "description":"Ver usuarios",
+         "is_system_permission":true
+      }
+   },
+   {
+      "model":"roles.custompermission",
+      "pk":10,
+      "fields":{
+         "name":"asign_roles",
+         "description":"Asignar roles",
+         "is_system_permission":true
+      }
+   },
+   {
+      "model":"roles.custompermission",
+      "pk":11,
+      "fields":{
+         "name":"inactivate_users",
+         "description":"Inactivar usuarios",
+         "is_system_permission":true
+      }
+   },
+   {
       "model":"roles.rolepermission",
       "pk":1,
       "fields":{
