@@ -47,18 +47,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    #apps
     'cmsis2',
     'usuarios',
     'categorias',
     'roles',
-    'django.contrib.sites',
+    'contenidos',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'fontawesomefree',
     'django_quill',
-    'contenidos',
     'bootstrap_datepicker_plus',
 ]
 
