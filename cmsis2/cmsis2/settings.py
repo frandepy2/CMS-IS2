@@ -23,7 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = int(os.getenv("DEBUG"))
 debug_env = os.getenv("DEBUG")
 
 if debug_env is not None:
@@ -48,18 +47,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    #apps
     'cmsis2',
     'usuarios',
     'categorias',
     'roles',
-    'django.contrib.sites',
+    'contenidos',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'fontawesomefree',
     'django_quill',
-    'contenidos',
+    'bootstrap_datepicker_plus',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -146,7 +149,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Asuncion'
 
 USE_I18N = True
 

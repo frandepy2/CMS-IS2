@@ -8,18 +8,28 @@ class Plantilla(models.Model):
     descripcion = models.CharField()
     plantilla = QuillField()
 
-
     def __str__(self):
         return self.descripcion
+
 
 class Contenido(models.Model):
     nombre = models.CharField(max_length=100)
     cuerpo = QuillField()
-    estado = models.CharField(max_length=100)
     autor = models.ForeignKey(Usuario, on_delete=models.PROTECT)
-    subcategoria = models.ForeignKey(Subcategoria, on_delete=models.PROTECT, null=True)
+    subcategoria = models.ForeignKey(Subcategoria, on_delete=models.PROTECT)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_caducidad = models.DateField(null=True, blank= True)
+    fecha_publicacion = models.DateTimeField(null=True, blank=True)
+
+    ESTADO_CHOICES = (
+        ('BORRADOR', 'Borrador'),
+        ('EDICION', 'En Edición'),
+        ('REVISION', 'En Revision'),
+        ('PUBLICADO', 'Publicado'),
+        ('RECHAZADO', 'Rechazado'),
+        ('INACTIVO', 'Inactivo'),
+    )
+    estado = models.CharField(max_length=100, choices=ESTADO_CHOICES)
 
     def __str__(self):
         return self.nombre
