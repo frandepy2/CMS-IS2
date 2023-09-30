@@ -3,7 +3,7 @@
 {% block content %}
     <div class="content-list">
             {% for contenido in contenidos %}
-                <a href="{% url 'preview_contenido' contenido.id %}">
+                <a href="{% url 'ver_contenido' contenido.id %}">
                     <div class="flex-container">
                         <div class="flex-item">
                             <h3>{{ contenido.nombre }}</h3>

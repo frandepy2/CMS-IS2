@@ -224,7 +224,7 @@ def ver_categoria(request, categoria_id):
     categoria = get_object_or_404(Categoria, pk=categoria_id)
     page_title = categoria.nombre
     subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
-    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria, estado='publicado').order_by('-fecha_publicacion')
+    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria, estado='PUBLICADO').order_by('-fecha_publicacion')
     categorias = Categoria.objects.filter(is_active=True)
 
     return render(request, 'categorias/ver_contenidos_categoria.html', {
@@ -240,7 +240,7 @@ def ver_subcategoria(request, subcategoria_id):
     categoria = Categoria.objects.get(id=subcategoria_act.categoria.id)
     page_title = categoria.nombre + ': ' + subcategoria_act.nombre
     subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
-    contenidos = Contenido.objects.filter(subcategoria=subcategoria_act, estado='publicado').order_by('-fecha_publicacion')
+    contenidos = Contenido.objects.filter(subcategoria=subcategoria_act, estado='PUBLICADO').order_by('-fecha_publicacion')
     categorias = Categoria.objects.filter(is_active=True)
 
     return render(request, 'categorias/ver_contenidos_subcategoria.html', {

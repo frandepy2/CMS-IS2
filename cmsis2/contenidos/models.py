@@ -8,9 +8,9 @@ class Plantilla(models.Model):
     descripcion = models.CharField()
     plantilla = QuillField()
 
-
     def __str__(self):
         return self.descripcion
+
 
 class Contenido(models.Model):
     nombre = models.CharField(max_length=100)
@@ -22,11 +22,12 @@ class Contenido(models.Model):
     fecha_publicacion = models.DateTimeField(null=True, blank=True)
 
     ESTADO_CHOICES = (
-        ('borrador', 'Borrador'),
-        ('revision', 'En Revision'),
-        ('publicado', 'Publicado'),
-        ('rechazado', 'Rechazado'),
-        ('inactivo', 'Inactivo'),
+        ('BORRADOR', 'Borrador'),
+        ('EDICION', 'En Edición'),
+        ('REVISION', 'En Revision'),
+        ('PUBLICADO', 'Publicado'),
+        ('RECHAZADO', 'Rechazado'),
+        ('INACTIVO', 'Inactivo'),
     )
     estado = models.CharField(max_length=100, choices=ESTADO_CHOICES)
 

@@ -17,6 +17,7 @@ def previsualizar(request, plantilla_id):
 
 
 def crear_contenido(request, plantilla_id, categoria_id):
+    page_title = 'Crear Contenido'
 
     #Traemos todas las subcategorias por categoria
 
@@ -28,29 +29,29 @@ def crear_contenido(request, plantilla_id, categoria_id):
         if form.is_valid():
             nuevo_contenido = form.save(commit=False)
             nuevo_contenido.autor = request.user
-            nuevo_contenido.estado = 'borrador'
+            nuevo_contenido.estado = 'BORRADOR'
             nuevo_contenido.save()
-            return redirect('preview_contenido', contenido_id=nuevo_contenido.id)
+            return redirect('ver_contenido', contenido_id=nuevo_contenido.id)
 
     else:
         form = ContenidoForm(initial={
             'cuerpo': plantilla_predefinida.plantilla,
         }, categoria_id=categoria_id)
 
-    return render(request, 'contenidos/crear_contenido.html', {'form': form})
+    return render(request, 'contenidos/crear_contenido.html',
+                  {
+                      'page_title': page_title,
+                      'form': form
+                  })
 
 
 def ver_contenido(request, contenido_id):
     contenido = get_object_or_404(Contenido, pk=contenido_id)
+
     return render(request, 'contenidos/ver_contenido.html',
                   {
                       'contenido': contenido
                   })
-
-
-def preview_contenido(request, contenido_id):
-    contenido = get_object_or_404(Contenido, pk=contenido_id)
-    return render(request, 'contenidos/preview_contenido.html', {'contenido':contenido})
 
 
 def editar_contenido(request, contenido_id):
@@ -74,7 +75,7 @@ def gest_contenidos(request):
 
 def ver_borrador(request):
     page_title = 'En Borrador'
-    contenidos = Contenido.objects.filter(estado='borrador').order_by('-fecha_creacion')
+    contenidos = Contenido.objects.filter(estado='BORRADOR').order_by('-fecha_creacion')
 
     return render(request, 'contenidos/lista_contenidos.html',
                   {
@@ -85,7 +86,18 @@ def ver_borrador(request):
 
 def ver_revision(request):
     page_title = 'En Revisión'
-    contenidos = Contenido.objects.filter(estado='revision').order_by('-fecha_creacion')
+    contenidos = Contenido.objects.filter(estado='REVISION').order_by('-fecha_creacion')
+
+    return render(request, 'contenidos/lista_contenidos.html',
+                  {
+                      'page_title': page_title,
+                      'contenidos': contenidos
+                  })
+
+
+def ver_edicion(request):
+    page_title = 'En Edición'
+    contenidos = Contenido.objects.filter(estado='EDICION').order_by('-fecha_creacion')
 
     return render(request, 'contenidos/lista_contenidos.html',
                   {
@@ -96,7 +108,7 @@ def ver_revision(request):
 
 def ver_rechazados(request):
     page_title = 'Rechazados'
-    contenidos = Contenido.objects.filter(estado='rechazado').order_by('-fecha_creacion')
+    contenidos = Contenido.objects.filter(estado='RECHAZADO').order_by('-fecha_creacion')
 
     return render(request, 'contenidos/lista_contenidos.html',
                   {
@@ -107,7 +119,7 @@ def ver_rechazados(request):
 
 def ver_inactivos(request):
     page_title = 'Inactivos'
-    contenidos = Contenido.objects.filter(estado='inactivo').order_by('-fecha_creacion')
+    contenidos = Contenido.objects.filter(estado='INACTIVO').order_by('-fecha_creacion')
 
     return render(request, 'contenidos/lista_contenidos.html',
                   {
@@ -118,7 +130,7 @@ def ver_inactivos(request):
 
 def ver_publicados(request):
     page_title = 'Publicados'
-    contenidos = Contenido.objects.filter(estado='publicado').order_by('-fecha_creacion')
+    contenidos = Contenido.objects.filter(estado='PUBLICADO').order_by('-fecha_creacion')
 
     return render(request, 'contenidos/lista_contenidos.html',
                   {
@@ -134,7 +146,7 @@ def aprobar_contenido(request, contenido_id):
     if request.method == 'POST':
         form = AprobarContenidoForm(request.POST)
         if form.is_valid():
-            contenido.estado = 'publicado'
+            contenido.estado = 'PUBLICADO'
             contenido.fecha_publicacion = timezone.now()
             contenido.fecha_caducidad = form.cleaned_data['fecha_caducidad']
             contenido.save()
@@ -147,6 +159,20 @@ def aprobar_contenido(request, contenido_id):
 
 def rechazar_contenido(request, contenido_id):
     contenido = Contenido.objects.get(pk=contenido_id)
-    contenido.estado = 'rechazado'
+    contenido.estado = 'RECHAZADO'
     contenido.save()
-    return redirect('preview_contenido', contenido_id=contenido_id)
+    return redirect('ver_contenido', contenido_id=contenido_id)
+
+
+def enviar_edicion(request, contenido_id):
+    contenido = Contenido.objects.get(pk=contenido_id)
+    contenido.estado = 'EDICION'
+    contenido.save()
+    return redirect('gest_contenidos')
+
+
+def enviar_revision(request, contenido_id):
+    contenido = Contenido.objects.get(pk=contenido_id)
+    contenido.estado = 'REVISION'
+    contenido.save()
+    return redirect('gest_contenidos')

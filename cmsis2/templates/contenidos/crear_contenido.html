@@ -1,30 +1,16 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<!--
+
     <div class="container mt-5">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post">
             {% csrf_token %}
-            {{ form.media}}
-            {% for field in form %}
-            <div class="form-group">
-                <div><label for="{{ field.id_for_label }}" class="text">{{ field.label }}: </label></div>
-                {{ field }}
-            </div>
-            {% endfor %}
-            <div class="d-flex flex-row justify-content-end mr-5">
+            {{ form.media }}
+            {{ form.as_p }}
+            <div class="d-flex flex-row justify-content-end">
                 <div class="d-inline-flex p-2">
-                    <input type="submit" class="btn btn-primary" value="Crear" />
+                    <input type="submit" class="btn btn-primary" value="Crear Contenido" />
                 </div>
             </div>
         </form>
-    </div>
--->
-    <h1>Crear Contenido desde Plantilla</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.media }}
-        {{ form.as_p }}
-        <button type="submit">Crear Contenido</button>
-    </form>
 {% endblock %}
