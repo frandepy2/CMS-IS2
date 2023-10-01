@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ContenidoForm, AprobarContenidoForm
 from .models import Contenido, Plantilla
 from django.utils import timezone
+from cmsis2.parametros.models import Parametro, LENGUAJE_COMUN_CHOICES
 
 
 def seleccionar_plantilla(request, categoria_id):
@@ -372,3 +373,16 @@ def enviar_revision(request, contenido_id):
     contenido.estado = 'REVISION'
     contenido.save()
     return redirect('gest_contenidos')
+
+def denunciar_contenido(request, contenido_id):
+    contenido = Contenido.objects.get(pk=contenido_id)
+    cant_max_denuncias = Parametro.objects.get(clave='MAX_CANT_DENUNCIAS')
+    cant_denuncias_max = int(cant_max_denuncias)
+
+    contenido.cantidad_denuncias += 1
+
+    if (contenido.cantidad_denuncias >= cant_denuncias_max):
+        contenido.estado = 'INACTIVO'
+
+    contenido.save()
+
