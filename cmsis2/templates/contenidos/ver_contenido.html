@@ -14,12 +14,21 @@
             <div class="d-inline-flex">
                 <h1>{{ contenido.nombre }}</h1>
             </div>
-            {% if user.is_authenticated and not user|has_role:"Suscriptor" %}
-                <div id="status" class="d-inline-flex mr-5">
-                    <h5>Estado: {{ contenido.get_estado_display }}</h5>
-                </div>
-            {% endif %}
-            <form action="{% url 'denunciar_contenido' contenido.id %}" method="post">
+
+            <div class="d-flex flex-row justify-content-end">
+                {% if user.is_authenticated and not user|has_role:"Suscriptor" %}
+                    <div class="d-inline-flex p-2">
+                        <h5>Estado: {{ contenido.get_estado_display }}</h5>
+                    </div>
+                    {% if contenido.estado != 'REVISION' or contenido.estado == 'INACTIVO' %}
+                        <div class="d-inline-flex p-2">
+                            <a href="{% url 'inactivar_contenido' contenido.id %}" class="btn btn-danger">Inactivar</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+          
+          <form action="{% url 'denunciar_contenido' contenido.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Denunciar</button>
             </form>

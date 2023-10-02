@@ -374,6 +374,7 @@ def enviar_revision(request, contenido_id):
     contenido.save()
     return redirect('gest_contenidos')
 
+  
 def denunciar_contenido(request, contenido_id):
     """
     Vista para reportar contenido como inapropiado.
@@ -398,3 +399,22 @@ def denunciar_contenido(request, contenido_id):
     contenido.save()
 
     return redirect('home')
+
+
+def inactivar_contenido(request, contenido_id):
+    """
+    Vista para inactivar el contenido
+
+    Esta función permite cambiar el estado del contenido especificado a 'INACTIVO'.
+
+    Args:
+        request (HttpRequest): El objeto HttpRequest de la solicitud HTTP.
+        contenido_id (int): El ID del contenido que se va a enviar a estado de revisión.
+
+    Returns:
+        HttpResponse: Redirección a la vista de gestión de contenidos.
+    """
+    contenido = get_object_or_404(Contenido, pk=contenido_id)
+    contenido.estado = 'INACTIVO'
+    contenido.save()
+    return redirect('gest_contenidos')
