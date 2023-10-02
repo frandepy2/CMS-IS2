@@ -7,3 +7,4 @@ sphinx-serve
 fontawesomefree==6.4.2
 django-quill-editor==0.1.40
 django-bootstrap-datepicker-plus==5.0.4
+django-crontab==0.7.1

@@ -38,6 +38,7 @@ CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1','http://localhost', 'http://44.218.15
 # Site Definition
 SITE_ID = 1
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'categorias',
     'roles',
     'contenidos',
+    'django_crontab',
 
     'allauth',
     'allauth.account',
@@ -143,6 +145,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#crons
+CRONJOBS = [
+    ('*/5 * * * *', 'contenidos.cron.my_first_cron'),
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
