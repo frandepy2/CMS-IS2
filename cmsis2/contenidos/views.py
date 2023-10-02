@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ContenidoForm, AprobarContenidoForm
 from .models import Contenido, Plantilla
+from categorias.models import Categoria
 from django.utils import timezone
 from parametros.models import Parametro
 
@@ -62,6 +63,7 @@ def crear_contenido(request, plantilla_id, categoria_id):
     #Traemos todas las subcategorias por categoria
 
     plantilla_predefinida = Plantilla.objects.get(id=plantilla_id)
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
 
     if request.method == 'POST':
         form = ContenidoForm(request.POST)
@@ -81,7 +83,8 @@ def crear_contenido(request, plantilla_id, categoria_id):
     return render(request, 'contenidos/crear_contenido.html',
                   {
                       'page_title': page_title,
-                      'form': form
+                      'form': form,
+                      'categoria': categoria
                   })
 
 

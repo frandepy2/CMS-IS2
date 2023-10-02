@@ -31,7 +31,7 @@ def has_role(user, role_name):
     return UserCategoryRole.objects.filter(user=user, role__name=role_name).exists()
 
 
-@register.filter(name='has_category_permission')
+@register.simple_tag(name='has_category_permission')
 def has_category_permission(user, category_id, permission_name):
     try:
         user_category_role = UserCategoryRole.objects.get(user=user, category_id=category_id)

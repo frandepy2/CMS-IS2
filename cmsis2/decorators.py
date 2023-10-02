@@ -28,12 +28,10 @@ def has_permission_decorator(permission_name):
     return decorator
 
 
-def has_category_permission_decorator(category_id, permission_name):
+def has_category_permission_decorator(permission_name):
     """
     Decorador que verifica si un usuario tiene un permiso específico de categoría.
 
-    :param category_id: El ID de la categoría para la que se debe verificar el permiso.
-    :type category_id: int
     :param permission_name: El nombre del permiso que se debe verificar.
     :type permission_name: str
     :return: La función de vista envuelta si el usuario tiene el permiso de categoría, de lo contrario, retorna una respuesta prohibida.
@@ -41,10 +39,10 @@ def has_category_permission_decorator(category_id, permission_name):
     """
     def decorator(view_func):
         @wraps(view_func)
-        def _wrapped_view(request, *args, **kwargs):
+        def _wrapped_view(request, categoria_id, *args, **kwargs):
             user = request.user
-            if has_category_permission(user, category_id, permission_name):
-                return view_func(request, *args, **kwargs)
+            if has_category_permission(user, categoria_id, permission_name):
+                return view_func(request, categoria_id, *args, **kwargs)
             else:
                 return HttpResponseForbidden("You don't have permission to access this page.")
         return _wrapped_view

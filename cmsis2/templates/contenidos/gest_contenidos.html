@@ -1,17 +1,25 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    {% load permissions_tags %}
+
     <div class="container mt-5 ml-5">
         <div class="d-flex flex-column ml-5">
-            <div class="d-inline-flex p-3">
-                <a href="{% url 'contenidos_borrador' %}" class="btn btn-primary">En Borrador</a>
-            </div>
-            <div class="d-inline-flex p-3">
-                <a href="{% url 'contenidos_edicion' %}" class="btn btn-primary">En Edición</a>
-            </div>
-            <div class="d-inline-flex p-3">
-                <a href="{% url 'contenidos_revision' %}" class="btn btn-primary">En Revisión</a>
-            </div>
+            {% if user|has_permission:'create_content' %}
+                <div class="d-inline-flex p-3">
+                    <a href="{% url 'contenidos_borrador' %}" class="btn btn-primary">En Borrador</a>
+                </div>
+            {% endif %}
+            {% if user|has_permission:'edit_content' %}
+                <div class="d-inline-flex p-3">
+                    <a href="{% url 'contenidos_edicion' %}" class="btn btn-primary">En Edición</a>
+                </div>
+            {% endif %}
+            {% if user|has_permission:'approve_content' %}
+                <div class="d-inline-flex p-3">
+                    <a href="{% url 'contenidos_revision' %}" class="btn btn-primary">En Revisión</a>
+                </div>
+            {% endif %}
             <div class="d-inline-flex p-3">
                 <a href="{% url 'contenidos_rechazados' %}" class="btn btn-primary">Rechazados</a>
             </div>

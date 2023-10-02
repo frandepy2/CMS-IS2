@@ -1,7 +1,10 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    {% load permissions_tags %}
 
+    {% has_category_permission user categoria.id "create_content" as autor %}
+    {% if autor %}
     <div class="container mt-5">
         <form method="post">
             {% csrf_token %}
@@ -13,4 +16,7 @@
                 </div>
             </div>
         </form>
+    {% else %}
+        <h2>No tiene permisos para crear contenido.</h2>
+    {% endif %}
 {% endblock %}

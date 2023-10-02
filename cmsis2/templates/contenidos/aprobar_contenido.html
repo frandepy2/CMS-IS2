@@ -1,15 +1,21 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    {% load permissions_tags %}
 
-    <div class="container mt-5">
-        {{ form.media }}
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Confirmar</button>
-        </form>
-    </div>
+    {% has_category_permission user contenido.subcategoria.categoria.id "approve_content" as publicador %}
+    {% if publicador %}
+        <div class="container mt-5">
+            {{ form.media }}
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Confirmar</button>
+            </form>
+        </div>
+    {% else %}
+        <h2>No tiene permisos para aprobar o rechazar este contenido.</h2>
+    {% endif %}
 
 
 {% endblock %}
