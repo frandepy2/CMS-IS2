@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ContenidoForm, AprobarContenidoForm
 from .models import Contenido, Plantilla
 from django.utils import timezone
-from cmsis2.parametros.models import Parametro, LENGUAJE_COMUN_CHOICES
+from parametros.models import Parametro
 
 
 def seleccionar_plantilla(request, categoria_id):
@@ -375,9 +375,20 @@ def enviar_revision(request, contenido_id):
     return redirect('gest_contenidos')
 
 def denunciar_contenido(request, contenido_id):
+    """
+    Vista para reportar contenido como inapropiado.
+
+    :param request: El objeto de solicitud HTTP.
+    :param contenido_id: El ID del contenido a reportar.
+    :return: Una redirección a la página de inicio.
+    """
     contenido = Contenido.objects.get(pk=contenido_id)
     cant_max_denuncias = Parametro.objects.get(clave='MAX_CANT_DENUNCIAS')
-    cant_denuncias_max = int(cant_max_denuncias)
+    cant_denuncias_max = int(cant_max_denuncias.valor)
+
+    if contenido.cantidad_denuncias is None:
+        contenido.cantidad_denuncias = 0
+        contenido.save()
 
     contenido.cantidad_denuncias += 1
 
@@ -386,3 +397,4 @@ def denunciar_contenido(request, contenido_id):
 
     contenido.save()
 
+    return redirect('home')

@@ -17,5 +17,6 @@ urlpatterns = [
     path('enviar_revision/<int:contenido_id>/', views.enviar_revision, name='enviar_revision'),
     path('plantillas/<int:categoria_id>', views.seleccionar_plantilla, name='seleccionar_plantilla'),
     path('plantillas/previsualizar/<int:plantilla_id>', views.previsualizar, name='previzualizar'),
-    path('crear/plantilla/<int:plantilla_id>/<int:categoria_id>', views.crear_contenido, name='crear_contenido')
+    path('crear/plantilla/<int:plantilla_id>/<int:categoria_id>', views.crear_contenido, name='crear_contenido'),
+    path('denunciar/<int:contenido_id>', views.denunciar_contenido, name='denunciar_contenido')
 ]

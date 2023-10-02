@@ -19,7 +19,7 @@
                     <h5>Estado: {{ contenido.get_estado_display }}</h5>
                 </div>
             {% endif %}
-            <form action="" method="post">
+            <form action="{% url 'denunciar_contenido' contenido.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Denunciar</button>
             </form>

@@ -55,3 +55,23 @@ f
 .cmsis2/templates/categorias/subcategorias.html,0/b/0bc534822194f0c6648cad1c058c7e996c051aa7
 a
 1cmsis2/templates/categorias/editar_categoria.html,4/6/463a3a7e288db1a49fd9de4494f1cd600a22466d
+?
+Dockerfile-prod,7/d/7db07700cfdd4823145422f4412981844f43f68f
+>
+Dockerfile-dev,5/a/5a9dca8a90d1c390643f24fa7587fb05b3f9f081
+H
+cmsis2/databasedump.json,5/2/52d99ce06c9e01029c3dc2fe6b1ad7b1145d55bc
+O
+cmsis2/templates/home/home.html,2/4/24342f7b5a29d8ee1b9122124541679d814b6684
+J
+cmsis2/parametros/admin.py,5/a/5a466391f67d1a4a1c96c5429e78c1762f7dfa4f
+[
++cmsis2/templates/parametros/parametros.html,6/f/6f8ee346dbeddedb05cef47429b9003d19abfe9b
+J
+cmsis2/parametros/views.py,b/9/b9155262cffd5f03b3d73352e2529e61ffde5f71
+I
+cmsis2/parametros/urls.py,d/6/d64216b0c7c726e5c390b4a3c753aa7a3bba8d80
+^
+.cmsis2/templates/contenidos/ver_contenido.html,5/5/554ab947cda7e6c7855506415d04433299dec7c5
+K
+cmsis2/parametros/models.py,4/6/46d29330163608dccf79e5bc506c636e0d7f4fe6
