@@ -2,7 +2,7 @@
 
 sleep 5
 echo "Inicia el proceso de hacer migraciones"
-python manage.py makemigrations usuarios roles categorias contenidos
+python manage.py makemigrations usuarios roles categorias contenidos parametros
 echo "finaliza el proceso de hacer migraciones"
 python manage.py migrate --no-input
 echo "Inicia el proceso de guardar la base de datos"

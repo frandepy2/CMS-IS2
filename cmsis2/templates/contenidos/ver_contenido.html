@@ -14,6 +14,7 @@
             <div class="d-inline-flex">
                 <h1>{{ contenido.nombre }}</h1>
             </div>
+
             <div class="d-flex flex-row justify-content-end">
                 {% if user.is_authenticated and not user|has_role:"Suscriptor" %}
                     <div class="d-inline-flex p-2">
@@ -26,6 +27,11 @@
                     {% endif %}
                 {% endif %}
             </div>
+          
+          <form action="{% url 'denunciar_contenido' contenido.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Denunciar</button>
+            </form>
         </div>
         <div class="post-content mt-3">
             {{ contenido.cuerpo.html|safe }}

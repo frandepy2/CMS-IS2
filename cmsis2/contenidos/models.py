@@ -30,6 +30,7 @@ class Contenido(models.Model):
         ('INACTIVO', 'Inactivo'),
     )
     estado = models.CharField(max_length=100, choices=ESTADO_CHOICES)
+    cantidad_denuncias = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.nombre
