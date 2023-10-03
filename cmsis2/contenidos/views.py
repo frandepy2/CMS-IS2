@@ -164,11 +164,13 @@ def ver_borrador(request):
     """
     page_title = 'En Borrador'
     contenidos = Contenido.objects.filter(estado='BORRADOR').order_by('-fecha_creacion')
+    contenidos_borrador = Contenido.objects.filter(estado='BORRADOR').order_by('-fecha_creacion')
 
     return render(request, 'contenidos/lista_contenidos.html',
                   {
                       'page_title': page_title,
-                      'contenidos': contenidos
+                      'contenidos_borrador': contenidos_borrador,
+                      'contenidos': contenidos,
                   })
 
 
