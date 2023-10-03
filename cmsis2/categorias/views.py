@@ -251,3 +251,57 @@ def ver_subcategoria(request, subcategoria_id):
         'contenidos': contenidos,
         'categorias': categorias
     })
+
+
+
+def mostrar_kanban(request, categoria_id):
+    category = get_object_or_404(Categoria, id=categoria_id)
+
+    list_subcategorias = Subcategoria.objects.filter(categoria=category)
+
+    list_contenidos = []
+
+    # Recorrer todas las subcategorías
+    for subcategoria in list_subcategorias:
+        # Obtener todos los contenidos asociados a la subcategoría actual
+        contenidos_subcategoria = Contenido.objects.filter(subcategoria=subcategoria)
+
+        # Agregar los contenidos de esta subcategoría a la lista general de contenidos
+        list_contenidos.extend(contenidos_subcategoria)
+
+    # Supongamos que tienes list_contenidos con todos los contenidos de las subcategorías
+
+    # Crear un diccionario para almacenar listas de contenidos por estado
+    contenidos_por_estado = {
+        'BORRADOR': [],
+        'EDICION': [],
+        'REVISION': [],
+        'PUBLICADO': [],
+        'RECHAZADO': [],
+    }
+
+    # Recorrer list_contenidos y asignar cada contenido a la lista correspondiente en el diccionario
+    for contenido in list_contenidos:
+        estado = contenido.estado  # Supongo que 'estado' es el campo que indica el estado del contenido
+        if estado in contenidos_por_estado:
+            contenidos_por_estado[estado].append(contenido)
+
+    # Ahora, contenidos_por_estado contiene las listas de contenidos separadas por estado
+    borradores = contenidos_por_estado['BORRADOR']
+    ediciones = contenidos_por_estado['EDICION']
+    revisiones = contenidos_por_estado['REVISION']
+    publicados = contenidos_por_estado['PUBLICADO']
+    rechazados = contenidos_por_estado['RECHAZADO']
+
+    # Asegúrate de que list_subcategorias contenga las subcategorias que deseas mostrar en el kanban.
+
+    return render(request, 'contenidos/kanban.html', {
+        'category': category,
+        'list_subcategorias': list_subcategorias,
+        'borradores': borradores,
+        'revisiones': revisiones,
+        'ediciones': ediciones,
+        'publicados': publicados,
+        'rechazados':rechazados
+    })
+

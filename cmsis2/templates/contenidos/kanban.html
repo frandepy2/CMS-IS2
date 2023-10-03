@@ -1,0 +1,94 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <h1>Kanban</h1>
+    <body>
+    <div class="kanban-board">
+        <div class="kanban-column">
+            <h2>En Borrador</h2>
+            {% for borrador in borradores %}
+                <div class="kanban-card">
+                    <a href="{% url 'ver_contenido' borrador.id %}">
+                        <h3>{{ borrador.nombre }}</h3>
+                        <p>{{ borrador.subcategoria.categoria }} - {{ borrador.subcategoria }}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="kanban-column">
+            <h2>Edición</h2>
+            {% for edicion in ediciones %}
+                <div class="kanban-card">
+                    <a href="{% url 'ver_contenido' edicion.id %}">
+                        <h3>{{ edicion.nombre }}</h3>
+                        <p>{{ edicion.subcategoria.categoria }} - {{ edicion.subcategoria }}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="kanban-column">
+            <h2>Revisión</h2>
+            {% for revision in revisiones %}
+                <div class="kanban-card">
+                    <a href="{% url 'ver_contenido' revision.id %}">
+                        <h3>{{ revision.nombre }}</h3>
+                        <p>{{ revision.subcategoria.categoria }} - {{ revision.subcategoria }}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="kanban-column">
+            <h2>Publicado</h2>
+            {% for publicado in publicados %}
+                <div class="kanban-card">
+                    <a href="{% url 'ver_contenido' publicado.id %}">
+                        <h3>{{ publicado.nombre }}</h3>
+                        <p>{{ publicado.subcategoria.categoria }} - {{ publicado.subcategoria }}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="kanban-column">
+            <h2>Rechazado</h2>
+            {% for rechazado in rechazados %}
+                <div class="kanban-card">
+                    <a href="{% url 'ver_contenido' rechazado.id %}">
+                        <h3>{{ rechazado.nombre }}</h3>
+                        <p>{{ rechazado.subcategoria.categoria }} - {{ rechazado.subcategoria }}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{% url 'seleccionar_plantilla' category.id %}" class="btn btn-sm btn-primary">Agregar Nuevo Contenido</a>
+    </body>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .kanban-board {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .kanban-column {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 10px;
+        }
+
+        .kanban-column h2 {
+            text-align: center;
+        }
+
+        .kanban-card {
+            background-color: #9B59B6;
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+        }
+    </style>
+{% endblock %}
