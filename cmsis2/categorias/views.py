@@ -4,19 +4,21 @@ from django.urls import reverse
 from .forms import CategoriaForm, SubcategoriaForm
 from .models import Categoria, Subcategoria
 from django.core.paginator import Paginator, Page
-from decorators import has_permission_decorator
+from decorators import has_permission_decorator, has_some_cat_role_decorator
 from django.contrib.auth.decorators import login_required
 from roles.models import UserCategoryRole
 from roles.forms import UserCategoryRoleForm
 from contenidos.models import Contenido
 
 """Crea la vista de la pantalla inicial de la sección categorías, donde se se listan todas las categorías existentes"""
+
+
 @login_required
 @has_permission_decorator('view_category')
 def categorias(request):
     page_title = 'Categorias'
     list_categorias = Categoria.objects.all().order_by('id')  # Obtén todos los roles
-    paginator = Paginator(list_categorias,5)
+    paginator = Paginator(list_categorias, 5)
 
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -27,7 +29,10 @@ def categorias(request):
                       'page': page
                   })
 
+
 """Crea una categoría"""
+
+
 @login_required
 @has_permission_decorator('create_category')
 def crear_categoria(request):
@@ -45,7 +50,10 @@ def crear_categoria(request):
                       'form': form
                   })
 
+
 """Visualiza el estado de la categoría, cuales son las subcategorías asociadas a la categoría"""
+
+
 @login_required
 @has_permission_decorator('view_category')
 def mas_informacion_categoria(request, categoria_id):
@@ -53,7 +61,7 @@ def mas_informacion_categoria(request, categoria_id):
     page_title = categoria.nombre
     subcategorias = Subcategoria.objects.filter(categoria=categoria)
 
-#    usuarios = Usuario.objects.filter(usercategoryrole__category_id=categoria_id)
+    #    usuarios = Usuario.objects.filter(usercategoryrole__category_id=categoria_id)
     usuarios_roles = UserCategoryRole.objects.filter(category_id=categoria_id)
 
     return render(request, 'categorias/more_info.html',
@@ -64,7 +72,10 @@ def mas_informacion_categoria(request, categoria_id):
                       'users_roles': usuarios_roles
                   })
 
+
 """Permite cambiar los detalles de la categpría seleccionada como descripción, inactivar o el nombre"""
+
+
 @login_required
 @has_permission_decorator('edit_category')
 def editar_categoria(request, categoria_id):
@@ -87,25 +98,31 @@ def editar_categoria(request, categoria_id):
                       'categoria': categoria
                   })
 
+
 """Permite inactivar la categoría"""
+
+
 @login_required
 @has_permission_decorator('inactivate_category')
-def inactivar_categoria(request,categoria_id):
+def inactivar_categoria(request, categoria_id):
     categoria = get_object_or_404(Categoria, id=categoria_id)
-    if categoria.is_active :
+    if categoria.is_active:
         categoria.is_active = False
     else:
         categoria.is_active = True
     categoria.save()
     return redirect('categorias')
 
+
 """Crea la vista de subcategorías pertenecientes a una categoría. """
+
+
 @login_required
 @has_permission_decorator('view_category')
 def subcategorias(request):
     page_title = 'Subcategorias'
     list_subcategorias = Subcategoria.objects.all().order_by('id')  # Obtén todos los roles
-    paginator = Paginator(list_subcategorias,5)
+    paginator = Paginator(list_subcategorias, 5)
 
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -116,7 +133,10 @@ def subcategorias(request):
                       'page': page
                   })
 
+
 """Crea una subcategoría"""
+
+
 @login_required
 @has_permission_decorator('edit_category')
 def crear_subcategoria(request):
@@ -134,7 +154,10 @@ def crear_subcategoria(request):
                       'form': form
                   })
 
+
 """Visualiza el estado de la subcategoría"""
+
+
 @login_required
 @has_permission_decorator('edit_category')
 def mas_informacion_subcategoria(request, subcategoria_id):
@@ -146,7 +169,10 @@ def mas_informacion_subcategoria(request, subcategoria_id):
                       'subcategoria': subcategoria
                   })
 
+
 """Permite editar el estado de una subcategoría"""
+
+
 @login_required
 @has_permission_decorator('edit_category')
 def editar_subcategoria(request, subcategoria_id):
@@ -168,12 +194,15 @@ def editar_subcategoria(request, subcategoria_id):
                       'subcategoria': subcategoria
                   })
 
+
 """Permite inactivar una subcategoría"""
+
+
 @login_required
 @has_permission_decorator('edit_category')
-def inactivar_subcategoria(request,subcategoria_id):
+def inactivar_subcategoria(request, subcategoria_id):
     subcategoria = get_object_or_404(Subcategoria, id=subcategoria_id)
-    if subcategoria.is_active :
+    if subcategoria.is_active:
         subcategoria.is_active = False
     else:
         subcategoria.is_active = True
@@ -182,6 +211,8 @@ def inactivar_subcategoria(request,subcategoria_id):
 
 
 """Permite agregar usuarios a una categoria"""
+
+
 @login_required
 @has_permission_decorator('add_user')
 def agregar_usuario(request, categoria_id):
@@ -199,13 +230,15 @@ def agregar_usuario(request, categoria_id):
         form.fields['category'].initial = category
         form.fields['category'].widget.attrs['disabled'] = True
     return render(request, 'usuarios/asign_user_role.html',
-                      {
-                          'page_title': page_title,
-                          'form': form
-                      })
+                  {
+                      'page_title': page_title,
+                      'form': form
+                  })
 
 
 """Permite quitar a usuarios de una categoria"""
+
+
 @login_required
 @has_permission_decorator('delete_user')
 def quitar_usuario(request, role_category_id):
@@ -220,11 +253,14 @@ def quitar_usuario(request, role_category_id):
 
 
 """Muestra el contenido de una categoria especifica para cualquier usuario"""
+
+
 def ver_categoria(request, categoria_id):
     categoria = get_object_or_404(Categoria, pk=categoria_id)
     page_title = categoria.nombre
     subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
-    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria, estado='PUBLICADO').order_by('-fecha_publicacion')
+    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria, estado='PUBLICADO').order_by(
+        '-fecha_publicacion')
     categorias = Categoria.objects.filter(is_active=True)
 
     return render(request, 'categorias/ver_contenidos_categoria.html', {
@@ -235,12 +271,14 @@ def ver_categoria(request, categoria_id):
         'categorias': categorias
     })
 
+
 def ver_subcategoria(request, subcategoria_id):
     subcategoria_act = get_object_or_404(Subcategoria, pk=subcategoria_id)
     categoria = Categoria.objects.get(id=subcategoria_act.categoria.id)
     page_title = categoria.nombre + ': ' + subcategoria_act.nombre
     subcategorias = Subcategoria.objects.filter(categoria=categoria, is_active=True)
-    contenidos = Contenido.objects.filter(subcategoria=subcategoria_act, estado='PUBLICADO').order_by('-fecha_publicacion')
+    contenidos = Contenido.objects.filter(subcategoria=subcategoria_act, estado='PUBLICADO').order_by(
+        '-fecha_publicacion')
     categorias = Categoria.objects.filter(is_active=True)
 
     return render(request, 'categorias/ver_contenidos_subcategoria.html', {
@@ -253,7 +291,8 @@ def ver_subcategoria(request, subcategoria_id):
     })
 
 
-
+@login_required
+@has_some_cat_role_decorator()
 def mostrar_kanban(request, categoria_id):
     category = get_object_or_404(Categoria, id=categoria_id)
 
@@ -302,6 +341,5 @@ def mostrar_kanban(request, categoria_id):
         'revisiones': revisiones,
         'ediciones': ediciones,
         'publicados': publicados,
-        'rechazados':rechazados
+        'rechazados': rechazados
     })
-

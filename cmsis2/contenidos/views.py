@@ -1,11 +1,14 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ContenidoForm, AprobarContenidoForm
 from .models import Contenido, Plantilla
 from categorias.models import Categoria
 from django.utils import timezone
 from parametros.models import Parametro
+from decorators import has_category_permission_decorator, has_some_cat_role_decorator, has_permission_decorator
 
-
+@login_required
+@has_category_permission_decorator('create_content')
 def seleccionar_plantilla(request, categoria_id):
     """
     Vista para seleccionar una plantilla de contenido.
@@ -25,6 +28,7 @@ def seleccionar_plantilla(request, categoria_id):
     return render(request, 'contenidos/seleccionar_plantilla.html', {'plantillas': plantillas, 'categoria': categoria_id})
 
 
+@login_required
 def previsualizar(request, plantilla_id):
     """
     Vista para previsualizar una plantilla de contenido.
@@ -43,7 +47,9 @@ def previsualizar(request, plantilla_id):
     return render(request, 'contenidos/previsualizar.html', {'plantilla': plantilla})
 
 
-def crear_contenido(request, plantilla_id, categoria_id):
+@login_required
+@has_category_permission_decorator('create_content')
+def crear_contenido(request, categoria_id, plantilla_id):
     """
     Vista para crear un nuevo contenido basado en una plantilla.
 
@@ -110,7 +116,10 @@ def ver_contenido(request, contenido_id):
                   })
 
 
-def editar_contenido(request, contenido_id):
+@login_required
+@has_category_permission_decorator('create_content')
+@has_category_permission_decorator('edit_content')
+def editar_contenido(request, categoria_id, contenido_id):
     """
     Renderiza una vista para editar el contenido especificado.
 
@@ -293,7 +302,9 @@ def ver_publicados(request):
                   })
 
 
-def aprobar_contenido(request, contenido_id):
+@login_required
+@has_category_permission_decorator('approve_content')
+def aprobar_contenido(request, categoria_id, contenido_id):
     """
     Vista para aprobar el contenido especificado.
 
@@ -323,7 +334,9 @@ def aprobar_contenido(request, contenido_id):
     return render(request, 'contenidos/aprobar_contenido.html', {'form': form, 'contenido': contenido})
 
 
-def rechazar_contenido(request, contenido_id):
+@login_required
+@has_category_permission_decorator('approve_content')
+def rechazar_contenido(request, categoria_id, contenido_id):
     """
     Vista para rechazar el contenido especificado.
 
@@ -342,7 +355,9 @@ def rechazar_contenido(request, contenido_id):
     return redirect('ver_contenido', contenido_id=contenido_id)
 
 
-def enviar_edicion(request, contenido_id):
+@login_required
+@has_category_permission_decorator('create_content')
+def enviar_edicion(request, categoria_id, contenido_id):
     """
     Vista para enviar el contenido a estado de edición.
 
@@ -358,10 +373,12 @@ def enviar_edicion(request, contenido_id):
     contenido = Contenido.objects.get(pk=contenido_id)
     contenido.estado = 'EDICION'
     contenido.save()
-    return redirect('gest_contenidos')
+    return redirect('kanban', categoria_id)
 
 
-def enviar_revision(request, contenido_id):
+@login_required
+@has_category_permission_decorator('edit_content')
+def enviar_revision(request,categoria_id, contenido_id):
     """
     Vista para enviar el contenido a estado de revisión.
 
@@ -375,11 +392,14 @@ def enviar_revision(request, contenido_id):
         HttpResponse: Redirección a la vista de gestión de contenidos.
     """
     contenido = Contenido.objects.get(pk=contenido_id)
+    categoria_id = contenido.subcategoria.categoria.id
     contenido.estado = 'REVISION'
     contenido.save()
-    return redirect('gest_contenidos')
+    return redirect('kanban', categoria_id)
 
-  
+
+@login_required
+@has_permission_decorator('report_content')
 def denunciar_contenido(request, contenido_id):
     """
     Vista para reportar contenido como inapropiado.
@@ -398,7 +418,7 @@ def denunciar_contenido(request, contenido_id):
 
     contenido.cantidad_denuncias += 1
 
-    if (contenido.cantidad_denuncias >= cant_denuncias_max):
+    if contenido.cantidad_denuncias >= cant_denuncias_max:
         contenido.estado = 'INACTIVO'
 
     contenido.save()
@@ -406,7 +426,9 @@ def denunciar_contenido(request, contenido_id):
     return redirect('home')
 
 
-def inactivar_contenido(request, contenido_id):
+@login_required
+@has_category_permission_decorator('inactivate_content')
+def inactivar_contenido(request, categoria_id, contenido_id):
     """
     Vista para inactivar el contenido
 
@@ -422,4 +444,4 @@ def inactivar_contenido(request, contenido_id):
     contenido = get_object_or_404(Contenido, pk=contenido_id)
     contenido.estado = 'INACTIVO'
     contenido.save()
-    return redirect('gest_contenidos')
+    return redirect('kanban', categoria_id)

@@ -49,6 +49,25 @@ def has_category_permission_decorator(permission_name):
     return decorator
 
 
+def has_some_cat_role_decorator():
+    """
+    Decorador que verifica si un usuario tiene un rol cualquiera dentro de una categoría.
+
+    :return: La función de vista envuelta si el usuario tiene el permiso de categoría, de lo contrario, retorna una respuesta prohibida.
+    :rtype: callable
+    """
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, categoria_id, *args, **kwargs):
+            user = request.user
+            if has_some_category_role(user, categoria_id):
+                return view_func(request, categoria_id, *args, **kwargs)
+            else:
+                return HttpResponseForbidden("You don't have permission to access this page.")
+        return _wrapped_view
+    return decorator
+
+
 def has_permission(user, permission_name):
     """
     Verifica si un usuario tiene un permiso específico.
@@ -86,5 +105,23 @@ def has_category_permission(user, category_id, permission_name):
     try:
         user_category_role = UserCategoryRole.objects.get(user=user, category_id=category_id)
         return user_category_role.role.permissions.filter(name=permission_name).exists()
+    except UserCategoryRole.DoesNotExist:
+        return False
+
+
+def has_some_category_role(user, category_id):
+    """
+    Verifica si un usuario tiene un rol cualquiera dentro de una categoría.
+
+    :param user: El usuario cuyo permiso de categoría se debe verificar.
+    :type user: User (o el tipo de usuario correspondiente en tu modelo de datos)
+    :param category_id: El ID de la categoría para la que se debe verificar el rol.
+    :type category_id: int
+    :return: True si el usuario tiene el rol en la categoría, False en caso contrario.
+    :rtype: bool
+    """
+    try:
+        user_category_role = UserCategoryRole.objects.get(user=user, category_id=category_id)
+        return user_category_role
     except UserCategoryRole.DoesNotExist:
         return False

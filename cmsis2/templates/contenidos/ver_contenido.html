@@ -24,7 +24,7 @@
                     {% if condition %}
                         {% if contenido.estado == 'BORRADOR' or contenido.estado == 'EDICION' or contenido.estado == 'PUBLICADO' %}
                             <div class="d-inline-flex p-2">
-                                <a href="{% url 'inactivar_contenido' contenido.id %}" class="btn btn-danger">Inactivar</a>
+                                <a href="{% url 'inactivar_contenido' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-danger">Inactivar</a>
                             </div>
                         {% endif %}
                     {% endif %}
@@ -66,33 +66,33 @@
             {% if contenido.estado == 'BORRADOR' and autor %}
                 <div class="d-flex flex-row justify-content-end mr-5">
                     <div class="d-inline-flex p-2">
-                        <a href="{% url 'enviar_edicion' contenido.id %}" class="btn btn-primary">Enviar a Edición</a>
+                        <a href="{% url 'enviar_edicion' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-primary">Enviar a Edición</a>
                     </div>
                     <div class="d-inline-flex p-2">
-                        <a href="{% url 'editar_contenido' contenido.id %}" class="btn btn-primary">Editar</a>
+                        <a href="{% url 'editar_contenido' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-primary">Editar</a>
                     </div>
                 </div>
 
             {% elif contenido.estado == 'EDICION' and editor %}
                 <div class="d-flex flex-row justify-content-end mr-5">
                     <div class="d-inline-flex p-2">
-                        <a href="{% url 'enviar_revision' contenido.id %}" class="btn btn-primary">Enviar a Revisión</a>
+                        <a href="{% url 'enviar_revision' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-primary">Enviar a Revisión</a>
                     </div>
                     <div class="d-inline-flex p-2">
-                        <a href="{% url 'editar_contenido' contenido.id %}" class="btn btn-primary">Editar</a>
+                        <a href="{% url 'editar_contenido' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-primary">Editar</a>
                     </div>
                 </div>
 
             {% elif contenido.estado == 'REVISION' and publicador %}
                 <div class="d-flex flex-row">
                     <div class="d-inline-flex p-2">
-                        <form method="POST" action="{% url 'rechazar_contenido' contenido.id %}">
+                        <form method="POST" action="{% url 'rechazar_contenido' contenido.subcategoria.categoria.id contenido.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
                         </form>
                     </div>
                     <div class="d-inline-flex p-2">
-                        <form method="POST" action="{% url 'aprobar_contenido' contenido.id %}">
+                        <form method="POST" action="{% url 'aprobar_contenido' contenido.subcategoria.categoria.id contenido.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
                         </form>

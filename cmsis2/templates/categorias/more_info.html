@@ -30,12 +30,17 @@
                     {% endif %}
                 </div>
                 <div class="d-flex flex-row justify-content-end">
-                    <div class="d-inline-flex p-2">
-                        <a href="{% url 'seleccionar_plantilla' categoria.id %}" class="btn btn-sm btn-primary">Agregar Nuevo Contenido</a>
-                    </div>
-                    <div class="d-inline-flex p-2">
-                        <a href="{% url 'kanban' categoria.id %}" class="btn btn-sm btn-primary">Ver Kanban</a>
-                    </div>
+                    {% has_category_permission user categoria.id "create_content" as autor %}
+                    {% if autor %}
+                        <div class="d-inline-flex p-2">
+                            <a href="{% url 'seleccionar_plantilla' categoria.id %}" class="btn btn-sm btn-primary">Agregar Nuevo Contenido</a>
+                        </div>
+                    {% endif %}
+                    {% if user|has_category_role:categoria.id %}
+                        <div class="d-inline-flex p-2">
+                            <a href="{% url 'kanban' categoria.id %}" class="btn btn-sm btn-primary">Ver Kanban</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 

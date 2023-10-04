@@ -4,7 +4,8 @@
     {% load permissions_tags %}
 
     {% has_category_permission user contenido.subcategoria.categoria.id "edit_content" as editor %}
-    {% if editor %}
+    {% has_category_permission user contenido.subcategoria.categoria.id "create_content" as autor %}
+    {% if editor or autor %}
         <div class="container mt-5">
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
