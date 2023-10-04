@@ -117,8 +117,7 @@ def ver_contenido(request, contenido_id):
 
 
 @login_required
-@has_category_permission_decorator('create_content')
-@has_category_permission_decorator('edit_content')
+@has_category_permission_decorator('edit_content', 'create_content')
 def editar_contenido(request, categoria_id, contenido_id):
     """
     Renderiza una vista para editar el contenido especificado.
