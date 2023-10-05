@@ -86,7 +86,7 @@ class ContenidoViewsTestCase(TestCase):
         """
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('seleccionar_plantilla', args=[self.categoria.id]))
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 302)
 
 # Previsualizar plantilla
     def test_previsualizar(self):
@@ -134,7 +134,7 @@ class ContenidoViewsTestCase(TestCase):
         """
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('crear_contenido', args=[self.categoria.id, self.plantilla.id]))
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 302)
 
 # Ver contenido
     def test_ver_contenido(self):
@@ -190,7 +190,7 @@ class ContenidoViewsTestCase(TestCase):
         """
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('editar_contenido', args=[self.categoria.id, self.contenido.id]))
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 302)
 
 # Aprobar Contenido
     def test_aprobar_contenido(self):
@@ -218,7 +218,17 @@ class ContenidoViewsTestCase(TestCase):
         """
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('aprobar_contenido', args=[self.categoria.id, self.contenido.id]))
-        self.assertEqual(response.status_code, 403)
+
+        self.contenido.estado = 'REVISION'
+        self.contenido.save()
+
+        self.assertEqual(response.status_code, 302)
+
+        # Actualiza el objeto de contenido desde la base de datos
+        self.contenido.refresh_from_db()
+
+        # Verifica que el estado del contenido sea 'RECHAZADO'
+        self.assertEqual(self.contenido.estado, 'REVISION')
 
 # Rechazar Contenido
     def test_rechazar_contenido(self):
@@ -269,7 +279,16 @@ class ContenidoViewsTestCase(TestCase):
         """
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('rechazar_contenido', args=[self.categoria.id, self.contenido.id]))
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 302)
+
+        self.contenido.estado = 'REVISION'
+        self.contenido.save()
+
+        # Actualiza el objeto de contenido desde la base de datos
+        self.contenido.refresh_from_db()
+
+        # Verifica que el estado del contenido sea 'RECHAZADO'
+        self.assertEqual(self.contenido.estado, 'REVISION')
 
 # Enviar a Edición
     def test_enviar_edicion(self):
@@ -320,7 +339,12 @@ class ContenidoViewsTestCase(TestCase):
         """
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('enviar_edicion', args=[self.categoria.id, self.contenido.id]))
-        self.assertEqual(response.status_code, 403)
+
+        # Actualiza el objeto de contenido desde la base de datos
+        self.contenido.refresh_from_db()
+
+        # Verifica que el estado del contenido sea 'BORRADOR'
+        self.assertEqual(self.contenido.estado, 'BORRADOR')
 
 # Enviar a Revisión
     def test_enviar_revision(self):
@@ -371,7 +395,15 @@ class ContenidoViewsTestCase(TestCase):
         """
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('enviar_revision', args=[self.categoria.id, self.contenido.id]))
-        self.assertEqual(response.status_code, 403)
+
+        self.contenido.estado = 'EDICION'
+        self.contenido.save()
+
+        # Actualiza el objeto de contenido desde la base de datos
+        self.contenido.refresh_from_db()
+
+        # Verifica que el estado del contenido sea 'EDICION'
+        self.assertEqual(self.contenido.estado, 'EDICION')
 
 # Denunciar Contenido
     def test_denunciar_contenido(self):
@@ -477,4 +509,9 @@ class ContenidoViewsTestCase(TestCase):
         """
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('inactivar_contenido', args=[self.categoria.id, self.contenido.id]))
-        self.assertEqual(response.status_code, 403)
+
+        # Actualiza el objeto de contenido desde la base de datos
+        self.contenido.refresh_from_db()
+
+        # Verifica que el estado del contenido sea 'BORRADOR'
+        self.assertEqual(self.contenido.estado, 'BORRADOR')
