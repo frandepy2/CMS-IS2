@@ -1,23 +1,30 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    {% load permissions_tags %}
 
-    <div class="container mt-5">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.media }}
-            {% for field in form %}
-            <div class="form-group">
-                <div><label for="{{ field.id_for_label }}" class="text">{{ field.label }}: </label></div>
-                {{ field }}
-            </div>
-            {% endfor %}
-            <div class="d-flex flex-row justify-content-end">
-                <div class="d-inline-flex p-2">
-                    <input type="submit" class="btn btn-primary" value="Guardar" />
+    {% has_category_permission user contenido.subcategoria.categoria.id "edit_content" as editor %}
+    {% has_category_permission user contenido.subcategoria.categoria.id "create_content" as autor %}
+    {% if editor or autor %}
+        <div class="container mt-5">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+                {% for field in form %}
+                <div class="form-group">
+                    <div><label for="{{ field.id_for_label }}" class="text">{{ field.label }}: </label></div>
+                    {{ field }}
                 </div>
-            </div>
-        </form>
-    </div>
+                {% endfor %}
+                <div class="d-flex flex-row justify-content-end">
+                    <div class="d-inline-flex p-2">
+                        <input type="submit" class="btn btn-primary" value="Guardar" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <h2>No tiene permisos para editar el contenido.</h2>
+    {% endif %}
 
 {% endblock %}
