@@ -226,7 +226,7 @@
                             <div class="collapse" id="dropdownSidebar">
                                 <ul class="nav flex-column">
                                     {% if user.is_authenticated %}
-                                        {% if user|has_permission:'view_category' %}
+                                        {% if user|has_permission:'view_category' or user|has_some_category_role %}
                                             <li class="nav-item">
                                                 <a class="nav-link hidden-item" href="{% url 'categorias' %}">Gestionar categorias</a>
                                                 <hr class="bottom-line hidden-item" style="margin-bottom: 0px; margin-top: 0px;">

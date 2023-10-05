@@ -47,3 +47,13 @@ def has_category_role(user, category_id):
         return user_category_role
     except UserCategoryRole.DoesNotExist:
         return False
+
+
+@register.filter(name='has_some_category_role')
+def has_some_category_role(user):
+    try:
+        user_category_role = UserCategoryRole.objects.filter(user=user, category__isnull=False)
+        return user_category_role
+    except UserCategoryRole.DoesNotExist:
+        return False
+

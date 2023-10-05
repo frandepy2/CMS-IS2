@@ -2,7 +2,7 @@
 
 {% block content %}
     {% load permissions_tags %}
-    {% if user|has_permission:'view_category' %}
+    {% if user|has_permission:'view_category' or user|has_some_category_role %}
         <div class="container">
             <h5 style="margin-bottom: 30px;">Status:
                 {% if categoria.is_active %}
