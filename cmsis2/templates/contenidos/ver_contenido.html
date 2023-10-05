@@ -1,0 +1,105 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {% load permissions_tags %}
+
+    <div>
+        <a href="{% url 'ver_categoria' contenido.subcategoria.categoria.id %}">{{ contenido.subcategoria.categoria }}</a>
+        >
+        <a href="{% url 'ver_subcategoria' contenido.subcategoria.id %}">{{ contenido.subcategoria }}</a>
+    </div>
+
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between">
+            <div class="d-inline-flex">
+                <h1>{{ contenido.nombre }}</h1>
+            </div>
+
+            <div class="d-flex flex-row justify-content-end">
+                {% if user.is_authenticated and not user|has_role:"Suscriptor" %}
+                    <div class="d-inline-flex p-2">
+                        <h5>Estado: {{ contenido.get_estado_display }}</h5>
+                    </div>
+                    {% has_category_permission user contenido.subcategoria.categoria.id "inactivate_content" as condition %}
+                    {% if condition %}
+                        {% if contenido.estado == 'BORRADOR' or contenido.estado == 'EDICION' or contenido.estado == 'PUBLICADO' %}
+                            <div class="d-inline-flex p-2">
+                                <a href="{% url 'inactivar_contenido' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-danger">Inactivar</a>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div class=" post-content mt-3">
+                {{ contenido.cuerpo.html|safe }}
+            </div>
+
+            {% if user.is_authenticated and contenido.estado == 'PUBLICADO' %}
+                <div class="d-inline-flex p-2">
+                    <form action="{% url 'denunciar_contenido' contenido.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Denunciar</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="content-data">
+            <small>
+                Escrito por: {{ contenido.autor.username }}<br>
+                {% if contenido.estado == 'PUBLICADO' %}
+                    Publicado: {{ contenido.fecha_publicacion }}
+                {% endif %}
+            </small>
+        </div>
+
+        {# condiciones #}
+    {% if user.is_authenticated %}
+        {% has_category_permission user contenido.subcategoria.categoria.id "create_content" as autor %}
+        {% has_category_permission user contenido.subcategoria.categoria.id "edit_content" as editor %}
+        {% has_category_permission user contenido.subcategoria.categoria.id "approve_content" as publicador %}
+    {% endif %}
+
+        <div id="acciones">
+            {% if contenido.estado == 'BORRADOR' and autor %}
+                <div class="d-flex flex-row justify-content-end mr-5">
+                    <div class="d-inline-flex p-2">
+                        <a href="{% url 'enviar_edicion' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-primary">Enviar a Edición</a>
+                    </div>
+                    <div class="d-inline-flex p-2">
+                        <a href="{% url 'editar_contenido' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-primary">Editar</a>
+                    </div>
+                </div>
+
+            {% elif contenido.estado == 'EDICION' and editor %}
+                <div class="d-flex flex-row justify-content-end mr-5">
+                    <div class="d-inline-flex p-2">
+                        <a href="{% url 'enviar_revision' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-primary">Enviar a Revisión</a>
+                    </div>
+                    <div class="d-inline-flex p-2">
+                        <a href="{% url 'editar_contenido' contenido.subcategoria.categoria.id contenido.id %}" class="btn btn-primary">Editar</a>
+                    </div>
+                </div>
+
+            {% elif contenido.estado == 'REVISION' and publicador %}
+                <div class="d-flex flex-row">
+                    <div class="d-inline-flex p-2">
+                        <form method="POST" action="{% url 'rechazar_contenido' contenido.subcategoria.categoria.id contenido.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
+                        </form>
+                    </div>
+                    <div class="d-inline-flex p-2">
+                        <form method="POST" action="{% url 'aprobar_contenido' contenido.subcategoria.categoria.id contenido.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
+                        </form>
+                    </div>
+
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

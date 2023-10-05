@@ -21,7 +21,7 @@
             background-color: #1f1f1f;
             color: #f0f0f0;
         }
-        h1, h2, h3, h4, h5, h6, p {
+        h1, h2, h3, h4, h5, h6, p, text, a {
             color: #f0f0f0;
         }
         hr {
@@ -126,6 +126,11 @@
             border-color: #bb86fc;
             color: #1f1f1f;
         }
+        .btn-outline-primary, .btn-outline-primary:active, .btn-outline-primary:hover, .btn-outline-primary:focus {
+            color: #bb86fc;
+            border-color: #bb86fc;
+            background-color: #1f1f1f;
+        }
 
         .table-dark, .thead-dark {
             color: #f0f0f0;
@@ -143,6 +148,9 @@
             background-color: #1f1f1f;
             border-right: 2px solid #3b3b3b;
         }
+        .content-data {
+            color: #8e8e8e;
+        }
 
         .back-btn {
             margin-top: 20px;
@@ -151,6 +159,10 @@
         .btn-secondary {
             color: #f0f0f0;
         }
+        .post-content {
+            margin-top: auto;
+            margin-bottom: 50px;
+        }
 
     </style>
 
@@ -158,6 +170,8 @@
 
 </head>
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 
     <!-- Navbar -->
     <nav class="navbar navbar-dark" style="background-color: #1f1f1f; border-bottom: 2px solid #3b3b3b;">
@@ -221,7 +235,7 @@
                                     {% endif %}
                                     {% for categoria in categorias %}
                                         <li class="nav-item">
-                                            <a class="nav-link hidden-item" href="#">{{ categoria }}</a>
+                                            <a class="nav-link hidden-item" href="{% url 'ver_categoria' categoria.id %}">{{ categoria }}</a>
                                         </li>
                                     {% endfor %}
                                 </ul>
@@ -286,7 +300,5 @@
     </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 </body>
 </html>

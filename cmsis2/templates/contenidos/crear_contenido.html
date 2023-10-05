@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {% load permissions_tags %}
+
+    {% has_category_permission user categoria.id "create_content" as autor %}
+    {% if autor %}
+    <div class="container mt-5">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <div class="d-flex flex-row justify-content-end">
+                <div class="d-inline-flex p-2">
+                    <input type="submit" class="btn btn-primary" value="Crear Contenido" />
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <h2>No tiene permisos para crear contenido.</h2>
+    {% endif %}
+{% endblock %}
