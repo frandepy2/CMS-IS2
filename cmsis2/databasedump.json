@@ -85,7 +85,7 @@
       "model":"roles.custompermission",
       "pk":9,
       "fields":{
-         "name":"view_user",
+         "name":"view_users",
          "description":"Ver usuarios",
          "is_system_permission":true
       }
