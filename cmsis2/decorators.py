@@ -73,24 +73,6 @@ def has_some_cat_role_decorator():
         return _wrapped_view
     return decorator
 
-def has_role_any_category_decorator(arg):
-    """
-    Decorador que verifica si un usuario tiene un rol cualquiera dentro de cualquier categoría.
-
-    :return: La función de vista envuelta si el usuario tiene el permiso de categoría, de lo contrario, retorna una respuesta prohibida.
-    :rtype: callable
-    """
-    def decorator(view_func):
-        @wraps(view_func)
-        def _wrapped_view(request, *args, **kwargs):
-            user = request.user
-            if has_role_any_category(user):
-                return view_func(request, *args, **kwargs)
-            else:
-                return HttpResponseForbidden("You don't have permission to access this page.")
-        return _wrapped_view
-    return decorator
-
 
 def has_permission(user, permission_name):
     """
@@ -146,19 +128,6 @@ def has_some_category_role(user, category_id):
     """
     try:
         user_category_role = UserCategoryRole.objects.get(user=user, category_id=category_id)
-        return user_category_role
-    except UserCategoryRole.DoesNotExist:
-        return False
-
-
-def has_role_any_category(user):
-    """
-    Verifica si un usuario tiene un rol en cualquier categoria.
-    :param user:
-    :return: bool
-    """
-    try:
-        user_category_role = UserCategoryRole.objects.filter(user=user, category__isnull=False)
         return user_category_role
     except UserCategoryRole.DoesNotExist:
         return False

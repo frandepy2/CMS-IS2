@@ -1,8 +1,16 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    {% load permissions_tags %}
 
     <div class="container">
+        <div class="d-flex flex-row justify-content-end">
+            {% if user|has_category_role:categoria.id %}
+                <div class="d-inline-flex p-2">
+                    <a href="{% url 'kanban' categoria.id %}" class="btn btn-sm btn-primary">Ver Kanban</a>
+                </div>
+            {% endif %}
+        </div>
         <div class="d-flex flex-row">
             {% for subcategoria in subcategorias %}
                 <div class="d-inline-flex p-2">

@@ -4,7 +4,7 @@ from django.urls import reverse
 from .forms import CategoriaForm, SubcategoriaForm
 from .models import Categoria, Subcategoria
 from django.core.paginator import Paginator, Page
-from decorators import has_permission_decorator, has_some_cat_role_decorator, has_role_any_category_decorator
+from decorators import has_permission_decorator, has_some_cat_role_decorator
 from django.contrib.auth.decorators import login_required
 from roles.models import UserCategoryRole
 from roles.forms import UserCategoryRoleForm
@@ -14,8 +14,7 @@ from contenidos.models import Contenido
 
 
 @login_required
-#@has_permission_decorator('view_category')
-@has_role_any_category_decorator('')
+@has_permission_decorator('view_category')
 def categorias(request):
     page_title = 'Categorias'
     list_categorias = Categoria.objects.all().order_by('id')  # Obtén todos los roles
@@ -57,7 +56,6 @@ def crear_categoria(request):
 
 @login_required
 @has_permission_decorator('view_category')
-@has_some_cat_role_decorator()
 def mas_informacion_categoria(request, categoria_id):
     categoria = Categoria.objects.get(id=categoria_id)
     page_title = categoria.nombre
