@@ -398,7 +398,6 @@ def enviar_revision(request,categoria_id, contenido_id):
 
 
 @login_required
-@has_permission_decorator('report_content')
 def denunciar_contenido(request, contenido_id):
     """
     Vista para reportar contenido como inapropiado.

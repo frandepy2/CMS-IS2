@@ -36,7 +36,7 @@
                 {{ contenido.cuerpo.html|safe }}
             </div>
 
-            {% if user|has_permission:'report_content' and contenido.estado == 'PUBLICADO' %}
+            {% if user.is_authenticated and contenido.estado == 'PUBLICADO' %}
                 <div class="d-inline-flex p-2">
                     <form action="{% url 'denunciar_contenido' contenido.id %}" method="post">
                         {% csrf_token %}
