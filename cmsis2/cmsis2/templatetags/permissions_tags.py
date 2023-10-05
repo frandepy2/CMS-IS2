@@ -31,10 +31,29 @@ def has_role(user, role_name):
     return UserCategoryRole.objects.filter(user=user, role__name=role_name).exists()
 
 
-@register.filter(name='has_category_permission')
+@register.simple_tag(name='has_category_permission')
 def has_category_permission(user, category_id, permission_name):
     try:
         user_category_role = UserCategoryRole.objects.get(user=user, category_id=category_id)
         return user_category_role.role.permissions.filter(name=permission_name).exists()
     except UserCategoryRole.DoesNotExist:
         return False
+
+
+@register.filter(name='has_category_role')
+def has_category_role(user, category_id):
+    try:
+        user_category_role = UserCategoryRole.objects.get(user=user, category_id=category_id)
+        return user_category_role
+    except UserCategoryRole.DoesNotExist:
+        return False
+
+
+@register.filter(name='has_some_category_role')
+def has_some_category_role(user):
+    try:
+        user_category_role = UserCategoryRole.objects.filter(user=user, category__isnull=False)
+        return user_category_role
+    except UserCategoryRole.DoesNotExist:
+        return False
+
