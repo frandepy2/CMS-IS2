@@ -16,4 +16,5 @@ urlpatterns = [
     path('quitar_usuario/<int:role_category_id>/', views.quitar_usuario, name='quitar_usuario'),
     path('ver_categoria/<int:categoria_id>/', views.ver_categoria, name='ver_categoria'),
     path('ver_subcategoria/<int:subcategoria_id>/', views.ver_subcategoria, name='ver_subcategoria'),
+    path('kanban/<int:categoria_id>', views.mostrar_kanban, name='kanban'),
 ]

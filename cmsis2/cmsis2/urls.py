@@ -26,5 +26,6 @@ urlpatterns = [
     path('roles/', include("roles.urls")),
     path('categorias/', include("categorias.urls")),
     path('contenidos/', include("contenidos.urls")),
+    path('parametros/', include("parametros.urls")),
     path('', HomeView, name='home'),
 ]

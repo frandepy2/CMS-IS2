@@ -3,7 +3,7 @@
 {% block content %}
     {% load socialaccount %}
     {% load permissions_tags %}
-    {% if user|has_permission:'view_category' %}
+    {% if user|has_permission:'view_category' or user|has_some_category_role %}
         <div class="container mt-5">
             <div class="row mb-3">
                 <div class="col">
@@ -38,6 +38,9 @@
                             <a href="{% url 'editar_categoria' categorias.id %}" class="btn btn-sm btn-primary">Modificar</a>
                             {% endif %}
                             <a href="{% url 'mas_informacion_categoria' categorias.id %}" class="btn btn-sm btn-primary">Mas Informacion</a>
+                            {#% if user|has_category_role:categoria.id %#}
+                                <a href="{% url 'kanban' categorias.id %}" class="btn btn-sm btn-primary">Ver Kanban</a>
+                            {#% endif %#}
                         </td>
                     </tr>
                     {% endfor %}

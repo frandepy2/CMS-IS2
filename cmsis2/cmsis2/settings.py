@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'fontawesomefree',
     'django_quill',
     'bootstrap_datepicker_plus',
+    'parametros',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {

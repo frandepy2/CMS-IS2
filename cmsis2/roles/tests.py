@@ -169,6 +169,14 @@ class PermissionsTest(TestCase):
         # Crea otro usuario para pruebas adicionales
         self.user = Usuario.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword')
 
+        # Crea una categoria de prueba
+        self.categoria = Categoria.objects.create(nombre='Prueba', descripcion='Categoria de prueba')
+
+        # Crea el rol de autor para las pruebas
+        self.role_autor = CustomRole.objects.create(name='autor', is_active=True)
+        self.permission_autor = CustomPermission.objects.create(name='create_content', description='crear contenido')
+        self.role_permission_autor = RolePermission.objects.create(role=self.role_autor, permission=self.permission_autor)
+
     def test_has_permission_decorator(self):
         """
         Prueba el decorador has_permission_decorator con un usuario que tiene el permiso.
@@ -199,28 +207,32 @@ class PermissionsTest(TestCase):
         """
         Prueba el decorador has_category_permission_decorator con un usuario que tiene el permiso en la categoría.
         """
-        @has_category_permission_decorator(category_id=1, permission_name='view_roles')
+
+        @has_category_permission_decorator(['create_content'])
         @dummy_decorator
         def view_with_category_permission(request):
             return HttpResponse('Category permission granted')
 
-        self.client.login(username='testuser', password='testpassword')
-        response = self.client.get(reverse('roles'))
+        # Asigna el rol autor al usuario
+        self.user_cat_role = UserCategoryRole(user=self.user, category=self.categoria, role=self.role_autor)
+        self.user_cat_role.save()
+
+        self.client.login(username='testuser2', password='testpassword')
+        response = self.client.get(reverse('kanban', kwargs={'categoria_id': self.categoria.id}))
         self.assertEqual(response.status_code, 200)
 
     def test_has_category_permission_decorator_no_permission(self):
         """
         Prueba el decorador has_category_permission_decorator con un usuario que no tiene el permiso en la categoría.
         """
-        # Prueba el decorador has_category_permission_decorator con un usuario que no tiene el permiso en la categoría.
-        @has_category_permission_decorator(category_id=1, permission_name='view_roles')
+        @has_category_permission_decorator(['create_content'])
         @dummy_decorator
         def view_without_category_permission(request):
-            return HttpResponse('roles')
+            return HttpResponse('kanban', self.categoria.id)
 
         self.client.login(username='testuser2', password='testpassword')
-        response = self.client.get(reverse('roles'))
-        self.assertEqual(response.status_code, 302)  # Debe ser redirigido
+        response = self.client.get(reverse('kanban', kwargs={'categoria_id': self.categoria.id}))
+        self.assertEqual(response.status_code, 403)
 
     def tearDown(self):
         self.client.logout()
