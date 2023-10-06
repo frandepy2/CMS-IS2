@@ -1,6 +1,14 @@
 categorias package
 ==================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   categorias.migrations
+
 Submodules
 ----------
 

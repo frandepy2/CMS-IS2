@@ -14,6 +14,3 @@ class SubcategoriaForm(forms.ModelForm):
     class Meta:
         model = Subcategoria
         fields = ['nombre', 'categoria', 'is_active']
-        # widgets = {
-        #     'permissions': forms.CheckboxSelectMultiple,  # Use CheckboxSelectMultiple widget
-        # }

@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="content-list">
+            {% for contenido in contenidos %}
+                <a href="{% url 'ver_contenido' contenido.id %}">
+                    <div class="flex-container">
+                        <div class="flex-item">
+                            <h3>{{ contenido.nombre }}</h3>
+                            <p class="cat-sub">{{ contenido.subcategoria.categoria }} - {{ contenido.subcategoria }}</p>
+                            <div class="interactions">
+                                <i class="fa-solid fa-thumbs-up int-icon" style="color: #ffffff;">  22</i>
+                                <i class="fa-solid fa-comment int-icon" style="color: #ffffff;">  15</i>
+                                <i class="fa-solid fa-share int-icon" style="color: #ffffff;">  30</i>
+                            </div>
+                        </div>
+                        <div class="flex-item">
+                            <p class="autor">{{ contenido.autor.username }}</p>
+                            <p class="date-time">Creado: {{ contenido.fecha_creacion }}</p>
+                        </div>
+
+                        <!-- Add more items as needed -->
+                    </div>
+                </a>
+                <hr class="bottom-line">
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+{% endblock %}

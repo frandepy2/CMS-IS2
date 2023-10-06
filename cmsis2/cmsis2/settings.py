@@ -23,7 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = int(os.getenv("DEBUG"))
 debug_env = os.getenv("DEBUG")
 
 if debug_env is not None:
@@ -39,6 +38,7 @@ CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1','http://localhost', 'http://44.218.15
 # Site Definition
 SITE_ID = 1
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -48,16 +48,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    #apps
     'cmsis2',
     'usuarios',
     'categorias',
     'roles',
-    'django.contrib.sites',
+    'contenidos',
+    'django_crontab',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'fontawesomefree',
+    'django_quill',
+    'bootstrap_datepicker_plus',
+    'parametros',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -138,13 +146,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#crons
+CRONJOBS = [
+    ('*/5 * * * *', 'contenidos.cron.my_first_cron'),
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Asuncion'
 
 USE_I18N = True
 
