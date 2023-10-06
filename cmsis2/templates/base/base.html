@@ -265,6 +265,13 @@
                                     </a>
                                 </li>
                             {% endif %}
+                            {% if user|has_permission:'manage_parameters' %}
+                                <li class="nav-item {% if request.path == '/parametros/' %}active{% endif %}">
+                                    <a class="nav-link sidebar-item" href="{% url 'lista_y_editar_parametros' %}">
+                                        Parametros
+                                    </a>
+                                </li>
+                            {% endif %}
 
                             <!-- Add more sidebar items here -->
                         </ul>
