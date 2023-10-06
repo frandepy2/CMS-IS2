@@ -8,13 +8,15 @@ Bienvenido a la documentacion de CMS-IS2
 ===================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 5
    :caption: Contenidos:
    cmsis2/cmsis2
    categorias
    roles
    templates
    usuarios
+   contenidos
+   parametros
 
 
 Indices and tablas

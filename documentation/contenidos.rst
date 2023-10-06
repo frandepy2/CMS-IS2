@@ -1,4 +1,4 @@
-categorias package
+contenidos package
 ==================
 
 Subpackages
@@ -7,63 +7,71 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   categorias.migrations
+   contenidos.migrations
 
 Submodules
 ----------
 
-categorias.admin module
+contenidos.admin module
 -----------------------
 
-.. automodule:: categorias.admin
+.. automodule:: contenidos.admin
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.apps module
+contenidos.apps module
 ----------------------
 
-.. automodule:: categorias.apps
+.. automodule:: contenidos.apps
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.forms module
+contenidos.cron module
+----------------------
+
+.. automodule:: contenidos.cron
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+contenidos.forms module
 -----------------------
 
-.. automodule:: categorias.forms
+.. automodule:: contenidos.forms
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.models module
+contenidos.models module
 ------------------------
 
-.. automodule:: categorias.models
+.. automodule:: contenidos.models
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.tests module
+contenidos.tests module
 -----------------------
 
-.. automodule:: categorias.tests
+.. automodule:: contenidos.tests
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.urls module
+contenidos.urls module
 ----------------------
 
-.. automodule:: categorias.urls
+.. automodule:: contenidos.urls
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.views module
+contenidos.views module
 -----------------------
 
-.. automodule:: categorias.views
+.. automodule:: contenidos.views
    :members:
    :undoc-members:
    :show-inheritance:
@@ -71,7 +79,7 @@ categorias.views module
 Module contents
 ---------------
 
-.. automodule:: categorias
+.. automodule:: contenidos
    :members:
    :undoc-members:
    :show-inheritance:
