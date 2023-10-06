@@ -1,4 +1,4 @@
-categorias package
+parametros package
 ==================
 
 Subpackages
@@ -7,63 +7,55 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   categorias.migrations
+   parametros.migrations
 
 Submodules
 ----------
 
-categorias.admin module
+parametros.admin module
 -----------------------
 
-.. automodule:: categorias.admin
+.. automodule:: parametros.admin
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.apps module
+parametros.apps module
 ----------------------
 
-.. automodule:: categorias.apps
+.. automodule:: parametros.apps
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.forms module
------------------------
-
-.. automodule:: categorias.forms
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-categorias.models module
+parametros.models module
 ------------------------
 
-.. automodule:: categorias.models
+.. automodule:: parametros.models
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.tests module
+parametros.tests module
 -----------------------
 
-.. automodule:: categorias.tests
+.. automodule:: parametros.tests
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.urls module
+parametros.urls module
 ----------------------
 
-.. automodule:: categorias.urls
+.. automodule:: parametros.urls
    :members:
    :undoc-members:
    :show-inheritance:
 
-categorias.views module
+parametros.views module
 -----------------------
 
-.. automodule:: categorias.views
+.. automodule:: parametros.views
    :members:
    :undoc-members:
    :show-inheritance:
@@ -71,7 +63,7 @@ categorias.views module
 Module contents
 ---------------
 
-.. automodule:: categorias
+.. automodule:: parametros
    :members:
    :undoc-members:
    :show-inheritance:
