@@ -6,6 +6,18 @@ from django.contrib.auth.decorators import login_required
 @login_required
 @has_permission_decorator('manage_parameters')
 def lista_y_editar_parametros(request, parametro_id=None):
+    """
+    Lista y Edita Parámetros
+
+    Esta vista permite listar y editar parámetros en el sistema.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :param parametro_id: (Opcional) El ID del parámetro a editar.
+    :type parametro_id: int
+    :returns: Una respuesta HTTP con la lista de parámetros o el formulario de edición.
+    :rtype: HttpResponse
+    """
     parametros = Parametro.objects.all()
     parametro = None
 
