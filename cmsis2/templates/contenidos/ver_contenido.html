@@ -118,7 +118,7 @@
                 <br>
                 <h2>Comentarios:</h2>
                 <ul class="list-group">
-                  {% for comentario in contenido.comentarios.all %}
+                  {% for comentario in contenido.comentarios.all|dictsortreversed:"fecha_creacion" %}
                     <li class="list-group-item my-2 bg-transparent">
                       <div class="text-light">
                         <strong style="color:#bb86fc;">{{ comentario.autor.username }}</strong>
