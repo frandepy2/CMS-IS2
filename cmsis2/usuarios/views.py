@@ -108,3 +108,16 @@ def desasignar_rol(request, role_category_id):
     role_category = get_object_or_404(UserCategoryRole, id=role_category_id)
     role_category.delete()
     return redirect('usuarios')
+
+
+def ver_mi_perfil(request):
+    user = request.user
+    page_title = 'Mi Perfil'
+    users_categories = UserCategoryRole.objects.filter(user=user, category__isnull=False)
+
+    return render(request, 'usuarios/mi_perfil.html',
+                  {
+                      'user': user,
+                      'page_title': page_title,
+                      'users_categories': users_categories
+                  })

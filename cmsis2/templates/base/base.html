@@ -190,6 +190,11 @@
                 color: #f0f0f0;
             }
 
+            .info-table {
+                background-color: #1f1f1f;
+                color: #f0f0f0;
+            }
+
 
 
         </style>
@@ -215,7 +220,7 @@
                             {{ user.username }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#">Mi perfil</a>
+                            <a class="dropdown-item" href="{% url 'mi_perfil' %}">Mi perfil</a>
                             <a class="dropdown-item d-md-none d-block" href="#">Notificaciones</a>
                             <a class="dropdown-item" href="#">Configuraciones</a>
                             <div class="dropdown-divider"></div>
@@ -322,7 +327,7 @@
                         <!-- usuario activo -->
                         <ul class="nav flex-column list-group">
                             <li class="nav-item rounded-pill">
-                                <a class="nav-link list-group-item list-group-item-action" href="#">
+                                <a class="nav-link list-group-item list-group-item-action" href="{% url 'mi_perfil' %}">
                                     Mi perfil
                                 </a>
                             </li>
