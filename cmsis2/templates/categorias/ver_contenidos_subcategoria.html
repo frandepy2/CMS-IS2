@@ -18,9 +18,9 @@
                             <h3>{{ contenido.nombre }}</h3>
                             <p class="cat-sub">{{ contenido.subcategoria.categoria }} - {{ contenido.subcategoria }}</p>
                             <div class="interactions">
-                                <i class="fa-solid fa-thumbs-up int-icon" style="color: #ffffff;">  22</i>
-                                <i class="fa-solid fa-comment int-icon" style="color: #ffffff;">  15</i>
-                                <i class="fa-solid fa-share int-icon" style="color: #ffffff;">  30</i>
+                                <i class="fa-solid fa-thumbs-up int-icon" style="color: #ffffff;"> {{ contenido.cantidad_me_gusta }}</i>
+                                <i class="fa-solid fa-comment int-icon" style="color: #ffffff;">  {{ contenido.cantidad_comentarios }}</i>
+                                <i class="fa-solid fa-share int-icon" style="color: #ffffff;">  {{ contenido.cantidad_compartir }}</i>
                             </div>
                         </div>
                         <div class="flex-item">
