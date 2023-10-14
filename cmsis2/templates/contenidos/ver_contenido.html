@@ -101,12 +101,26 @@
                 </div>
             {% elif contenido.estado == 'PUBLICADO' %}
                 <br>
-                <!-- Formulario para agregar un nuevo comentario -->
-                <form method="post" action="{% url 'crear_comentario' contenido.id %}">
-                  {% csrf_token %}
-                  {{ comentario_form.as_p }}
-                  <button type="submit" class="btn btn-primary">Agregar Comentario</button>
-                </form>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dar_me_gusta' contenido.id %}"><i class="fa-solid fa-thumbs-up int-icon" style="color: #ffffff;">{{ contenido.cantidad_me_gusta }}</i></a>
+                    <i class="fa-solid fa-comment int-icon" style="color: #ffffff;">  {{ contenido.cantidad_comentarios }}</i>
+                    <i class="fa-solid fa-share int-icon" style="color: #ffffff;">  {{ contenido.cantidad_compartir }}</i>
+                    <br>
+                    <br>
+                    <!-- Formulario para agregar un nuevo comentario -->
+                    <form method="post" action="{% url 'crear_comentario' contenido.id %}">
+                      {% csrf_token %}
+                      {{ comentario_form.as_p }}
+                      <button type="submit" class="btn btn-primary">Agregar Comentario</button>
+                    </form>
+                    <br>
+                {% else %}
+                    <i class="fa-solid fa-thumbs-up int-icon" style="color: #ffffff;"> {{ contenido.cantidad_me_gusta }}</i>
+                    <i class="fa-solid fa-comment int-icon" style="color: #ffffff;">  {{ contenido.cantidad_comentarios }}</i>
+                    <i class="fa-solid fa-share int-icon" style="color: #ffffff;">  {{ contenido.cantidad_compartir }}</i>
+
+                {% endif %}
+                <br>
                 <br>
                 <h2>Comentarios:</h2>
                 <ul class="list-group">

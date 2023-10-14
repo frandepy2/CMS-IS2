@@ -7,6 +7,7 @@ from django.utils import timezone
 from parametros.models import Parametro
 from decorators import has_category_permission_decorator, has_some_cat_role_decorator, has_permission_decorator
 from interacciones.forms import ComentarioForm
+from interacciones.models import Accion
 
 @login_required
 @has_category_permission_decorator('create_content')
@@ -111,11 +112,13 @@ def ver_contenido(request, contenido_id):
     """
     contenido = get_object_or_404(Contenido, pk=contenido_id)
     comentario_form = ComentarioForm()
+    me_gusta = Accion.objects.filter(contenido=contenido, tipo_accion='LIKE').count()
 
     return render(request, 'contenidos/ver_contenido.html',
                   {
                       'contenido': contenido,
                       'comentario_form': comentario_form,
+                      'me_gusta': me_gusta,
                   })
 
 
