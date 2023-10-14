@@ -206,7 +206,10 @@
 
         <!-- Navbar -->
         <nav class="navbar navbar-expand-md navbar-dark flex-row">
-            <a class="navbar-brand ml-0 mr-md-2 h1 p-md-2" href="{% url 'home' %}">TheLittleSwine</a>
+
+            <img id="imagen-a-mostrar" src="/media/logo.jpg" alt="Mi Imagen" style="max-width: 80px; max-height: 80px;">
+
+            <a data-titulo="TheLittleSwine" id="titulo-enlace" class="navbar-brand ml-0 mr-md-2 h1 p-md-2" href="{% url 'home' %}">TheLittleSwine</a>
 
             <ul class="navbar-nav ml-md-auto">
                 {% if user.is_authenticated %}
@@ -373,7 +376,35 @@
         </div>
 
     </div>
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Hacer una solicitud fetch a la vista de Django
+            fetch("{% url 'verificar-logo' %}")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.existe) {
+                        // Mostrar la imagen si la respuesta es verdadera
+                        document.getElementById("imagen-a-mostrar").style.display = "block";
+                    } else {
+                        // Ocultar la imagen si la respuesta es falsa
+                        document.getElementById("imagen-a-mostrar").style.display = "none";
+                    }
+                    var enlaceTitulo = document.getElementById("titulo-enlace");
+                    var tituloPredeterminado = enlaceTitulo.getAttribute("data-titulo");
+                    if (data.titulo && data.titulo.trim() !== '' ){
+                        enlaceTitulo.textContent = data.titulo
+                    }
+                    else {
+                        enlaceTitulo.textContent = tituloPredeterminado
+                    }
+                })
+                .catch(function(error) {
+                    console.error("Error al consultar el estado de la imagen: ", error);
+                });
+        });
+    </script>
 
     </body>
 </html>

@@ -2,6 +2,7 @@ from django.db import models
 
 LENGUAJE_COMUN_CHOICES = [
     ('MAX_CANT_DENUNCIAS', 'MAX_CANT_DENUNCIAS'),
+    ('TITULO', 'TITULO'),
 ]
 
 class Parametro(models.Model):
