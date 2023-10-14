@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from contenidos.models import Contenido
 from .forms import ComentarioForm
 from .models import Accion
 from django.shortcuts import redirect
 
+@login_required
 def crear_comentario(request, contenido_id):
     contenido = Contenido.objects.get(id=contenido_id)
 
@@ -27,7 +29,7 @@ def crear_comentario(request, contenido_id):
         else:
             return redirect('ver_contenido', contenido_id = contenido_id)
 
-
+@login_required
 def dar_me_gusta(request, contenido_id):
     contenido = Contenido.objects.get(id=contenido_id)
     usuario = request.user
@@ -45,3 +47,25 @@ def dar_me_gusta(request, contenido_id):
         contenido.save()
 
     return redirect('ver_contenido', contenido_id = contenido_id)  # Redirige al usuario a la página del contenido
+
+
+def compartir_contenido(request, contenido_id):
+    contenido = Contenido.objects.get(id=contenido_id)
+
+    if not request.user.is_authenticated:
+        accion = Accion(contenido=contenido, tipo_accion='SHARE')
+        accion.save()
+    else:
+        accion = Accion(usuario=request.user, contenido=contenido, tipo_accion='SHARE')
+        accion.save()
+
+    if contenido.cantidad_compartir is None:
+        contenido.cantidad_compartir = 0
+        contenido.save()
+
+    contenido.cantidad_compartir += 1
+    contenido.save()
+    uri_anterior = request.META.get('HTTP_REFERER', 'No disponible')
+    alert_message = f"Link {uri_anterior} copiado en el portapapeles."
+
+    return JsonResponse({'alert_message': alert_message, 'uri_copiar':uri_anterior })  # Redirige al usuario a la página del contenido

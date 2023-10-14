@@ -97,7 +97,7 @@
                 {% if user.is_authenticated %}
                     <a href="{% url 'dar_me_gusta' contenido.id %}"><i class="fa-solid fa-thumbs-up int-icon" style="color: #ffffff;">{{ contenido.cantidad_me_gusta }}</i></a>
                     <i class="fa-solid fa-comment int-icon" style="color: #ffffff;">  {{ contenido.cantidad_comentarios }}</i>
-                    <i class="fa-solid fa-share int-icon" style="color: #ffffff;">  {{ contenido.cantidad_compartir }}</i>
+                    <a id="compartir-btn"><i class="fa-solid fa-share int-icon" style="color: #ffffff;">  {{ contenido.cantidad_compartir }}</i></a>
                     <a href="{% url 'denunciar_contenido' contenido.id %}"><i class="fa-solid fa-flag int-icon" style="color: #ffffff;"></i></a>
                     <br>
                     <br>
@@ -111,7 +111,7 @@
                 {% else %}
                     <i class="fa-solid fa-thumbs-up int-icon" style="color: #ffffff;"> {{ contenido.cantidad_me_gusta }}</i>
                     <i class="fa-solid fa-comment int-icon" style="color: #ffffff;">  {{ contenido.cantidad_comentarios }}</i>
-                    <i class="fa-solid fa-share int-icon" style="color: #ffffff;">  {{ contenido.cantidad_compartir }}</i>
+                    <a id="compartir-btn"><i class="fa-solid fa-share int-icon" style="color: #ffffff;">  {{ contenido.cantidad_compartir }}</i></a>
 
                 {% endif %}
                 <br>
@@ -131,4 +131,35 @@
             {% endif %}
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#compartir-btn').click(function() {
+            $.ajax({
+                url: "{% url 'compartir_contenido' contenido.id %}",
+                type: "GET",
+                success: function(data) {
+                    alert(data.alert_message);
+
+                    // Copiar el texto al portapapeles
+                    var textoAInsertar = data.uri_copiar;
+                    var aux = document.createElement("input");
+                    aux.setAttribute("value", textoAInsertar);
+                    document.body.appendChild(aux);
+                    aux.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(aux)
+
+                    // Recargar la página después de mostrar el mensaje de alerta
+                    window.location.reload();
+                },
+                error: function() {
+                    alert("Error al compartir el contenido.");
+                }
+            });
+        });
+    });
+    </script>
+
 {% endblock %}
