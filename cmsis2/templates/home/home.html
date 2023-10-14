@@ -1,31 +1,23 @@
-
 {% extends 'base/base.html' %}
 
 {% block content %}
-
-    <div class="content-list">
+    <div class="content list-group list-group-flush p-md-3 ml-lg-5 mr-lg-5">
         {% for contenido in contenidos %}
-            <a href="{% url 'ver_contenido' contenido.id %}">
-                <div class="flex-container">
-                    <div class="flex-item">
-                        <h3>{{ contenido.nombre }}</h3>
-                        <p class="cat-sub">{{ contenido.subcategoria.categoria }} - {{ contenido.subcategoria }}</p>
-                        <div class="interactions">
-                            <i class="fa-solid fa-thumbs-up int-icon" style="color: #ffffff;">  22</i>
-                            <i class="fa-solid fa-comment int-icon" style="color: #ffffff;">  15</i>
-                            <i class="fa-solid fa-share int-icon" style="color: #ffffff;">  30</i>
-                        </div>
-                    </div>
-                    <div class="flex-item">
-                        <p class="autor">{{ contenido.autor.username }}</p>
-                        <p class="date-time">{{ contenido.fecha_publicacion }}</p>
-                    </div>
-
-                    <!-- Add more items as needed -->
+            <a class="content list-group-item list-group-item-action rounded mb-2" href="{% url 'ver_contenido' contenido.id %}">
+                <div class="d-flex justify-content-between mr-lg-5">
+                    <h3 class="mb-1">{{ contenido.nombre }}</h3>
+                    <small>{{ contenido.autor.username }}</small>
+                </div>
+                <div class="d-flex justify-content-between mr-lg-5">
+                    <p class="mb-1 cat-sub">{{ contenido.subcategoria.categoria }} - {{ contenido.subcategoria }}</p>
+                    <small>{{ contenido.fecha_publicacion }}</small>
+                </div>
+                <div id="interactions-preview">
+                    <i class="fa-solid fa-thumbs-up int-icon"> 22</i>
+                    <i class="fa-solid fa-comment int-icon"> 15</i>
+                    <i class="fa-solid fa-share int-icon"> 30</i>
                 </div>
             </a>
-            <hr class="bottom-line">
         {% endfor %}
     </div>
-
 {% endblock %}
