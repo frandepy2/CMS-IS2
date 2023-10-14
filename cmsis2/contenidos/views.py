@@ -415,19 +415,25 @@ def denunciar_contenido(request, contenido_id):
     contenido = Contenido.objects.get(pk=contenido_id)
     cant_max_denuncias = Parametro.objects.get(clave='MAX_CANT_DENUNCIAS')
     cant_denuncias_max = int(cant_max_denuncias.valor)
+    usuario = request.user
 
-    if contenido.cantidad_denuncias is None:
-        contenido.cantidad_denuncias = 0
+    if not Accion.objects.filter(usuario=usuario, contenido=contenido, tipo_accion='REPORT').exists():
+        accion = Accion(usuario=usuario, contenido=contenido, tipo_accion='REPORT')  # REGISTRA QUE EL USUARIO YA HIZO UN REPORTE
+        accion.save()
+
+        if contenido.cantidad_denuncias is None:
+            contenido.cantidad_denuncias = 0
+            contenido.save()
+
+        contenido.cantidad_denuncias += 1
+
+        if contenido.cantidad_denuncias >= cant_denuncias_max:
+            contenido.estado = 'INACTIVO'
+
         contenido.save()
+        return redirect('home')
 
-    contenido.cantidad_denuncias += 1
-
-    if contenido.cantidad_denuncias >= cant_denuncias_max:
-        contenido.estado = 'INACTIVO'
-
-    contenido.save()
-
-    return redirect('home')
+    return redirect('ver_contenido', contenido_id)
 
 
 @login_required
