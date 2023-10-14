@@ -3,8 +3,12 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="mt-5">Panel de control de Parámetros</h1>
-
+        <h1 class="mt-5">Panel de control</h1>
+        <form method="post" action="{% url 'subir-imagen' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="imagen">
+            <button type="submit">Subir Imagen</button>
+        </form>
         <h2 class="mt-4">Parámetros</h2>
         <table class="table table-striped">
             <caption>Parametros</caption>
