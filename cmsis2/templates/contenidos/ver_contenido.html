@@ -99,6 +99,27 @@
                     </div>
 
                 </div>
+            {% elif contenido.estado == 'PUBLICADO' %}
+                <br>
+                <!-- Formulario para agregar un nuevo comentario -->
+                <form method="post" action="{% url 'crear_comentario' contenido.id %}">
+                  {% csrf_token %}
+                  {{ comentario_form.as_p }}
+                  <button type="submit" class="btn btn-primary">Agregar Comentario</button>
+                </form>
+                <br>
+                <h2>Comentarios:</h2>
+                <ul class="list-group">
+                  {% for comentario in contenido.comentarios.all %}
+                    <li class="list-group-item my-2 bg-transparent">
+                      <div class="text-light">
+                        <strong style="color:#bb86fc;">{{ comentario.autor.username }}</strong>
+                        <small class="text-muted float-right">{{ comentario.fecha_creacion }}</small>
+                        <p class="mb-0">{{ comentario.texto }}</p>
+                      </div>
+                    </li>
+                  {% endfor %}
+                </ul>
             {% endif %}
         </div>
     </div>

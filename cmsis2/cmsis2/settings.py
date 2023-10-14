@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'django_quill',
     'bootstrap_datepicker_plus',
     'parametros',
+    'interacciones',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
