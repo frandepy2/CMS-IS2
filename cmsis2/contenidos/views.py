@@ -113,6 +113,18 @@ def ver_contenido(request, contenido_id):
     contenido = get_object_or_404(Contenido, pk=contenido_id)
     comentario_form = ComentarioForm()
     me_gusta = Accion.objects.filter(contenido=contenido, tipo_accion='LIKE').count()
+    if not request.user.is_authenticated:
+        accion = Accion(contenido=contenido, tipo_accion='VIEW')  # REGISTRA QUE EL USUARIO VISUALIZA CONTENIDO
+        accion.save()
+    else:
+        accion = Accion(usuario=request.user, contenido=contenido, tipo_accion='VIEW')  # REGISTRA QUE EL USUARIO VISUALIZA CONTENIDO
+        accion.save()
+    if contenido.cantidad_visualizaciones is None:
+        contenido.cantidad_visualizaciones = 0
+        contenido.save()
+
+    contenido.cantidad_visualizaciones += 1
+    contenido.save()
 
     return render(request, 'contenidos/ver_contenido.html',
                   {

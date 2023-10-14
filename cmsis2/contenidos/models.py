@@ -34,6 +34,7 @@ class Contenido(models.Model):
     cantidad_me_gusta = models.IntegerField(null= True, blank=True, default=0)
     cantidad_compartir = models.IntegerField(null=True, blank=True, default=0)
     cantidad_comentarios = models.IntegerField(null=True, blank=True, default=0)
+    cantidad_visualizaciones = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
         return self.nombre
