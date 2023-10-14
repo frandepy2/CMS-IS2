@@ -6,6 +6,7 @@ from categorias.models import Categoria
 from django.utils import timezone
 from parametros.models import Parametro
 from decorators import has_category_permission_decorator, has_some_cat_role_decorator, has_permission_decorator
+from interacciones.forms import ComentarioForm
 
 @login_required
 @has_category_permission_decorator('create_content')
@@ -109,10 +110,12 @@ def ver_contenido(request, contenido_id):
         HttpResponse: La plantilla renderizada que muestra el contenido.
     """
     contenido = get_object_or_404(Contenido, pk=contenido_id)
+    comentario_form = ComentarioForm()
 
     return render(request, 'contenidos/ver_contenido.html',
                   {
-                      'contenido': contenido
+                      'contenido': contenido,
+                      'comentario_form': comentario_form,
                   })
 
 

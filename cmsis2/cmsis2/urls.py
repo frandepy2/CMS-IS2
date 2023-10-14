@@ -27,5 +27,6 @@ urlpatterns = [
     path('categorias/', include("categorias.urls")),
     path('contenidos/', include("contenidos.urls")),
     path('parametros/', include("parametros.urls")),
+    path('interacciones/', include('interacciones.urls')),
     path('', HomeView, name='home'),
 ]
