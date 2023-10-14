@@ -7,6 +7,7 @@ from django.utils import timezone
 from parametros.models import Parametro
 from decorators import has_category_permission_decorator, has_some_cat_role_decorator, has_permission_decorator
 from interacciones.forms import ComentarioForm
+from interacciones.models import Accion
 
 @login_required
 @has_category_permission_decorator('create_content')
@@ -111,11 +112,25 @@ def ver_contenido(request, contenido_id):
     """
     contenido = get_object_or_404(Contenido, pk=contenido_id)
     comentario_form = ComentarioForm()
+    me_gusta = Accion.objects.filter(contenido=contenido, tipo_accion='LIKE').count()
+    if not request.user.is_authenticated:
+        accion = Accion(contenido=contenido, tipo_accion='VIEW')  # REGISTRA QUE EL USUARIO VISUALIZA CONTENIDO
+        accion.save()
+    else:
+        accion = Accion(usuario=request.user, contenido=contenido, tipo_accion='VIEW')  # REGISTRA QUE EL USUARIO VISUALIZA CONTENIDO
+        accion.save()
+    if contenido.cantidad_visualizaciones is None:
+        contenido.cantidad_visualizaciones = 0
+        contenido.save()
+
+    contenido.cantidad_visualizaciones += 1
+    contenido.save()
 
     return render(request, 'contenidos/ver_contenido.html',
                   {
                       'contenido': contenido,
                       'comentario_form': comentario_form,
+                      'me_gusta': me_gusta,
                   })
 
 
@@ -412,19 +427,25 @@ def denunciar_contenido(request, contenido_id):
     contenido = Contenido.objects.get(pk=contenido_id)
     cant_max_denuncias = Parametro.objects.get(clave='MAX_CANT_DENUNCIAS')
     cant_denuncias_max = int(cant_max_denuncias.valor)
+    usuario = request.user
 
-    if contenido.cantidad_denuncias is None:
-        contenido.cantidad_denuncias = 0
+    if not Accion.objects.filter(usuario=usuario, contenido=contenido, tipo_accion='REPORT').exists():
+        accion = Accion(usuario=usuario, contenido=contenido, tipo_accion='REPORT')  # REGISTRA QUE EL USUARIO YA HIZO UN REPORTE
+        accion.save()
+
+        if contenido.cantidad_denuncias is None:
+            contenido.cantidad_denuncias = 0
+            contenido.save()
+
+        contenido.cantidad_denuncias += 1
+
+        if contenido.cantidad_denuncias >= cant_denuncias_max:
+            contenido.estado = 'INACTIVO'
+
         contenido.save()
+        return redirect('home')
 
-    contenido.cantidad_denuncias += 1
-
-    if contenido.cantidad_denuncias >= cant_denuncias_max:
-        contenido.estado = 'INACTIVO'
-
-    contenido.save()
-
-    return redirect('home')
+    return redirect('ver_contenido', contenido_id)
 
 
 @login_required
