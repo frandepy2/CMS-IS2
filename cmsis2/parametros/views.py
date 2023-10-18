@@ -4,6 +4,7 @@ from decorators import has_permission_decorator, has_some_cat_role_decorator
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
+import os
 
 @login_required
 @has_permission_decorator('manage_parameters')
@@ -46,6 +47,10 @@ def upload_image(request):
     if request.method == 'POST' and request.FILES['imagen']:
         imagen = request.FILES['imagen']
         fs = FileSystemStorage()
+
+        # Check if the file 'logo.jpg' exists and delete it
+        if fs.exists('logo.jpg'):
+            os.remove(fs.url('logo.jpg').lstrip('/'))  # Remove the file
 
         # Renombrar el archivo a 'logo.jpg'
         nombre_archivo = 'logo.jpg'
