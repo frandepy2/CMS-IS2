@@ -7,6 +7,13 @@ from django.shortcuts import redirect
 
 @login_required
 def crear_comentario(request, contenido_id):
+    """
+    Crea un comentario para un contenido específico.
+
+    :param request: HttpRequest object
+    :param contenido_id: ID del contenido al que se le quiere agregar el comentario
+    :return: Redirección a la vista del contenido
+    """
     contenido = Contenido.objects.get(id=contenido_id)
 
     if request.method == 'POST':
@@ -31,6 +38,13 @@ def crear_comentario(request, contenido_id):
 
 @login_required
 def dar_me_gusta(request, contenido_id):
+    """
+    Permite a un usuario autenticado dar "Me gusta" a un contenido.
+
+    :param request: HttpRequest object
+    :param contenido_id: ID del contenido al que se le quiere dar "Me gusta"
+    :return: Redirección a la vista del contenido
+    """
     contenido = Contenido.objects.get(id=contenido_id)
     usuario = request.user
 
@@ -50,6 +64,13 @@ def dar_me_gusta(request, contenido_id):
 
 
 def compartir_contenido(request, contenido_id):
+    """
+    Permite a un usuario compartir un contenido. Si el usuario no está autenticado, aún puede compartir.
+
+    :param request: HttpRequest object
+    :param contenido_id: ID del contenido que se quiere compartir
+    :return: JsonResponse con un mensaje y la URI del contenido
+    """
     contenido = Contenido.objects.get(id=contenido_id)
 
     if not request.user.is_authenticated:
@@ -68,4 +89,4 @@ def compartir_contenido(request, contenido_id):
     uri_anterior = request.META.get('HTTP_REFERER', 'No disponible')
     alert_message = f"Link {uri_anterior} copiado en el portapapeles."
 
-    return JsonResponse({'alert_message': alert_message, 'uri_copiar':uri_anterior })  # Redirige al usuario a la página del contenido
+    return JsonResponse({'alert_message': alert_message, 'uri_copiar':uri_anterior })
