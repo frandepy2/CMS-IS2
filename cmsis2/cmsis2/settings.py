@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'django_quill',
     'bootstrap_datepicker_plus',
     'parametros',
+    'interacciones',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -189,3 +190,5 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_LOGOUT_ON_GET = True
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

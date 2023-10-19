@@ -1,311 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {% load static %}
-    {% load socialaccount %}
-    {% load permissions_tags %}
+    <head>
+        {% load static %}
+        {% load socialaccount %}
+        {% load permissions_tags %}
+        <meta charset="UTF-8">
+        <title>Home CMS</title>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+              integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+        <!-- Our project just needs Font Awesome Free's Solid and Brand files -->
+        <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
 
-    <!-- Our project just needs Font Awesome Free's Solid and Brand files -->
-    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+        <!-- Stylesheet -->
+        <style>
+            body {
+                background-color: #1f1f1f;
+                color: #f0f0f0;
+            }
+            /* temporal */
+            h1, h2, h3, h4, h5, h6, p, a {
+                color: #f0f0f0;
+            }
+            hr {
+                color: #2e2e2e;
+            }
+            .flex-container {
+                display: flex;
+                justify-content: space-between; /* Distribute items evenly */
+                align-items: center; /* Vertically align items */
+                margin-top: 30px;
+            }
+            .flex-item {
+                margin-left: 50px;
+                margin-right: 100px;
+            }
+            .autor {
+                font-size: medium;
+                color: #f0f0f0;
+            }
+            .cat-sub {
+                font-size: large;
+                color: #8e8e8e;
+            }
+            .date-time {
+                margin-bottom: 0;
+                color: #8e8e8e;
+                font-size: medium;
+            }
+            .int-icon {
+                margin-right: 30px;
+                font-size: medium;
+            }
+            a:hover {
+                color: #bb86fc; /* Change the color to red */
+            }
+            a:focus {
+                color: #bb86fc; /* Change the color to purple */
+            }
 
-    <style>
-        body {
-            background-color: #1f1f1f;
-            color: #f0f0f0;
-        }
-        h1, h2, h3, h4, h5, h6, p, text, a {
-            color: #f0f0f0;
-        }
-        hr {
-            color: #2e2e2e;
-        }
-        i {
-            text-align: right;
-            margin-right: 0;
-        }
-        a:hover {
-            color: #bb86fc; /* Change the color to red */
-        }
-        a:focus {
-            color: #bb86fc; /* Change the color to purple */
-        }
-        ul li.active a {
-            color: #bb86fc; /* Change color to red for the active link */
-        }
+            /* botones */
+            /*.btn-primary, .btn-primary:active, .btn-primary:hover, .btn-primary:focus {
+                background-color: #bb86fc;
+                border-color: #bb86fc;
+                color: #1f1f1f;
+            }*/
+            .btn-outline-primary  {
+                color: #bb86fc;
+                border-color: #bb86fc;
+            }
+            .btn-outline-primary:hover {
+                color: #bb86fc;
+                background-color: rgb(73.3%,52.5%,98.8%,12%);
+                border-color: #bb86fc;
+            }
+            .btn-outline-primary.focus, .btn-outline-primary:focus {
+                box-shadow: 0 0 0 0.2rem rgb(187, 134, 252, 20%);
+            }
+            .btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle {
+                color: #bb86fc;
+                background-color: rgb(73.3%,52.5%,98.8%,15%);
+                border-color: #bb86fc;
+            }
 
-        .title {
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
+            .btn-primary, .btn-primary:active, .btn-primary:hover, .btn-primary:focus {
+                background-color: #bb86fc;
+                border-color: #bb86fc;
+                color: #1f1f1f;
+            }
 
-        .sidebar-subtitle {
-            color: #8e8e8e;
-            font-size: small;
-            margin-top: 20px;
-            margin-left: 2px;
-        }
 
-        .bottom-line {
-            margin-top: 5px;
-            background-color: #3b3b3b;
-        }
+            /* navbar */
+            .navbar-dark {
+                background-color: #1f1f1f;
+                color: #f0f0f0;
+            }
+            .navbar-dark .navbar-brand {
+                color: #bb86fc;
+                font-size: x-large;
+            }
+            .navbar-dark .navbar-nav .nav-link {
+                color: #f0f0f0;
+            }
 
-        .flex-container {
-            display: flex;
-            justify-content: space-between; /* Distribute items evenly */
-            align-items: center; /* Vertically align items */
-            margin-top: 30px;
-        }
+                /* dropdown */
+            .dropdown-menu {
+                background-color: #1f1f1f;
+                border-color: rgba(255, 255, 255, 0.15);
+            }
+            .dropdown-item {
+                color: #f0f0f0;
+            }
+            .dropdown-divider {
+                border-top-color: #8e8e8e;
+            }
 
-        .navbar-flex-container {
-            display: flex;
-            justify-content: space-between; /* Distribute items evenly */
-            align-items: center; /* Vertically align items */
-        }
-        .flex-item {
-            margin-left: 50px;
-            margin-right: 100px;
-        }
-        .autor {
-            font-size: medium;
-            color: #f0f0f0;
-        }
-        .cat-sub {
-            font-size: large;
-            color: #8e8e8e;
-        }
-        .date-time {
-            margin-bottom: 0;
-            color: #8e8e8e;
-            font-size: medium;
-        }
-        .int-icon {
-            margin-right: 30px;
-            font-size: medium;
-        }
-        .dropdown-menu {
-            background-color: #3b3b3b;
-        }
-        .dropdown-item {
-            color: #f0f0f0;
-        }
-        .dropdown-divider {
-            border-top-color: #f0f0f0;
-        }
-        .table-dark {
-            background-color: #1f1f1f;
-        }
-        .drop-btn {
-            background-color: #1f1f1f;
-            color: #f0f0f0;
-        }
-        .btn-submit {
-            margin-right: 100px;
-        }
-        .sidebar-item {
-            color: #f0f0f0;
-        }
-        .sidebar-preference {
-            position: sticky;
-            bottom: 0;
-        }
-        .hidden-item {
-            margin-left: 20px;
-            color: #f0f0f0;
-        }
-        .btn-primary, .btn-primary:active, .btn-primary:hover, .btn-primary:focus {
-            background-color: #bb86fc;
-            border-color: #bb86fc;
-            color: #1f1f1f;
-        }
-        .btn-outline-primary, .btn-outline-primary:active, .btn-outline-primary:hover, .btn-outline-primary:focus {
-            color: #bb86fc;
-            border-color: #bb86fc;
-            background-color: #1f1f1f;
-        }
+            /* sidebar */
+            .sidebar-subtitle {
+                color: #8e8e8e;
+                font-size: small;
+                margin-top: 20px;
+                margin-left: 2px;
+            }
+            .bottom-line {
+                margin-top: 5px;
+                background-color: #3b3b3b;
+            }
+            .navbar-toggler-icon {
+                color: #f0f0f0;
+                border: 1px solid #3b3b3b;
+            }
 
-        .table-dark, .thead-dark {
-            color: #f0f0f0;
-        }
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000; /* To ensure it's above other elements */
-        }
-        #sidebar {
-            position: fixed;
-            height: 100vh;
-            background-color: #1f1f1f;
-            border-right: 2px solid #3b3b3b;
-        }
-        .content-data {
-            color: #8e8e8e;
-        }
+            /* List Group */
+            .list-group-item {
+                position: relative;
+                padding: 0.5rem 1.25rem;
+                background-color: #1f1f1f;
+                color: #f0f0f0;
+                border: 0px;
+                border-radius: inherit;
+            }
+            .list-group-item.active {
+                z-index: 2;
+                color: #f0f0f0;
+                background-color: rgb(73.3%,52.5%,98.8%,25%);
+                font-weight: bold;
+            }
+            .list-group-item-action:active {
+                color: #f0f0f0;
+                background-color: rgb(73.3%,52.5%,98.8%,25%);
+                border-bottom-left-radius: inherit;
+                border-bottom-right-radius: inherit;
+            }
+            .list-group-item-action:focus, .list-group-item-action:hover {
+                z-index: 1;
+                color: #f0f0f0;
+                text-decoration: none;
+                background-color: rgb(73.3%,52.5%,98.8%,10%);
+                border-bottom-left-radius: inherit;
+                border-bottom-right-radius: inherit;
+            }
+            :focus-visible {
+                outline: #bb86fc solid 1px;
+            }
 
-        .back-btn {
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-        .btn-secondary {
-            color: #f0f0f0;
-        }
-        .post-content {
-            margin-top: auto;
-            margin-bottom: 50px;
-        }
+            /* Home */
+            .content .list-group-item-action:hover {
+                background-color: rgb(73.3%,52.5%,98.8%,5%);
+            }
+            .content .list-group-item-action:active {
+                background-color: rgb(73.3%,52.5%,98.8%,5%);
+            }
+            .content .list-group-item-action:focus {
+                background-color: rgb(73.3%,52.5%,98.8%,5%);
+            }
+            .cat-sub {
+                color: #8e8e8e;
+            }
 
-    </style>
+            /* Tablas */
+            .table-dark {
+                background-color: #1f1f1f;
+            }
+            .table-dark, .thead-dark {
+                color: #f0f0f0;
+            }
 
-    <title>CMS-IS2</title>
+            .info-table {
+                background-color: #1f1f1f;
+                color: #f0f0f0;
+            }
 
-</head>
-<body>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-dark" style="background-color: #1f1f1f; border-bottom: 2px solid #3b3b3b;">
-        <a class="navbar-brand" style="color:#bb86fc; font-size: xx-large; margin-top: 0px;" href="{% url 'home' %}">TheLittleSwine</a>
-        <div class="navbar-user navbar-flex-container">
-            {% if user.is_authenticated %}
-                <div class="navbar-flex-item" style="margin-right: 20px;">
-                    <a href="#"><i class="fa-solid fa-bell mr-auto" style="color: #e0e0e0;"></i></a>
-                </div>
-                <div class="navbar-flex-item">
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle drop-btn" type="button" data-toggle="dropdown" aria-expanded="false">
+
+        </style>
+
+    </head>
+    <body>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-md navbar-dark flex-row">
+
+            <img id="imagen-a-mostrar" src="/media/logo.jpg" alt="Mi Imagen" style="max-width: 80px; max-height: 80px;">
+
+            <a data-titulo="TheLittleSwine" id="titulo-enlace" class="navbar-brand ml-0 mr-md-2 h1 p-md-2" href="{% url 'home' %}">TheLittleSwine</a>
+
+            <ul class="navbar-nav ml-md-auto">
+                {% if user.is_authenticated %}
+                    <!-- notificaciones -->
+                    <li class="nav-item d-none d-md-inline-block p-2">
+                        <a href="#" class="nav-link"><i class="fa-solid fa-bell"></i></a>
+                    </li>
+                    <!-- usuario activo -->
+                    <li class="nav-item dropdown d-none d-md-inline-block p-md-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
                             {{ user.username }}
-                        </button>
+                        </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#">Mi perfil</a>
+                            <a class="dropdown-item" href="{% url 'mi_perfil' %}">Mi perfil</a>
+                            <a class="dropdown-item d-md-none d-block" href="#">Notificaciones</a>
                             <a class="dropdown-item" href="#">Configuraciones</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'account_logout' %}">
                                 Cerrar Sesion
                             </a>
                         </div>
-                    </div>
-                </div>
-            {% else %}
-                <a class="btn btn-primary" href="{% provider_login_url "google" %}">Iniciar Sesión</a>
-            {% endif %}
-        </div>
-    </nav>
+                    </li>
+                {% else %}
+                    <li class="nav-item p-md-2 d-inline-block">
+                        <a class="btn btn-outline-primary rounded-pill" href="{% provider_login_url "google" %}">Iniciar Sesión</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <!--/div-->
+        </nav>
 
-    <div class="container-fluid" style="padding-top: 75px;">
+
+    <!-- Sidebar y Main -->
+    <div class="container-fluid">
         <div class="row">
+            <button class="navbar-toggler d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebar"
+                    aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon align-items-center"><i class="fa-solid fa-bars p-1"></i></span>
+            </button>
             <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
-                <!-- Sidebar content goes here -->
-                <div class="position-sticky sidebar-menu">
-                    <ul class="nav flex-column">
-                        <li class="sidebar-subtitle">
-                            Menú
-                            <hr class="bottom-line">
-                        </li>
-                        <li class="nav-item {% if request.path == '/' %}active{% endif %}">
-                            <a class="nav-link active sidebar-item" href="{% url 'home' %}">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse mb-3">
+
+                <!-- Contenido del sidebar -->
+                <div id="sidebarMenu" class="position-sticky">
+                    <p class="sidebar-subtitle mb-0">
+                        Menu
+                        <hr class="bottom-line">
+                    </p>
+                    <ul class="nav flex-column list-group">
+                        <li class="nav-item rounded-pill">
+                            <a class="nav-link list-group-item list-group-item-action {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
                                 Inicio
                             </a>
                         </li>
-                        <!-- Dropdown Sidebar Item -->
-                        <li class="nav-item {% if request.path == '/categorias/' %}active{% endif %}">
-                            <a class="nav-link collapsed sidebar-item" href="#dropdownSidebar" data-toggle="collapse">
+                        <li class="nav-item rounded-pill">
+                            <a class="nav-link collapsed list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="#dropdownSidebar" data-toggle="collapse">
                                 Categorias
+                                <i class="fa-solid fa-caret-down"></i>
                             </a>
                             <div class="collapse" id="dropdownSidebar">
-                                <ul class="nav flex-column">
-                                    {% if user.is_authenticated %}
-                                        {% if user|has_permission:'view_category' %}
-                                            <li class="nav-item">
-                                                <a class="nav-link hidden-item" href="{% url 'categorias' %}">Gestionar categorias</a>
-                                                <hr class="bottom-line hidden-item" style="margin-bottom: 0px; margin-top: 0px;">
-                                            </li>
-                                        {% endif %}
+                                <ul class="nav flex-column list-group ml-3">
+                                    {% if user.is_authenticated and user|has_permission:'view_category' %}
+                                        <li class="nav-item rounded-pill">
+                                            <a class="nav-link list-group-item list-group-item-action mb-0" href="{% url 'categorias' %}">Gestionar Categorias</a>
+                                            <hr class="bottom-line mt-0 ml-2 mb-0">
+                                        </li>
                                     {% endif %}
                                     {% for categoria in categorias %}
-                                        <li class="nav-item">
-                                            <a class="nav-link hidden-item" href="{% url 'ver_categoria' categoria.id %}">{{ categoria }}</a>
+                                        <li class="nav-item rounded-pill">
+                                            <a class="nav-link list-group-item list-group-item-action" href="{% url 'ver_categoria' categoria.id %}">
+                                                {{ categoria }}
+                                            </a>
                                         </li>
                                     {% endfor %}
                                 </ul>
                             </div>
                         </li>
-                        <!-- Add more sidebar items here -->
+
                     </ul>
                 </div>
                 {% if user.is_authenticated and not user|has_role:"Suscriptor" %}
-                    <div class="position-sticky admin-conf">
-                        <ul class="nav flex-column">
-                            <li class="sidebar-subtitle">
-                                Configuraciones
-                                <hr class="bottom-line">
-                            </li>
+                    <div id="adminConf" class="position-sticky">
+                        <p class="sidebar-subtitle mb-0">
+                            Configuraciones
+                            <hr class="bottom-line">
+                        </p>
+                        <ul class="nav flex-column list-group">
                             {% if user|has_permission:'view_users' %}
-                                <li class="nav-item {% if request.path == '/usuarios/' %}active{% endif %}">
-                                    <a class="nav-link sidebar-item" href="{% url 'usuarios' %}">
+                                <li class="nav-item rounded-pill">
+                                    <a class="nav-link list-group-item list-group-item-action {% if request.path == '/usuarios/' %}active{% endif %}" href="{% url 'usuarios' %}">
                                         Usuarios
                                     </a>
                                 </li>
                             {% endif %}
                             {% if user|has_permission:'view_roles' %}
-                                <li class="nav-item {% if request.path == '/roles/' %}active{% endif %}">
-                                    <a class="nav-link sidebar-item" href="{% url 'roles' %}">
+                                <li class="nav-item rounded-pill">
+                                    <a class="nav-link list-group-item list-group-item-action {% if request.path == '/roles/' %}active{% endif %}" href="{% url 'roles' %}">
                                         Roles
                                     </a>
                                 </li>
                             {% endif %}
                             {% if user|has_permission:'manage_parameters' %}
-                                <li class="nav-item {% if request.path == '/parametros/' %}active{% endif %}">
-                                    <a class="nav-link sidebar-item" href="{% url 'lista_y_editar_parametros' %}">
+                                <li class="nav-item rounded-pill">
+                                    <a class="nav-link list-group-item list-group-item-action {% if request.path == '/parametros/parametros/' %}active{% endif %}" href="{% url 'lista_y_editar_parametros' %}">
                                         Parametros
                                     </a>
                                 </li>
                             {% endif %}
-
-                            <!-- Add more sidebar items here -->
                         </ul>
                     </div>
                 {% endif %}
+                <div id="login-sidebar" class="position-sticky d-md-none d-block">
+                    {% if user.is_authenticated %}
+                        <p class="sidebar-subtitle mb-0">
+                            Mi Cuenta
+                            <hr class="bottom-line">
+                        </p>
+                        <!-- usuario activo -->
+                        <ul class="nav flex-column list-group">
+                            <li class="nav-item rounded-pill">
+                                <a class="nav-link list-group-item list-group-item-action" href="{% url 'mi_perfil' %}">
+                                    Mi perfil
+                                </a>
+                            </li>
+                            <li class="nav-item rounded-pill">
+                                <a class="nav-link list-group-item list-group-item-action" href="#">
+                                    Notificaciones
+                                </a>
+                            </li>
+                            <li class="nav-item rounded-pill">
+                                <a class="nav-link list-group-item list-group-item-action" href="#">
+                                    Configuraciones
+                                </a>
+                            </li>
+                            <hr>
+                            <li class="nav-item rounded-pill">
+                                <a class="logout nav-link list-group-item list-group-item-action" href="{% url 'account_logout' %}">
+                                    Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                </div>
+
             </nav>
 
-
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <div class="title">
-                    <h2>{{ page_title }}</h2>
+                <div id="title" class="m-2">
+                    <h3>{{ page_title }}</h3>
                 </div>
 
-                {% block content %}
+                <div class="content">
+                    {% block content %}
 
-                {% endblock %}
-
-            {% if request.path != '/' %}
-                <div class="back-btn mt-5">
-                    <button id="goBackButton" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver</button>
+                    {% endblock %}
                 </div>
-            {% endif %}
+
+
+
 
             </main>
+
+
         </div>
+
     </div>
-
-
     <script>
-        document.getElementById('goBackButton').addEventListener('click', function () {
-            window.history.back();
+        document.addEventListener("DOMContentLoaded", function() {
+            // Hacer una solicitud fetch a la vista de Django
+            fetch("{% url 'verificar-logo' %}")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.existe) {
+                        // Mostrar la imagen si la respuesta es verdadera
+                        document.getElementById("imagen-a-mostrar").style.display = "block";
+                    } else {
+                        // Ocultar la imagen si la respuesta es falsa
+                        document.getElementById("imagen-a-mostrar").style.display = "none";
+                    }
+                    var enlaceTitulo = document.getElementById("titulo-enlace");
+                    var tituloPredeterminado = enlaceTitulo.getAttribute("data-titulo");
+                    if (data.titulo && data.titulo.trim() !== '' ){
+                        enlaceTitulo.textContent = data.titulo
+                    }
+                    else {
+                        enlaceTitulo.textContent = tituloPredeterminado
+                    }
+                })
+                .catch(function(error) {
+                    console.error("Error al consultar el estado de la imagen: ", error);
+                });
         });
     </script>
 
-
-</body>
+    </body>
 </html>
