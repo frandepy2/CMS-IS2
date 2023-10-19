@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="col-lg-6">
+            <table class="table table-borderless info-table">
+                <tr>
+                    <td>Nombre(s):</td>
+                    <td>{{ user.first_name }}</td>
+                </tr>
+                <tr>
+                    <td>Apellido(s):</td>
+                    <td>{{ user.last_name }}</td>
+                </tr>
+                <tr>
+                    <td>Nombre de usuario:</td>
+                    <td>{{ user.username }}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+            </table>
+
+            <table class="table table-borderless info-table">
+                <thead>
+                    <tr>
+                        <th><h4>Categorias</h4></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user_category in users_categories %}
+                        <tr>
+                            <td>{{ user_category.category }}</td>
+                            <td>{{ user_category.role }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}
