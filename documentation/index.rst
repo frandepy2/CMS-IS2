@@ -17,6 +17,7 @@ Bienvenido a la documentacion de CMS-IS2
    usuarios
    contenidos
    parametros
+   interacciones
 
 
 Indices and tablas
