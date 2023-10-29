@@ -10,6 +10,7 @@ cmsis2
    contenidos
    decorators
    doc
+   interacciones
    load_database
    manage
    parametros
