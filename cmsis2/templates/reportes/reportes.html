@@ -1,4 +1,320 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    <h3>Reportes globales</h3>
+
+    <div class="row">
+        <div class="col-6" id="container">
+        <h5>Interacciones por categorias</h5>
+        </div>
+        <div class="col-6" id="container2">
+        <h5>Cantidad de reportes por Categoria</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" id="container3">
+        <h5>Grafico de Categorias mas vistas por fecha</h5>
+            <div id="legend"></div>
+        </div>
+        <div class="col-6" id="container4">
+        <h5>Cantidad de reportes por Categoria</h5>
+            <div id="legend2"></div>
+        </div>
+    </div>
+    <script type="module">
+    import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+    // Realizar una solicitud fetch para obtener los datos JSON desde Django
+    fetch('/reportes/category/interactions')
+        .then(response => response.json())
+        .then(data => {
+            // Dimensiones y margenes del gráfico
+            const width = 640;
+            const height = 400;
+            const marginTop = 20;
+            const marginRight = 20;
+            const marginBottom = 30;
+            const marginLeft = 40;
+
+            // Escalas X e Y
+            const categories = Object.keys(data);
+            const values = Object.values(data);
+
+            const x = d3.scaleBand()
+                .domain(categories)
+                .range([marginLeft, width - marginRight])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(values)])
+                .nice()
+                .range([height - marginBottom, marginTop]);
+
+            // Crear el contenedor SVG
+            const svg = d3.create("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            // Agregar el contenedor SVG al div "container"
+            document.getElementById("container").appendChild(svg.node());
+
+            // Agregar las barras al gráfico
+            svg.selectAll("rect")
+                .data(values)
+                .enter()
+                .append("rect")
+                .attr("x", (d, i) => x(categories[i]))
+                .attr("y", d => y(d))
+                .attr("width", x.bandwidth())
+                .attr("height", d => height - marginBottom - y(d))
+                .attr("fill", "#bb86fc");
+
+            // Agregar el eje X
+            svg.append("g")
+                .attr("transform", `translate(0,${height - marginBottom})`)
+                .call(d3.axisBottom(x));
+
+            // Agregar el eje Y
+            svg.append("g")
+                .attr("transform", `translate(${marginLeft},0)`)
+                .call(d3.axisLeft(y));
+        })
+        .catch(error => {
+            console.error('Error al obtener los datos:', error);
+        });
+</script>
+    <script type="module">
+    import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+    // Realizar una solicitud fetch para obtener los datos JSON desde Django
+    fetch('/reportes/category/reports')
+        .then(response => response.json())
+        .then(data => {
+            // Dimensiones y margenes del gráfico
+            const width = 640;
+            const height = 400;
+            const marginTop = 20;
+            const marginRight = 20;
+            const marginBottom = 30;
+            const marginLeft = 40;
+
+            // Escalas X e Y
+            const categories = Object.keys(data);
+            const values = Object.values(data);
+
+            const x = d3.scaleBand()
+                .domain(categories)
+                .range([marginLeft, width - marginRight])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(values)])
+                .nice()
+                .range([height - marginBottom, marginTop]);
+
+            // Crear el contenedor SVG
+            const svg = d3.create("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            // Agregar el contenedor SVG al div "container"
+            document.getElementById("container2").appendChild(svg.node());
+
+            // Agregar las barras al gráfico
+            svg.selectAll("rect")
+                .data(values)
+                .enter()
+                .append("rect")
+                .attr("x", (d, i) => x(categories[i]))
+                .attr("y", d => y(d))
+                .attr("width", x.bandwidth())
+                .attr("height", d => height - marginBottom - y(d))
+                .attr("fill", "#bb86fc");
+
+            // Agregar el eje X
+            svg.append("g")
+                .attr("transform", `translate(0,${height - marginBottom})`)
+                .call(d3.axisBottom(x));
+
+            // Agregar el eje Y
+            svg.append("g")
+                .attr("transform", `translate(${marginLeft},0)`)
+                .call(d3.axisLeft(y));
+        })
+        .catch(error => {
+            console.error('Error al obtener los datos:', error);
+        });
+    </script>
+
+<script type="module">
+    import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+    // Realizar una solicitud fetch para obtener los datos JSON desde Django
+    fetch('/reportes/category/dateviews')
+        .then(response => response.json())
+        .then(data => {
+            // Dimensiones y márgenes del gráfico
+            const width = 640;
+            const height = 400;
+            const marginTop = 20;
+            const marginRight = 20;
+            const marginBottom = 60; // Aumenta el margen inferior para acomodar la leyenda
+            const marginLeft = 40;
+
+            // Extraer todas las fechas y categorías de los datos
+            const allDates = new Set();
+            const allCategories = new Set();
+            for (const category in data) {
+                allCategories.add(category);
+                for (const date in data[category]) {
+                    allDates.add(date);
+                }
+            }
+
+            // Escalas X e Y
+            const categories = Array.from(allCategories);
+            const dates = Array.from(allDates).sort();
+
+            const x = d3.scaleBand()
+                .domain(dates)
+                .range([marginLeft, width - marginRight])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(dates, date =>
+                    Math.max(...categories.map(category => data[category][date] || 0))
+                )])
+                .nice()
+                .range([height - marginBottom, marginTop]);
+
+            // Crear el contenedor SVG
+            const svg = d3.create("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            // Agregar el contenedor SVG al div "container2"
+            document.getElementById("container3").appendChild(svg.node());
+
+            // Agregar las líneas al gráfico para cada categoría y la leyenda
+            const colorScale = d3.scaleOrdinal(d3.schemeCategory10); // Escala de colores
+            const legendArea = d3.select("#legend");
+
+            categories.forEach((category, index) => {
+                console.log(dates)
+                const line = d3.line()
+                    .x(date => x(date))
+                    .y(date => y(data[category][date] || 0));
+
+                svg.append("path")
+                    .datum(dates)
+                    .attr("fill", "none")
+                    .attr("stroke", colorScale(index)) // Asigna un color único
+                    .attr("stroke-width", 2)
+                    .attr("d", line);
+
+                // Agregar un cuadro de leyenda
+                legendArea.append("div")
+                    .style("background-color", colorScale(index))
+                    .text(category);
+            });
+
+            // Agregar el eje X
+            svg.append("g")
+                .attr("transform", `translate(0,${height - marginBottom})`)
+                .call(d3.axisBottom(x));
+
+            // Agregar el eje Y
+            svg.append("g")
+                .attr("transform", `translate(${marginLeft},0)`)
+                .call(d3.axisLeft(y));
+        })
+        .catch(error => {
+            console.error('Error al obtener los datos:', error);
+        });
+</script>
+<script type="module">
+    import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+    // Realizar una solicitud fetch para obtener los datos JSON desde Django
+    fetch('/reportes/category/datelikes')
+        .then(response => response.json())
+        .then(data => {
+            // Dimensiones y márgenes del gráfico
+            const width = 640;
+            const height = 400;
+            const marginTop = 20;
+            const marginRight = 20;
+            const marginBottom = 60; // Aumenta el margen inferior para acomodar la leyenda
+            const marginLeft = 40;
+
+            // Extraer todas las fechas y categorías de los datos
+            const allDates = new Set();
+            const allCategories = new Set();
+            for (const category in data) {
+                allCategories.add(category);
+                for (const date in data[category]) {
+                    allDates.add(date);
+                }
+            }
+
+            // Escalas X e Y
+            const categories = Array.from(allCategories);
+            const dates = Array.from(allDates).sort();
+
+            const x = d3.scaleBand()
+                .domain(dates)
+                .range([marginLeft, width - marginRight])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(dates, date =>
+                    Math.max(...categories.map(category => data[category][date] || 0))
+                )])
+                .nice()
+                .range([height - marginBottom, marginTop]);
+
+            // Crear el contenedor SVG
+            const svg = d3.create("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            // Agregar el contenedor SVG al div "container2"
+            document.getElementById("container4").appendChild(svg.node());
+
+            // Agregar las líneas al gráfico para cada categoría y la leyenda
+            const colorScale = d3.scaleOrdinal(d3.schemeCategory10); // Escala de colores
+            const legendArea = d3.select("#legend2");
+
+            categories.forEach((category, index) => {
+                const line = d3.line()
+                    .x(date => x(date))
+                    .y(date => y(data[category][date] || 0));
+
+                svg.append("path")
+                    .datum(dates)
+                    .attr("fill", "none")
+                    .attr("stroke", colorScale(index)) // Asigna un color único
+                    .attr("stroke-width", 2)
+                    .attr("d", line);
+
+                // Agregar un cuadro de leyenda
+                legendArea.append("div")
+                    .style("background-color", colorScale(index))
+                    .text(category);
+            });
+
+            // Agregar el eje X
+            svg.append("g")
+                .attr("transform", `translate(0,${height - marginBottom})`)
+                .call(d3.axisBottom(x));
+
+            // Agregar el eje Y
+            svg.append("g")
+                .attr("transform", `translate(${marginLeft},0)`)
+                .call(d3.axisLeft(y));
+        })
+        .catch(error => {
+            console.error('Error al obtener los datos:', error);
+        });
+</script>
 {% endblock %}
