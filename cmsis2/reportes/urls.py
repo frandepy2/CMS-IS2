@@ -9,4 +9,5 @@ urlpatterns = [
     path('category/dateviews',views.visualizaciones_por_categoria_por_fecha, name='visualizaciones_por_categoria_por_fecha'),
     path('category/datelikes',views.likes_por_categoria_por_fecha, name='likes_por_categoria_por_fecha'),
     path('generar_pdf/', views.generar_pdf, name='generar_pdf'),
+    #'/categoria/<id_categoria>'
 ]

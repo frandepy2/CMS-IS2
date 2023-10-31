@@ -255,3 +255,14 @@ def generar_pdf(request):
     doc.build(flowables)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='reporte_interacciones.pdf')
+
+
+#Cantidad de likes de los contenidos en una categoria
+
+#Cantidad de compentarios  de los  contenidos en una categoria
+
+#Cantidad de compartir  de los  contenidos en una categoria
+
+#Cantidad de denuncias de los contenidos en una categoria
+
+#generar_pdf_de_categoria
