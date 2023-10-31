@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from django.http import JsonResponse
-from categorias.models import Categoria, Subcategoria
-from interacciones.models import Accion
-from contenidos.models import Contenido
+from django.http import JsonResponse, FileResponse
+from categorias.models import Categoria, Subcategoria #TODO quitar cmsis2
+from interacciones.models import Accion #TODO quitar cmsis2
+from contenidos.models import Contenido #TODO quitar cmsis2
 from django.http import HttpResponse
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image,Paragraph
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image,Paragraph,Spacer,PageBreak
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 import matplotlib.pyplot as plt
@@ -93,89 +93,165 @@ def get_interacciones_por_categoria(tipo_accion):
 
     return interacciones_por_categoria
 
-
 def generar_pdf(request):
-    # Obtén los datos que deseas incluir en el PDF, por ejemplo, interacciones_por_categoria
-    datos = calcular_interacciones_por_categoria()  # Reemplaza con tus datos reales
-
-    # Crear un objeto de BytesIO para almacenar el PDF en memoria
+    # Crear un objeto BytesIO para capturar el PDF generado
     buffer = BytesIO()
 
-    # Crear un documento PDF con ReportLab
-    doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+    # Establecer el documento PDF con tamaño de página letter y orientación vertical
+    doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=18)
+    flowables = []
 
-    # Definir estilos para el título y subtítulo
+    # Establecer estilos
     styles = getSampleStyleSheet()
-    title_style = styles['Title']
-    subtitle_style = styles['Heading1']
 
-    # Agregar título y subtítulo
-    title = Paragraph("Reporte del sistema", title_style)
-    subtitle = Paragraph("Cantidad de likes de cada Categoria", subtitle_style)
+    # Titulo del reporte
+    title = Paragraph("Reporte de Interacciones", styles['Heading1'])
+    flowables.append(title)
+    flowables.append(Spacer(1, 12))
 
-    # Generar el gráfico con Matplotlib
-    plt.figure(figsize=(8, 4))
-    categorias = list(datos.keys())
-
-    # Ordenar las fechas
-    fechas = sorted(list(datos[categorias[0]].keys()))
-
-    # Crear una lista para almacenar los valores de cada categoría
-    valores_por_categoria = []
-
-    for categoria in categorias:
-        valores = []
-        for fecha in fechas:
-            valor = datos[categoria].get(fecha, 0)
-            valores.append(valor)
-        valores_por_categoria.append(valores)
-        plt.plot(fechas, valores, marker='o', linestyle='-', label=categoria)
-
-    plt.xlabel('Fechas')
-    plt.ylabel('Interacciones')
-    plt.title('Interacciones por Fecha')
-    plt.xticks(rotation=45)
-    plt.legend()
+    # 1. Gráfico: Interacciones por categoría
+    interacciones = calcular_interacciones_por_categoria()
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.bar(interacciones.keys(), interacciones.values(), color='blue')
+    ax.set_title('Interacciones por categoría')
+    ax.set_xlabel('Categoría')
+    ax.set_ylabel('Cantidad de interacciones')
+    plt.xticks(rotation=45, ha='right')
+    imgdata = BytesIO()
     plt.tight_layout()
+    plt.savefig(imgdata, format='png')  # Cambiamos a formato PNG
+    imgdata.seek(0)
+    img = Image(imgdata)
+    flowables.append(img)
 
-    # Guardar el gráfico en un objeto de BytesIO
-    image_buffer = BytesIO()
-    plt.savefig(image_buffer, format='png')
-    plt.close()
-    image_buffer.seek(0)
+    data_interacciones = [['Categoría', 'Interacciones']]
+    for cat, valor in interacciones.items():
+        data_interacciones.append([cat, valor])
+    t_interacciones = Table(data_interacciones, colWidths=[200, 100])
+    t_interacciones.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.blue),
+                                          ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                          ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                          ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                          ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                          ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                          ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+    flowables.append(t_interacciones)
 
-    # Crear una imagen con el gráfico usando ReportLab
-    image = Image(image_buffer, width=400, height=200)
+    flowables.append(PageBreak())
 
-    # Crear una tabla para mostrar los datos
-    table_data = [["Categoría"] + fechas] + [[categoria] + valores for categoria, valores in zip(categorias, valores_por_categoria)]
+    # Puedes seguir agregando más gráficos y contenido al PDF de manera similar...
+    interacciones = get_interacciones_por_categoria('LIKE')
+    categorias = list(interacciones.keys())
+    totales_likes = [sum(valores.values()) for valores in interacciones.values()]
 
-    t = Table(table_data, repeatRows=1)
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.bar(categorias, totales_likes, color='red')
+    ax.set_title('Likes por categoría')
+    ax.set_xlabel('Likes')
+    ax.set_ylabel('Cantidad de Likes')
+    plt.xticks(rotation=45, ha='right')
+    imgdata = BytesIO()
+    plt.tight_layout()
+    plt.savefig(imgdata, format='png')  # Cambiamos a formato PNG
+    imgdata.seek(0)
+    img = Image(imgdata)
+    flowables.append(img)
 
-    # Estilo de la tabla
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black)
-    ])
-    t.setStyle(style)
+    # Tabla: Detalle de Likes por categoría
+    data_likes = [['Categoría', 'Total Likes']]
+    for cat, likes in zip(categorias, totales_likes):
+        data_likes.append([cat, likes])
+    t_likes = Table(data_likes, colWidths=[200, 100])
+    t_likes.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.red),
+                                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                 ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                 ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                 ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                 ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+    flowables.append(t_likes)
 
-    # Construir el PDF
-    elements = [title, subtitle, image, t]
-    doc.build(elements)
+    flowables.append(PageBreak())
 
-    # Obtener el contenido del PDF y cerrar los objetos de BytesIO
-    pdf = buffer.getvalue()
-    buffer.close()
-    image_buffer.close()
+    # 1. Gráfico: Visualizaciones por categoría por fecha
+    visualizaciones_data = get_interacciones_por_categoria('VIEW')
+    categorias = list(visualizaciones_data.keys())
 
-    # Crear una respuesta HTTP con el PDF
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="informe.pdf"'
-    response.write(pdf)
+    for categoria, fecha_data in visualizaciones_data.items():
+        fechas = list(fecha_data.keys())
+        visualizaciones = list(fecha_data.values())
 
-    return response
+        fig, ax = plt.subplots(figsize=(6, 3))
+        ax.bar(fechas, visualizaciones, color='green')
+        ax.set_title(f'Visualizaciones por fecha en {categoria}')
+        ax.set_xlabel('Fecha')
+        ax.set_ylabel('Cantidad de visualizaciones')
+        plt.xticks(rotation=45, ha='right')
+
+        imgdata = BytesIO()
+        plt.tight_layout()
+        plt.savefig(imgdata, format='png')
+        imgdata.seek(0)
+        img = Image(imgdata)
+
+        flowables.append(img)
+
+        # Tabla: Detalle de Visualizaciones por fecha en categoría
+        table_data = [['Fecha', 'Visualizaciones']]
+        for date, view_count in fecha_data.items():
+            table_data.append([date, view_count])
+
+        t = Table(table_data, colWidths=[200, 100])
+        t.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.green),
+                               ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                               ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                               ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                               ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                               ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                               ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+        flowables.append(t)
+        flowables.append(PageBreak())
+
+    # 1. Gráfico: Likes por categoría por fecha
+    likes_data = get_interacciones_por_categoria('LIKE')
+    categorias = list(likes_data.keys())
+
+    for categoria, fecha_data in likes_data.items():
+        fechas = list(fecha_data.keys())
+        likes = list(fecha_data.values())
+
+        fig, ax = plt.subplots(figsize=(6, 3))
+        ax.bar(fechas, likes, color='purple')
+        ax.set_title(f'Likes por fecha en {categoria}')
+        ax.set_xlabel('Fecha')
+        ax.set_ylabel('Cantidad de Likes')
+        plt.xticks(rotation=45, ha='right')
+
+        imgdata = BytesIO()
+        plt.tight_layout()
+        plt.savefig(imgdata, format='png')
+        imgdata.seek(0)
+        img = Image(imgdata)
+
+        flowables.append(img)
+
+        # Tabla: Detalle de Likes por fecha en categoría
+        table_data = [['Fecha', 'Likes']]
+        for date, like_count in fecha_data.items():
+            table_data.append([date, like_count])
+
+        t = Table(table_data, colWidths=[200, 100])
+        t.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.purple),
+                               ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                               ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                               ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                               ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                               ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                               ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+        flowables.append(t)
+        flowables.append(PageBreak())
+
+    # Generar PDF
+    doc.build(flowables)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='reporte_interacciones.pdf')

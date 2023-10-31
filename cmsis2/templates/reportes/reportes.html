@@ -3,12 +3,14 @@
 {% block content %}
     <h3>Reportes globales</h3>
 
+    <a href="{% url 'generar_pdf' %}" class="btn btn-primary">Descargar PDF</a>
+
     <div class="row">
         <div class="col-6" id="container">
         <h5>Interacciones por categorias</h5>
         </div>
         <div class="col-6" id="container2">
-        <h5>Cantidad de reportes por Categoria</h5>
+        <h5>Cantidad de denuncias por Categoria</h5>
         </div>
     </div>
     <div class="row">
@@ -17,7 +19,7 @@
             <div id="legend"></div>
         </div>
         <div class="col-6" id="container4">
-        <h5>Cantidad de reportes por Categoria</h5>
+        <h5>Cantidad de Likes por Fecha</h5>
             <div id="legend2"></div>
         </div>
     </div>
