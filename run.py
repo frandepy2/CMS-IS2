@@ -45,7 +45,6 @@ def main():
         else:
             print("Opción no válida. Por favor, seleccione 1, 2 o 3.")
 
-
 def crear_documentacion():
     print(azul+"[INFO] "+resetear+"Inicia el proceso de creacion de documentacion")
 
@@ -58,6 +57,7 @@ def ejecutar_en_desarrollo():
     checkout_to_tag(cadena)
     eliminar_migraciones()
     ejecutar_docker_dev("docker-compose-dev.yaml")
+    print(verde + "[SUCCESS] " + resetear + "Ejecucion exitosa de DESARROLLO")
 
 
 def ejecutar_docker_dev(compose_file):
@@ -107,6 +107,10 @@ def ejecutar_en_produccion():
     tag = input("Ingrese el tag específico: ")
     cadena = "iteracion_" + str(tag)
     print(azul+"[INFO] "+resetear+"Ejecutando en el entorno de "+azul+"PRODUCCION"+resetear+" con el tag"+azul+f" {cadena}"+resetear)
+    checkout_to_tag(cadena)
+    print(morado+"EN EL CASO DE PROD, NO EJECUTAMOS POBLACION DE BASE DE DATOS PORQUE SE MONTA EN UNA BASE DE DATOS EXTERNA"+resetear)
+    ejecutar_docker_dev("docker-compose-prod.yaml")
+    print(verde + "[SUCCESS] " + resetear + "Ejecucion exitosa de PRODUCCION")
 
 
 def mostrar_opciones():
