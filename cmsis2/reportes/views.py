@@ -302,8 +302,10 @@ def interacciones_categoria_json(category_id):
     return interacciones_por_contenido
 
 
-def get_informacion_contenido(request, category_id):
-    return JsonResponse(interacciones_categoria_json(category_id))
+def get_informacion_contenido(request, categoria_id):
+    return JsonResponse(interacciones_categoria_json(categoria_id))
 
-def mostrar_reportes_por_categoria(request,category):
-    return render(request, 'reportes/reportes.html')
+def mostrar_reportes_por_categoria(request,categoria_id):
+    categoria = Categoria.objects.get(id=categoria_id)
+    return render(request, 'reportes/reportes_por_categoria.html',{'category': categoria})
+
