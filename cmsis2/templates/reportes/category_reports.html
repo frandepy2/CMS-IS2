@@ -1,0 +1,42 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <h3>Category Reports: {{ category.nombre }}</h3>
+
+    <!-- 1) Quantity of Likes -->
+    <h4>1) Quantity of Likes for Contents in {{ category.nombre }}</h4>
+    <ul>
+        {% for content in contents %}
+            <li>{{ content.titulo }} - Likes: {{ content.cantidad_me_gusta }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- 2) Quantity of Comments -->
+    <h4>2) Quantity of Comments for Contents in {{ category.nombre }}</h4>
+    <ul>
+        {% for content in contents %}
+            <li>{{ content.titulo }} - Comments: {{ content.cantidad_comentarios }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- 3) Quantity of Shares -->
+    <h4>3) Quantity of Shares for Contents in {{ category.nombre }}</h4>
+    <ul>
+        {% for content in contents %}
+            <li>{{ content.titulo }} - Shares: {{ content.cantidad_compartir }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- 4) Quantity of Reports -->
+    <h4>4) Quantity of Reports for Contents in {{ category.nombre }}</h4>
+    <ul>
+        {% for content in contents %}
+            <li>{{ content.titulo }} - Reports: {{ content.cantidad_denuncias }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- 5) Generate PDF for the Category -->
+    <h4>5) Generate PDF for {{ category.nombre }}</h4>
+    <a href="{% url 'generate_category_pdf' category.id %}" class="btn btn-primary">Generate PDF</a>
+</div>
+{% endblock %}

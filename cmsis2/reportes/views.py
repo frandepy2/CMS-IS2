@@ -10,7 +10,8 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image,Parag
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 import matplotlib.pyplot as plt
-
+import plotly.express as px
+import plotly.io as pio
 
 # Create your views here.
 def mostrar_reportes(request):
@@ -255,6 +256,43 @@ def generar_pdf(request):
     doc.build(flowables)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='reporte_interacciones.pdf')
+
+
+def category_reports(request, category_id):
+    category = Categoria.objects.get(id=category_id)
+    contents = Contenido.objects.filter(subcategoria__categoria=category)
+    context = {
+        'category': category,
+        'contents': contents,
+    }
+    return render(request, 'reportes/category_reports.html', context)
+
+
+def generate_category_pdf(request, category_id):
+    category = Categoria.objects.get(id=category_id)
+    contents = Contenido.objects.filter(subcategoria__categoria=category)
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    styles = getSampleStyleSheet()
+    flowables = []
+
+    # Title
+    title = Paragraph(f"Category Report: {category.nombre}", styles['Title'])
+    flowables.append(title)
+    flowables.append(Spacer(1, 12))
+
+    # Content Reports
+    for content in contents:
+        content_report = f"Content: {content.titulo}<br/>Likes: {content.likes_count}<br/>Comments: {content.comments_count}<br/>Shares: {content.shares_count}<br/>Reports: {content.reports_count}"
+        flowables.append(Paragraph(content_report, styles['Normal']))
+        flowables.append(Spacer(1, 12))
+
+    doc.build(flowables)
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{category.nombre}_report.pdf"'
+    return response
 
 
 #Cantidad de likes de los contenidos en una categoria
