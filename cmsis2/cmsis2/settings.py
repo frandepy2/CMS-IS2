@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
     'parametros',
     'interacciones',
+    'reportes',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
