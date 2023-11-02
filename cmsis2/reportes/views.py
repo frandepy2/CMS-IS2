@@ -10,9 +10,6 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image,Parag
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 import matplotlib.pyplot as plt
-import plotly.express as px
-import plotly.io as pio
-
 # Create your views here.
 def mostrar_reportes(request):
     return render(request, 'reportes/reportes.html')
@@ -260,10 +257,8 @@ def generar_pdf(request):
 
 def category_reports(request, category_id):
     category = Categoria.objects.get(id=category_id)
-    contents = Contenido.objects.filter(subcategoria__categoria=category)
     context = {
         'category': category,
-        'contents': contents,
     }
     return render(request, 'reportes/category_reports.html', context)
 
@@ -295,12 +290,64 @@ def generate_category_pdf(request, category_id):
     return response
 
 
-#Cantidad de likes de los contenidos en una categoria
+def contenido_to_json(contenido):
+    contenido_json = {
+        'nombre': contenido.nombre,
+        'autor': contenido.autor.username,  # Supongamos que el autor tiene un campo "nombre"
+        'subcategoria': contenido.subcategoria.nombre,  # Supongamos que la subcategoría tiene un campo "nombre"
+        'fecha_creacion': contenido.fecha_creacion.strftime('%Y-%m-%d %H:%M:%S'),  # Formatea la fecha como una cadena
+        'fecha_caducidad': contenido.fecha_caducidad.strftime('%Y-%m-%d') if contenido.fecha_caducidad else None,
+        'fecha_publicacion': contenido.fecha_publicacion.strftime('%Y-%m-%d %H:%M:%S') if contenido.fecha_publicacion else None,
+        'estado': contenido.estado,
+        'cantidad_denuncias': contenido.cantidad_denuncias,
+        'cantidad_me_gusta': contenido.cantidad_me_gusta,
+        'cantidad_compartir': contenido.cantidad_compartir,
+        'cantidad_comentarios': contenido.cantidad_comentarios,
+        'cantidad_visualizaciones': contenido.cantidad_visualizaciones,
+        'acciones': get_acciones_contenido(contenido),
+    }
+    return contenido_json
 
-#Cantidad de compentarios  de los  contenidos en una categoria
 
-#Cantidad de compartir  de los  contenidos en una categoria
+def get_acciones_contenido(contenido):
+    acciones = contenido.acciones.all()
+    acciones_json = []
+    for accion in acciones:
+        accion_dict = {
+            'usuario':  accion.usuario.username if accion.usuario else None,
+            'tipo_accion': accion.tipo_accion,
+            'fecha_creacion': accion.fecha_creacion.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+        acciones_json.append(accion_dict)
 
-#Cantidad de denuncias de los contenidos en una categoria
+    return acciones_json
+
+
+def interacciones_categoria_json(category_id):
+    categoria = Categoria.objects.get(id=category_id)
+    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria)
+
+    interacciones_por_contenido = {}
+
+    for contenido in contenidos:
+        contenido_json = contenido_to_json(contenido)
+        interacciones_por_contenido[contenido.id]=contenido_json
+
+    return interacciones_por_contenido
+
+
+def get_informacion_contenido(request, category_id):
+    return JsonResponse(interacciones_categoria_json(category_id))
+
+
+
+
+#REPORTES POR CATEGORIA
+#REPORTE 1: una tabla fecha inicio y fin con todos los contenidos y sus reacciones en una categoria
+
+
+#REPORTE 2: grafico de visualizaciones/interacciones de la categoria por fecha (todas las categorias)
+
+#REPORTE 3: Grafico de suscriptores  vs no suscriptores por categoria
 
 #generar_pdf_de_categoria

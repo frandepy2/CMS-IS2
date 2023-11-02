@@ -11,6 +11,5 @@ urlpatterns = [
     path('generar_pdf/', views.generar_pdf, name='generar_pdf'),
     path('category/<int:category_id>/reports/', views.category_reports, name='category_reports'),
     path('generate_category_pdf/<int:category_id>/', views.generate_category_pdf, name='generate_category_pdf'),
-
-    #'/categoria/<id_categoria>'
+    path('category/<int:category_id>/get_category_info/',views.get_informacion_contenido, name='get_informacion_contenido')
 ]

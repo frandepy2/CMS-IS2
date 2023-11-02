@@ -1,42 +1,233 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <h3>Category Reports: {{ category.nombre }}</h3>
+    <h3>Reportes de Categoria: {{ category.nombre }}</h3>
+    <div class="col-12" id="container"></div>
+    <div class="row">
+        <div class="col-6" id="chart">
+            <h4>Autores con más colaboraciones</h4>
+        </div>
+        <div  class="col-6" id="chart2">
+            <h4>Informe de Estados de Contenido</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" id="chart3">
+            <h4>Interaciones por fecha</h4>
+        </div>
+        <div class="col-6" id="char4">
+            <h4>Visualizacions de suscriptores vs no suscriptores</h4>
+        </div>
+    </div>
 
-    <!-- 1) Quantity of Likes -->
-    <h4>1) Quantity of Likes for Contents in {{ category.nombre }}</h4>
-    <ul>
-        {% for content in contents %}
-            <li>{{ content.titulo }} - Likes: {{ content.cantidad_me_gusta }}</li>
-        {% endfor %}
-    </ul>
 
-    <!-- 2) Quantity of Comments -->
-    <h4>2) Quantity of Comments for Contents in {{ category.nombre }}</h4>
-    <ul>
-        {% for content in contents %}
-            <li>{{ content.titulo }} - Comments: {{ content.cantidad_comentarios }}</li>
-        {% endfor %}
-    </ul>
+    <a href="{% url 'generate_category_pdf' category.id %}" class="btn btn-primary">GENERAR PDF</a>
 
-    <!-- 3) Quantity of Shares -->
-    <h4>3) Quantity of Shares for Contents in {{ category.nombre }}</h4>
-    <ul>
-        {% for content in contents %}
-            <li>{{ content.titulo }} - Shares: {{ content.cantidad_compartir }}</li>
-        {% endfor %}
-    </ul>
 
-    <!-- 4) Quantity of Reports -->
-    <h4>4) Quantity of Reports for Contents in {{ category.nombre }}</h4>
-    <ul>
-        {% for content in contents %}
-            <li>{{ content.titulo }} - Reports: {{ content.cantidad_denuncias }}</li>
-        {% endfor %}
-    </ul>
+    <script type="module">
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+        fetch("{% url 'get_informacion_contenido' category.id %}")
+            .then(response => response.json())
+            .then(data => {
+                // Procesar datos para contar contenidos por estado
+                const estados = {};
+                Object.values(data).forEach(item => {
+                    if (estados[item.estado]) {
+                        estados[item.estado]++;
+                    } else {
+                        estados[item.estado] = 1;
+                    }
+                });
 
-    <!-- 5) Generate PDF for the Category -->
-    <h4>5) Generate PDF for {{ category.nombre }}</h4>
-    <a href="{% url 'generate_category_pdf' category.id %}" class="btn btn-primary">Generate PDF</a>
-</div>
+                const processedData = Object.entries(estados).map(([estado, count]) => ({ estado, count }));
+
+                // Configuración de dimensiones del gráfico
+                const width = 600;
+                const height = 400;
+                const margin = { top: 40, right: 20, bottom: 70, left: 60 };
+
+                // Crear escalas
+                const xScale = d3.scaleBand().domain(processedData.map(d => d.estado)).range([0, width]).padding(0.1);
+                const yScale = d3.scaleLinear().domain([0, d3.max(processedData, d => d.count)]).range([height, 0]);
+
+                // Crear SVG
+                const svg = d3.select("#chart2").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                // Ejes
+                svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(xScale));
+                svg.append("g").call(d3.axisLeft(yScale));
+
+                // Creación de las barras
+                svg.selectAll(".bar").data(processedData).enter().append("rect").attr("class", "bar").attr("x", d => xScale(d.estado)).attr("y", d => yScale(d.count)).attr("width", xScale.bandwidth()).attr("height", d => height - yScale(d.count)).attr("fill", "#51087f");
+
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+            });
+
+    </script>
+
+    <script type="module">
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+        fetch("{% url 'get_informacion_contenido' category.id %}") // Asegúrate de que esta URL sea correcta para tu aplicación.
+            .then(response => response.json())
+            .then(data => {
+
+                // Seleccionar o crear el contenedor para la tabla
+                const containerDiv = d3.select("#container").append("div").attr("class", "container mt-4");
+                const responsiveDiv = containerDiv.append("div").attr("class", "table-responsive");
+
+                // Crear la tabla con clases específicas para fondos oscuros
+                const table = responsiveDiv.append("table").attr("class", "table table-dark table-hover table-striped");
+
+                // Agregar encabezado de tabla
+                const thead = table.append("thead");
+                thead.append("tr")
+                    .selectAll("th")
+                    .data(["Nombre", "Autor", "Subcategoría", "Estado", "Visualizaciones", "Me gusta", "Compartir", "Comentarios", "Denuncias"])
+                    .enter()
+                    .append("th")
+                    .text(d => d);
+
+                // Agregar cuerpo de tabla
+                const tbody = table.append("tbody");
+
+                // Iterar a través de los datos y llenar la tabla
+                Object.values(data).forEach(item => {
+                    const row = tbody.append("tr");
+                    row.append("td").text(item.nombre);
+                    row.append("td").text(item.autor);
+                    row.append("td").text(item.subcategoria);
+                    row.append("td").text(item.estado);
+                    row.append("td").text(item.cantidad_visualizaciones);
+                    row.append("td").text(item.cantidad_me_gusta);
+                    row.append("td").text(item.cantidad_compartir);
+                    row.append("td").text(item.cantidad_comentarios);
+                    row.append("td").text(item.cantidad_denuncias);
+                });
+
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+            });
+    </script>
+    <!-- Contenedor para el gráfico -->
+    <script type="module">
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+        // Realizar la petición fetch para obtener los datos
+        fetch("{% url 'get_informacion_contenido' category.id %}")
+        .then(response => response.json())
+        .then(data => {
+
+            // Procesar los datos para el informe
+            const authors = {};
+            Object.values(data).forEach(entry => {
+                const author = entry.autor;
+                authors[author] = (authors[author] || 0) + 1;
+            });
+
+            // Datos para el gráfico
+            const dataset = Object.entries(authors).map(([author, count]) => ({author, count}));
+
+            // Configurar el SVG
+            const margin = { top: 20, right: 20, bottom: 70, left: 60 };
+            const width = 600 - margin.left - margin.right;
+            const height = 400 - margin.top - margin.bottom;
+
+            const svg = d3.select("#chart").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Escalas
+            const xScale = d3.scaleBand().range([0, width]).padding(0.5);
+            const yScale = d3.scaleLinear().range([height, 0]);
+
+            xScale.domain(dataset.map(d => d.author));
+            yScale.domain([0, d3.max(dataset, d => d.count)]);
+
+            // Ejes
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(xScale))
+                .selectAll("text")
+                .attr("dy", "0.5em")
+                .attr("dx", "-.8em")
+                .attr("transform", "rotate(-45)")
+                .style("text-anchor", "end");
+
+            svg.append("g")
+                .call(d3.axisLeft(yScale));
+
+            // Barras
+            svg.selectAll(".bar")
+                .data(dataset)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", d => xScale(d.author))
+                .attr("y", d => yScale(d.count))
+                .attr("width", xScale.bandwidth())
+                .attr("height", d => height - yScale(d.count))
+                .attr('fill', '#7b3de3')  // Aquí estableces el color principal de las barras.
+                .on('mouseover', function() {
+                    d3.select(this)
+                        .attr('fill', '#51087f');  // Color cuando se pasa el cursor sobre la barra.
+                })
+                .on('mouseout', function() {
+                    d3.select(this)
+                        .attr('fill', '#9333e3');  // Restaurar al color principal.
+                });
+
+        })
+        .catch(error => console.error("Error al obtener los datos:", error));
+    </script>
+
+    <script type="module">
+    import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+    fetch("{% url 'get_informacion_contenido' category.id %}")
+        .then(response => response.json())
+        .then(data => {
+            const dataset = Object.values(data).map(item => ({
+                fecha: new Date(item.fecha_creacion),
+                interacciones: item.cantidad_me_gusta + item.cantidad_comentarios + item.cantidad_denuncias + item.cantidad_compartir
+            }));
+
+            const svgWidth = 800, svgHeight = 400;
+            const svg = d3.select("#chart3").append("svg").attr("width", svgWidth).attr("height", svgHeight);
+
+            const xScale = d3.scaleTime().domain(d3.extent(dataset, d => d.fecha)).range([50, svgWidth - 50]);
+            const yScale = d3.scaleLinear().domain([0, d3.max(dataset, d => d.interacciones)]).range([svgHeight - 50, 50]);
+
+            const xAxis = d3.axisBottom(xScale).ticks(dataset.length).tickFormat(d3.timeFormat("%Y-%m-%d"));
+            const yAxis = d3.axisLeft(yScale);
+
+            svg.append("g").attr("transform", `translate(0, ${svgHeight - 50})`).call(xAxis)
+                .selectAll("text")
+                .attr("transform", "rotate(-45)")
+                .attr("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em");
+
+            svg.append("g").attr("transform", "translate(50, 0)").call(yAxis);
+
+            // Creando el gráfico de líneas
+            const line = d3.line()
+                .x(d => xScale(d.fecha))
+                .y(d => yScale(d.interacciones));
+
+            svg.append("path")
+                .datum(dataset)
+                .attr("d", line)
+                .attr("fill", "none")
+                .attr("stroke", "#58D68D")
+                .attr("stroke-width", 2);
+
+        }).catch(error => {
+            console.error('Error al obtener los datos:', error);
+        });
+    </script>
 {% endblock %}
