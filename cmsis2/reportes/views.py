@@ -308,4 +308,3 @@ def get_informacion_contenido(request, categoria_id):
 def mostrar_reportes_por_categoria(request,categoria_id):
     categoria = Categoria.objects.get(id=categoria_id)
     return render(request, 'reportes/reportes_por_categoria.html',{'category': categoria})
-
