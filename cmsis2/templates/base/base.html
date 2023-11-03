@@ -317,6 +317,13 @@
                                     </a>
                                 </li>
                             {% endif %}
+                            {% if user|has_permission:'view_reports' %}
+                                <li class="nav-item rounded-pill">
+                                    <a class="nav-link list-group-item list-group-item-action {% if request.path == '/reportes/' %}active{% endif %}" href="{% url 'mostrar_reportes' %}">
+                                        Reportes
+                                    </a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                 {% endif %}
