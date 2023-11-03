@@ -1,0 +1,271 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {% load permissions_tags %}
+    {% if user.is_authenticated and user|has_permission:'view_reports' %}
+    <div class="container-fluid p-3"> <!-- Ajuste fluido a la pantalla con un padding de 3 -->
+    <h3>Reportes de Categoría: {{ category.nombre }}</h3>
+    <a href="" class="btn btn-primary mb-3">Descargar PDF</a> <!-- Añadí un margin-bottom para separarlo del contenedor de gráficos -->
+    <div class="row">
+        <div class="col-12 mb-3" id="container">
+            <!-- Contenido del container -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3" id="chart">
+            <h4>Autores con más colaboraciones</h4>
+            <!-- Contenido del chart -->
+        </div>
+        <div class="col-md-6 mb-3" id="chart2">
+            <h4>Informe de Estados de Contenido</h4>
+            <!-- Contenido del chart2 -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6" id="chart4">
+            <h4>Visualizaciones de suscriptores vs no suscriptores</h4>
+            <!-- Contenido del chart4 -->
+        </div>
+    </div>
+</div>
+
+
+
+
+
+    <script type="module">
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+        fetch("{% url 'get_informacion_contenido' category.id %}")
+            .then(response => response.json())
+            .then(data => {
+                // Procesar datos para contar contenidos por estado
+                const estados = {};
+                Object.values(data).forEach(item => {
+                    if (estados[item.estado]) {
+                        estados[item.estado]++;
+                    } else {
+                        estados[item.estado] = 1;
+                    }
+                });
+
+                const processedData = Object.entries(estados).map(([estado, count]) => ({ estado, count }));
+
+                // Configuración de dimensiones del gráfico
+                const width = 600;
+                const height = 400;
+                const margin = { top: 40, right: 20, bottom: 70, left: 60 };
+
+                // Crear escalas
+                const xScale = d3.scaleBand().domain(processedData.map(d => d.estado)).range([0, width]).padding(0.1);
+                const yScale = d3.scaleLinear().domain([0, d3.max(processedData, d => d.count)]).range([height, 0]);
+
+                // Crear SVG
+                const svg = d3.select("#chart2").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                // Ejes
+                svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(xScale));
+                svg.append("g").call(d3.axisLeft(yScale));
+
+                // Creación de las barras
+                svg.selectAll(".bar").data(processedData).enter().append("rect").attr("class", "bar").attr("x", d => xScale(d.estado)).attr("y", d => yScale(d.count)).attr("width", xScale.bandwidth()).attr("height", d => height - yScale(d.count)).attr("fill", "#51087f");
+
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+            });
+
+    </script>
+
+    <script type="module">
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+        fetch("{% url 'get_informacion_contenido' category.id %}") // Asegúrate de que esta URL sea correcta para tu aplicación.
+            .then(response => response.json())
+            .then(data => {
+
+                // Seleccionar o crear el contenedor para la tabla
+                const containerDiv = d3.select("#container").append("div").attr("class", "container mt-4");
+                const responsiveDiv = containerDiv.append("div").attr("class", "table-responsive");
+
+                // Crear la tabla con clases específicas para fondos oscuros
+                const table = responsiveDiv.append("table").attr("class", "table table-dark table-hover table-striped");
+
+                // Agregar encabezado de tabla
+                const thead = table.append("thead");
+                thead.append("tr")
+                    .selectAll("th")
+                    .data(["Nombre", "Autor", "Subcategoría", "Estado", "Visualizaciones", "Me gusta", "Compartir", "Comentarios", "Denuncias"])
+                    .enter()
+                    .append("th")
+                    .text(d => d);
+
+                // Agregar cuerpo de tabla
+                const tbody = table.append("tbody");
+
+                // Iterar a través de los datos y llenar la tabla
+                Object.values(data).forEach(item => {
+                    const row = tbody.append("tr");
+                    row.append("td").text(item.nombre);
+                    row.append("td").text(item.autor);
+                    row.append("td").text(item.subcategoria);
+                    row.append("td").text(item.estado);
+                    row.append("td").text(item.cantidad_visualizaciones);
+                    row.append("td").text(item.cantidad_me_gusta);
+                    row.append("td").text(item.cantidad_compartir);
+                    row.append("td").text(item.cantidad_comentarios);
+                    row.append("td").text(item.cantidad_denuncias);
+                });
+
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+            });
+    </script>
+    <!-- Contenedor para el gráfico -->
+    <script type="module">
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+        // Realizar la petición fetch para obtener los datos
+        fetch("{% url 'get_informacion_contenido' category.id %}")
+        .then(response => response.json())
+        .then(data => {
+
+            // Procesar los datos para el informe
+            const authors = {};
+            Object.values(data).forEach(entry => {
+                const author = entry.autor;
+                authors[author] = (authors[author] || 0) + 1;
+            });
+
+            // Datos para el gráfico
+            const dataset = Object.entries(authors).map(([author, count]) => ({author, count}));
+
+            // Configurar el SVG
+            const margin = { top: 20, right: 20, bottom: 70, left: 60 };
+            const width = 600 - margin.left - margin.right;
+            const height = 400 - margin.top - margin.bottom;
+
+            const svg = d3.select("#chart").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Escalas
+            const xScale = d3.scaleBand().range([0, width]).padding(0.5);
+            const yScale = d3.scaleLinear().range([height, 0]);
+
+            xScale.domain(dataset.map(d => d.author));
+            yScale.domain([0, d3.max(dataset, d => d.count)]);
+
+            // Ejes
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(xScale))
+                .selectAll("text")
+                .attr("dy", "0.5em")
+                .attr("dx", "-.8em")
+                .attr("transform", "rotate(-45)")
+                .style("text-anchor", "end");
+
+            svg.append("g")
+                .call(d3.axisLeft(yScale));
+
+            // Barras
+            svg.selectAll(".bar")
+                .data(dataset)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", d => xScale(d.author))
+                .attr("y", d => yScale(d.count))
+                .attr("width", xScale.bandwidth())
+                .attr("height", d => height - yScale(d.count))
+                .attr('fill', '#7b3de3')  // Aquí estableces el color principal de las barras.
+                .on('mouseover', function() {
+                    d3.select(this)
+                        .attr('fill', '#51087f');  // Color cuando se pasa el cursor sobre la barra.
+                })
+                .on('mouseout', function() {
+                    d3.select(this)
+                        .attr('fill', '#9333e3');  // Restaurar al color principal.
+                });
+
+        })
+        .catch(error => console.error("Error al obtener los datos:", error));
+    </script>
+    <script type="module">
+      import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+      fetch("{% url 'get_informacion_contenido' category.id %}")
+        .then(response => response.json())
+        .then(data => {
+          // Process data to count views from subscribers vs non-subscribers
+          const counts = { subscriberViews: 0, nonSubscriberViews: 0 };
+          Object.values(data).forEach(item => {
+            item.acciones.forEach(action => {
+              if (action.tipo_accion === "VIEW") {
+                if (action.usuario) {
+                  counts.subscriberViews++;
+                } else {
+                  counts.nonSubscriberViews++;
+                }
+              }
+            });
+          });
+
+          const dataset = [
+            { category: 'SUSCRIPTORES', count: counts.subscriberViews },
+            { category: 'NO SUSCRIPTORES', count: counts.nonSubscriberViews }
+          ];
+
+          const svgWidth = 800, svgHeight = 400;
+          const svg = d3.select("#chart4").append("svg")
+                        .attr("width", svgWidth)
+                        .attr("height", svgHeight);
+
+          const xScale = d3.scaleBand()
+                           .domain(dataset.map(d => d.category))
+                           .rangeRound([0, svgWidth])
+                           .padding(0.1);
+
+          const yScale = d3.scaleLinear()
+                           .domain([0, d3.max(dataset, d => d.count)])
+                           .range([svgHeight, 0]);
+
+          // Define the axes
+          const xAxis = d3.axisBottom(xScale);
+          const yAxis = d3.axisLeft(yScale);
+
+          // Append axes to the SVG
+          svg.append("g")
+             .attr("transform", `translate(50, ${svgHeight - 50})`)
+             .call(xAxis);
+
+          svg.append("g")
+             .attr("transform", "translate(50, -50)")
+             .call(yAxis);
+
+          // Create rectangles for the bar chart
+          svg.selectAll(".bar")
+             .data(dataset)
+             .enter().append("rect")
+             .attr("class", "bar")
+             .attr("x", d => xScale(d.category) + 50)
+             .attr("y", d => yScale(d.count) - 50)
+             .attr("width", xScale.bandwidth())
+             .attr("height", d => svgHeight - yScale(d.count))
+             .attr("fill", d => d.category === 'SUSCRIPTORES' ? "#9333e3" : "#51087f");
+
+        }).catch(error => {
+          console.error('Error fetching or processing data:', error);
+        });
+    </script>
+{% else %}
+        <h3>No tiene permiso para ver reportes. Será redirigido en unos segundos.</h3>
+        <script>
+            setTimeout(function() {
+                window.history.back();
+            }, 3000); // Redirect the user back after 3 seconds
+        </script>
+{% endif %}
+{% endblock %}

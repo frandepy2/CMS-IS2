@@ -12,14 +12,6 @@ parametros.migrations.0001\_initial module
    :undoc-members:
    :show-inheritance:
 
-parametros.migrations.0002\_alter\_parametro\_clave module
-----------------------------------------------------------
-
-.. automodule:: parametros.migrations.0002_alter_parametro_clave
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

@@ -8,3 +8,5 @@ fontawesomefree==6.4.2
 django-quill-editor==0.1.40
 django-bootstrap-datepicker-plus==5.0.4
 django-crontab==0.7.1
+reportlab==4.0.6
+matplotlib==3.8.0

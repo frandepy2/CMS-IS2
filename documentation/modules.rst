@@ -14,5 +14,6 @@ cmsis2
    load_database
    manage
    parametros
+   reportes
    roles
    usuarios

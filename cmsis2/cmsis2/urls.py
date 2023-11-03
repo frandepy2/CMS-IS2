@@ -31,6 +31,7 @@ urlpatterns = [
     path('contenidos/', include("contenidos.urls")),
     path('parametros/', include("parametros.urls")),
     path('interacciones/', include('interacciones.urls')),
+    path('reportes/', include('reportes.urls')),
     path('', HomeView, name='home'),
 ]
 if settings.DEBUG:
