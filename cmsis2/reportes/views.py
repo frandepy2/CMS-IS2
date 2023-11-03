@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse, FileResponse
+from decorators import has_permission_decorator
 from categorias.models import Categoria, Subcategoria #TODO quitar cmsis2
 from interacciones.models import Accion #TODO quitar cmsis2
 from contenidos.models import Contenido #TODO quitar cmsis2
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image,Paragraph,Spacer,PageBreak
@@ -13,10 +15,32 @@ import matplotlib.pyplot as plt
 
 
 # Create your views here.
+@login_required
+@has_permission_decorator('view_reports')
 def mostrar_reportes(request):
+    """
+    Vista para mostrar la lista de reportes.
+
+    Esta vista renderiza la página de reportes y se utiliza para mostrar una lista de reportes disponibles.
+    Requiere que el usuario esté autenticado.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :return: La página de reportes.
+    :rtype: HttpResponse
+    """
     return render(request, 'reportes/reportes.html')
 
 def calcular_interacciones_por_categoria():
+    """
+    Calcula el número total de interacciones por categoría.
+
+    Esta función calcula el número total de interacciones por cada categoría, donde una interacción
+    se refiere a la cantidad de acciones realizadas en contenido asociado a esa categoría.
+
+    :return: Un diccionario que mapea el nombre de cada categoría al número total de interacciones.
+    :rtype: dict
+    """
     categorias = Categoria.objects.all()
     interacciones_por_categoria = {}
 
@@ -34,11 +58,33 @@ def calcular_interacciones_por_categoria():
     return interacciones_por_categoria
 
 def interacciones_por_categoria(request):
+    """
+    Vista para obtener el número total de interacciones por categoría y devolverlo como respuesta JSON.
+
+    Esta vista utiliza la función 'calcular_interacciones_por_categoria' para calcular el número total de
+    interacciones por categoría y luego devuelve este resultado como una respuesta JSON.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :return: Una respuesta JSON que contiene el número total de interacciones por categoría.
+    :rtype: JsonResponse
+    """
     interacciones = calcular_interacciones_por_categoria()
     return JsonResponse(interacciones)
 
 
 def reportes_por_categoria(request):
+    """
+    Vista para obtener el número total de reportes por categoría y devolverlo como respuesta JSON.
+
+    Esta vista obtiene el número total de reportes por categoría utilizando la función 'calcular_interacciones_por_categoria'
+    y devuelve este resultado como una respuesta JSON. Los reportes se obtienen de los contenidos marcados con la acción 'REPORT'.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :return: Una respuesta JSON que contiene el número total de reportes por categoría.
+    :rtype: JsonResponse
+    """
     #Traemos todas las categorias
     categorias = Categoria.objects.all()
     interacciones_por_categoria = {}
@@ -60,16 +106,50 @@ def reportes_por_categoria(request):
 
 
 def visualizaciones_por_categoria_por_fecha(request):
+    """
+    Vista para obtener el número total de visualizaciones por categoría y fecha y devolverlo como respuesta JSON.
+
+    Esta vista utiliza la función 'get_interacciones_por_categoria' para obtener el número total de visualizaciones por
+    categoría y fecha. Puedes cambiar el valor de 'tipo_accion' según tus necesidades para obtener distintos tipos de acciones.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :return: Una respuesta JSON que contiene el número total de visualizaciones por categoría y fecha.
+    :rtype: JsonResponse
+    """
     tipo_accion = 'VIEW'  # Cambia el tipo de acción según tus necesidades
     data = get_interacciones_por_categoria(tipo_accion)
     return JsonResponse(data)
 
 def likes_por_categoria_por_fecha(request):
+    """
+    Vista para obtener el número total de 'likes' por categoría y fecha y devolverlo como respuesta JSON.
+
+    Esta vista utiliza la función 'get_interacciones_por_categoria' para obtener el número total de 'likes' por
+    categoría y fecha. Puedes cambiar el valor de 'tipo_accion' según tus necesidades para obtener distintos tipos de acciones.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :return: Una respuesta JSON que contiene el número total de 'likes' por categoría y fecha.
+    :rtype: JsonResponse
+    """
     tipo_accion = 'LIKE'  # Cambia el tipo de acción según tus necesidades
     data = get_interacciones_por_categoria(tipo_accion)
     return JsonResponse(data)
 
+
 def get_interacciones_por_categoria(tipo_accion):
+    """
+    Calcula el número total de interacciones de un tipo específico por categoría y fecha.
+
+    Esta función calcula el número total de interacciones de un tipo específico (por ejemplo, 'vistas' o 'likes')
+    por categoría y fecha. Los resultados se agrupan por categoría y se detallan por fecha.
+
+    :param tipo_accion: El tipo de acción para el que se desean calcular las interacciones (por ejemplo, 'VIEW' o 'LIKE').
+    :type tipo_accion: str
+    :return: Un diccionario que mapea el nombre de cada categoría a un diccionario que contiene las interacciones por fecha.
+    :rtype: dict
+    """
     categorias = Categoria.objects.all()
     interacciones_por_categoria = {}
 
@@ -93,7 +173,22 @@ def get_interacciones_por_categoria(tipo_accion):
 
     return interacciones_por_categoria
 
+
+@login_required
+@has_permission_decorator('view_reports')
 def generar_pdf(request):
+    """
+    Vista para generar un informe en formato PDF que contiene gráficos y tablas de interacciones por categoría y fecha.
+
+    Esta vista crea un informe en formato PDF que incluye gráficos y tablas de interacciones por categoría y fecha,
+    incluyendo visualizaciones y likes. Los gráficos y tablas se generan a partir de datos obtenidos mediante funciones
+    como 'calcular_interacciones_por_categoria' y 'get_interacciones_por_categoria'.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :return: Un archivo PDF que contiene el informe de interacciones por categoría y fecha.
+    :rtype: FileResponse (PDF)
+    """
     # Crear un objeto BytesIO para capturar el PDF generado
     buffer = BytesIO()
 
@@ -257,6 +352,18 @@ def generar_pdf(request):
     return FileResponse(buffer, as_attachment=True, filename='reporte_interacciones.pdf')
 
 def contenido_to_json(contenido):
+    """
+    Convierte un objeto de contenido en un diccionario JSON.
+
+    Esta función toma un objeto de contenido y lo convierte en un diccionario JSON que representa la información
+    relevante del contenido. El diccionario incluye información como el nombre, autor, subcategoría, fechas,
+    estado y estadísticas de interacción.
+
+    :param contenido: El objeto de contenido a convertir en formato JSON.
+    :type contenido: Contenido
+    :return: Un diccionario JSON que representa la información del contenido.
+    :rtype: dict
+    """
     contenido_json = {
         'nombre': contenido.nombre,
         'autor': contenido.autor.username,  # Supongamos que el autor tiene un campo "nombre"
@@ -276,6 +383,18 @@ def contenido_to_json(contenido):
 
 
 def get_acciones_contenido(contenido):
+    """
+    Obtiene las acciones asociadas a un contenido y las convierte en una lista de diccionarios JSON.
+
+    Esta función toma un objeto de contenido y obtiene todas las acciones asociadas a ese contenido. Luego, las acciones
+    se convierten en una lista de diccionarios JSON que incluyen información como el usuario que realizó la acción, el tipo
+    de acción y la fecha de creación.
+
+    :param contenido: El objeto de contenido del que se desean obtener las acciones.
+    :type contenido: Contenido
+    :return: Una lista de diccionarios JSON que representan las acciones asociadas al contenido.
+    :rtype: list
+    """
     acciones = contenido.acciones.all()
     acciones_json = []
     for accion in acciones:
@@ -290,6 +409,18 @@ def get_acciones_contenido(contenido):
 
 
 def interacciones_categoria_json(category_id):
+    """
+    Obtiene información detallada de los contenidos de una categoría en formato JSON.
+
+    Esta función toma un ID de categoría y devuelve un diccionario JSON que contiene información detallada de todos los contenidos
+    pertenecientes a esa categoría. La información incluye detalles como el nombre, autor, subcategoría, fechas, estado y estadísticas
+    de interacción de cada contenido.
+
+    :param category_id: El ID de la categoría de la que se desean obtener los contenidos.
+    :type category_id: int
+    :return: Un diccionario JSON que representa información detallada de los contenidos de la categoría.
+    :rtype: dict
+    """
     categoria = Categoria.objects.get(id=category_id)
     contenidos = Contenido.objects.filter(subcategoria__categoria=categoria)
 
@@ -303,8 +434,36 @@ def interacciones_categoria_json(category_id):
 
 
 def get_informacion_contenido(request, categoria_id):
+    """
+    Vista para obtener y devolver información detallada de contenidos de una categoría en formato JSON.
+
+    Esta vista toma un ID de categoría y utiliza la función 'interacciones_categoria_json' para obtener información detallada
+    de los contenidos pertenecientes a esa categoría en formato JSON. Luego, devuelve este JSON como respuesta a la solicitud.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :param categoria_id: El ID de la categoría de la que se desean obtener los contenidos.
+    :type categoria_id: int
+    :return: Una respuesta JSON que contiene información detallada de los contenidos de la categoría.
+    :rtype: JsonResponse
+    """
     return JsonResponse(interacciones_categoria_json(categoria_id))
 
+@login_required
+@has_permission_decorator('view_reports')
 def mostrar_reportes_por_categoria(request,categoria_id):
+    """
+    Vista para mostrar reportes específicos de una categoría.
+
+    Esta vista toma un ID de categoría y obtiene información de la categoría correspondiente. Luego, renderiza una página HTML
+    de informes específicos para esa categoría, pasando la información de la categoría como contexto.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :param categoria_id: El ID de la categoría para la que se mostrarán los informes.
+    :type categoria_id: int
+    :return: Una respuesta HTML que muestra los informes de la categoría.
+    :rtype: HttpResponse
+    """
     categoria = Categoria.objects.get(id=categoria_id)
     return render(request, 'reportes/reportes_por_categoria.html',{'category': categoria})

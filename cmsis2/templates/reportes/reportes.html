@@ -1,6 +1,8 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    {% load permissions_tags %}
+    {% if user.is_authenticated and user|has_permission:'view_reports' %}
     <h3>Reportes globales</h3>
 
     <a href="{% url 'generar_pdf' %}" class="btn btn-primary">Descargar PDF</a>
@@ -319,4 +321,12 @@
             console.error('Error al obtener los datos:', error);
         });
 </script>
+{% else %}
+        <h3>No tiene permiso para ver reportes. Será redirigido en unos segundos.</h3>
+        <script>
+            setTimeout(function() {
+                window.history.back();
+            }, 3000); // Redirect the user back after 3 seconds
+        </script>
+{% endif %}
 {% endblock %}
