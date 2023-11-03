@@ -5,7 +5,6 @@
     {% if user.is_authenticated and user|has_permission:'view_reports' %}
     <div class="container-fluid p-3"> <!-- Ajuste fluido a la pantalla con un padding de 3 -->
     <h3>Reportes de Categoría: {{ category.nombre }}</h3>
-    <a href="" class="btn btn-primary mb-3">Descargar PDF</a> <!-- Añadí un margin-bottom para separarlo del contenedor de gráficos -->
     <div class="row">
         <div class="col-12 mb-3" id="container">
             <!-- Contenido del container -->
