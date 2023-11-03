@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse, FileResponse
+from decorators import has_permission_decorator
 from categorias.models import Categoria, Subcategoria #TODO quitar cmsis2
 from interacciones.models import Accion #TODO quitar cmsis2
 from contenidos.models import Contenido #TODO quitar cmsis2
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image,Paragraph,Spacer,PageBreak
@@ -13,6 +15,8 @@ import matplotlib.pyplot as plt
 
 
 # Create your views here.
+@login_required
+@has_permission_decorator('view_reports')
 def mostrar_reportes(request):
     return render(request, 'reportes/reportes.html')
 
@@ -93,6 +97,8 @@ def get_interacciones_por_categoria(tipo_accion):
 
     return interacciones_por_categoria
 
+@login_required
+@has_permission_decorator('view_reports')
 def generar_pdf(request):
     # Crear un objeto BytesIO para capturar el PDF generado
     buffer = BytesIO()
@@ -305,6 +311,8 @@ def interacciones_categoria_json(category_id):
 def get_informacion_contenido(request, categoria_id):
     return JsonResponse(interacciones_categoria_json(categoria_id))
 
+@login_required
+@has_permission_decorator('view_reports')
 def mostrar_reportes_por_categoria(request,categoria_id):
     categoria = Categoria.objects.get(id=categoria_id)
     return render(request, 'reportes/reportes_por_categoria.html',{'category': categoria})
