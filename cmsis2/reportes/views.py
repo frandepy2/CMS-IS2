@@ -255,3 +255,56 @@ def generar_pdf(request):
     doc.build(flowables)
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='reporte_interacciones.pdf')
+
+def contenido_to_json(contenido):
+    contenido_json = {
+        'nombre': contenido.nombre,
+        'autor': contenido.autor.username,  # Supongamos que el autor tiene un campo "nombre"
+        'subcategoria': contenido.subcategoria.nombre,  # Supongamos que la subcategoría tiene un campo "nombre"
+        'fecha_creacion': contenido.fecha_creacion.strftime('%Y-%m-%d %H:%M:%S'),  # Formatea la fecha como una cadena
+        'fecha_caducidad': contenido.fecha_caducidad.strftime('%Y-%m-%d') if contenido.fecha_caducidad else None,
+        'fecha_publicacion': contenido.fecha_publicacion.strftime('%Y-%m-%d %H:%M:%S') if contenido.fecha_publicacion else None,
+        'estado': contenido.estado,
+        'cantidad_denuncias': contenido.cantidad_denuncias,
+        'cantidad_me_gusta': contenido.cantidad_me_gusta,
+        'cantidad_compartir': contenido.cantidad_compartir,
+        'cantidad_comentarios': contenido.cantidad_comentarios,
+        'cantidad_visualizaciones': contenido.cantidad_visualizaciones,
+        'acciones': get_acciones_contenido(contenido),
+    }
+    return contenido_json
+
+
+def get_acciones_contenido(contenido):
+    acciones = contenido.acciones.all()
+    acciones_json = []
+    for accion in acciones:
+        accion_dict = {
+            'usuario':  accion.usuario.username if accion.usuario else None,
+            'tipo_accion': accion.tipo_accion,
+            'fecha_creacion': accion.fecha_creacion.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+        acciones_json.append(accion_dict)
+
+    return acciones_json
+
+
+def interacciones_categoria_json(category_id):
+    categoria = Categoria.objects.get(id=category_id)
+    contenidos = Contenido.objects.filter(subcategoria__categoria=categoria)
+
+    interacciones_por_contenido = {}
+
+    for contenido in contenidos:
+        contenido_json = contenido_to_json(contenido)
+        interacciones_por_contenido[contenido.id]=contenido_json
+
+    return interacciones_por_contenido
+
+
+def get_informacion_contenido(request, categoria_id):
+    return JsonResponse(interacciones_categoria_json(categoria_id))
+
+def mostrar_reportes_por_categoria(request,categoria_id):
+    categoria = Categoria.objects.get(id=categoria_id)
+    return render(request, 'reportes/reportes_por_categoria.html',{'category': categoria})
