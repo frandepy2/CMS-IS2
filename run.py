@@ -90,7 +90,7 @@ def checkout_to_tag(tag):
     print(azul + "[INFO] " + resetear + "Inicia el proceso de cambio de tag")
     try:
         # Realiza un checkout al tag específico
-        #subprocess.run(["git", "checkout", tag], check=True) TODO DESCOMENTAR CUANDO TERMINE EL DESARROLLO
+        subprocess.run(["git", "checkout", tag], check=True)
 
         print(verde + "[SUCCESS] " + resetear +f"Checkout al tag '{tag}' exitoso.")
     except subprocess.CalledProcessError:
