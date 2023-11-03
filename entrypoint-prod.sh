@@ -1,10 +1,11 @@
 #!/bin/sh
 
-sleep 5
+sleep 10
 echo "Inicia el proceso de hacer migraciones"
-python manage.py makemigrations usuarios roles categorias contenidos parametros interacciones
+python manage.py makemigrations usuarios roles categorias contenidos parametros interacciones reportes
 echo "finaliza el proceso de hacer migraciones"
 python manage.py migrate --no-input
+
 python manage.py collectstatic --noinput
 
 echo "activa los crontab"
