@@ -43,7 +43,8 @@ def main():
             crear_documentacion()
             break
         else:
-            print("Opción no válida. Por favor, seleccione 1, 2 o 3.")
+            print(morado+"HASTA LUEGO"+resetear)
+            break
 
 def crear_documentacion():
     print(azul+"[INFO] "+resetear+"Inicia el proceso de creacion de documentacion")
