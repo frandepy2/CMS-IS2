@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import Notificacion
 from usuarios.models import Usuario
 
@@ -30,3 +30,10 @@ def obtener_notificaciones(request, usuario_id):
 
     except ObjectDoesNotExist:
         return JsonResponse({"error": "Usuario no encontrado"}, status=404)
+
+
+def marcar_como_leido(request, notificacion_id):
+    notificacion = Notificacion.objects.get(id=notificacion_id)
+    notificacion.leido = True
+    notificacion.save()
+    return HttpResponse("OK", status=200)
