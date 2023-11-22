@@ -9,6 +9,9 @@ from decorators import has_category_permission_decorator, has_some_cat_role_deco
 from interacciones.forms import ComentarioForm
 from interacciones.models import Accion
 
+from notificaciones.utils import crear_notificacion
+
+
 @login_required
 @has_category_permission_decorator('create_content')
 def seleccionar_plantilla(request, categoria_id):
@@ -81,6 +84,14 @@ def crear_contenido(request, categoria_id, plantilla_id):
             nuevo_contenido.autor = request.user
             nuevo_contenido.estado = 'BORRADOR'
             nuevo_contenido.save()
+            crear_notificacion(
+                emisor=request.user,
+                receptor=request.user,
+                contenido=nuevo_contenido,
+                titulo=f"Nuevo contenido: {nuevo_contenido.nombre}",
+                mensaje=f"Has creado un nuevo contenido en la categoria {nuevo_contenido.subcategoria.nombre}"
+            )
+
             return redirect('ver_contenido', contenido_id=nuevo_contenido.id)
 
     else:
