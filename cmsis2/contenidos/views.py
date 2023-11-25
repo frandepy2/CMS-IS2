@@ -167,6 +167,13 @@ def editar_contenido(request, categoria_id, contenido_id):
         form = ContenidoForm(request.POST, instance=contenido)
         if form.is_valid():
             form.save()
+            crear_notificacion(
+                emisor=request.user,
+                receptor=contenido.autor,
+                contenido=contenido,
+                titulo=f"Contenido Editado: {contenido.nombre}",
+                mensaje=f"Se edito el contenido que creaste"
+            )
             return redirect('ver_contenido', contenido_id=contenido.id)
     else:
         form = ContenidoForm(instance=contenido)
@@ -355,6 +362,15 @@ def aprobar_contenido(request, categoria_id, contenido_id):
             contenido.fecha_publicacion = timezone.now()
             contenido.fecha_caducidad = form.cleaned_data['fecha_caducidad']
             contenido.save()
+
+            crear_notificacion(
+                emisor=request.user,
+                receptor=contenido.autor,
+                contenido=contenido,
+                titulo=f"Contenido publicado: {contenido.nombre}",
+                mensaje=f"Se publico tu contenido"
+            )
+
             return redirect('ver_contenido', contenido_id=contenido_id)
     else:
         form = AprobarContenidoForm()
@@ -380,6 +396,15 @@ def rechazar_contenido(request, categoria_id, contenido_id):
     contenido = Contenido.objects.get(pk=contenido_id)
     contenido.estado = 'RECHAZADO'
     contenido.save()
+
+    crear_notificacion(
+        emisor=request.user,
+        receptor=contenido.autor,
+        contenido=contenido,
+        titulo=f"Contenido rechazado: {contenido.nombre}",
+        mensaje=f"Se rechazo tu contenido"
+    )
+
     return redirect('ver_contenido', contenido_id=contenido_id)
 
 
@@ -401,6 +426,15 @@ def enviar_edicion(request, categoria_id, contenido_id):
     contenido = Contenido.objects.get(pk=contenido_id)
     contenido.estado = 'EDICION'
     contenido.save()
+
+    crear_notificacion(
+        emisor=request.user,
+        receptor=contenido.autor,
+        contenido=contenido,
+        titulo=f"Contenido en fase de edicion: {contenido.nombre}",
+        mensaje=f"Se envio tu contenido a edicion"
+    )
+
     return redirect('kanban', categoria_id)
 
 
@@ -423,6 +457,15 @@ def enviar_revision(request,categoria_id, contenido_id):
     categoria_id = contenido.subcategoria.categoria.id
     contenido.estado = 'REVISION'
     contenido.save()
+
+    crear_notificacion(
+        emisor=request.user,
+        receptor=contenido.autor,
+        contenido=contenido,
+        titulo=f"Contenido en fase de revision: {contenido.nombre}",
+        mensaje=f"Se envio tu contenido a revision"
+    )
+
     return redirect('kanban', categoria_id)
 
 
@@ -453,6 +496,14 @@ def denunciar_contenido(request, contenido_id):
         if contenido.cantidad_denuncias >= cant_denuncias_max:
             contenido.estado = 'INACTIVO'
 
+            crear_notificacion(
+                emisor=request.user,
+                receptor=contenido.autor,
+                contenido=contenido,
+                titulo=f"Tu contenido ha sido inactivado: {contenido.nombre}",
+                mensaje=f"Se ha reportado tu contenido"
+            )
+
         contenido.save()
         return redirect('home')
 
@@ -477,4 +528,13 @@ def inactivar_contenido(request, categoria_id, contenido_id):
     contenido = get_object_or_404(Contenido, pk=contenido_id)
     contenido.estado = 'INACTIVO'
     contenido.save()
+
+    crear_notificacion(
+        emisor=request.user,
+        receptor=contenido.autor,
+        contenido=contenido,
+        titulo=f"Tu contenido ha sido inactivado: {contenido.nombre}",
+        mensaje=f"Se ha dado de baja tu contenido"
+    )
+
     return redirect('kanban', categoria_id)

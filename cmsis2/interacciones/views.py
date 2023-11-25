@@ -71,6 +71,14 @@ def dar_me_gusta(request, contenido_id):
         contenido.cantidad_me_gusta += 1
         contenido.save()
 
+        crear_notificacion(
+            emisor=request.user,
+            receptor=contenido.autor,
+            contenido=contenido,
+            titulo=f"Nuevo Like",
+            mensaje=f"{request.user.username} dio like a tu contenido {contenido.nombre}"
+        )
+
     return redirect('ver_contenido', contenido_id = contenido_id)  # Redirige al usuario a la página del contenido
 
 
