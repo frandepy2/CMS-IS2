@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'parametros',
     'interacciones',
     'reportes',
+    'notificaciones',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
