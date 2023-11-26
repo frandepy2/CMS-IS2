@@ -196,6 +196,29 @@
             }
 
 
+            /* Notificaciones */
+            .notification-icon {
+                position: relative;
+                display: inline-block;
+            }
+
+            .notification-badge {
+                position: absolute;
+                top: 10px;
+                right: 8px;
+                width: 17px;
+                height: 17px;
+                background-color: red;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 10px;
+            }
+
+
+
 
         </style>
 
@@ -203,6 +226,10 @@
     <body>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+        <!-- Agrega los scripts de SimpleBar -->
+        <script src="https://unpkg.com/simplebar@5.3.0/dist/simplebar.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/simplebar@5.3.0/dist/simplebar.min.css" />
+
         <!-- Navbar -->
         <nav class="navbar navbar-expand-md navbar-dark flex-row">
 
@@ -213,8 +240,84 @@
             <ul class="navbar-nav ml-md-auto">
                 {% if user.is_authenticated %}
                     <!-- notificaciones -->
-                    <li class="nav-item d-none d-md-inline-block p-2">
-                        <a href="#" class="nav-link"><i class="fa-solid fa-bell"></i></a>
+<!-- Icono de Notificaciones -->
+<li class="nav-item d-none d-md-inline-block p-2 notification-icon">
+    <a href="#" class="nav-link" id="notificationsDropdown" type="button" data-toggle="dropdown" aria-expanded="false">
+        <i class="fa-solid fa-bell"></i>
+    </a>
+
+    <!-- Menú de Notificaciones -->
+    <div class="dropdown-menu dropdown-menu-right notifications-list" aria-labelledby="notificationsDropdown" style="width: 300px;">
+        <div class="card card-notification text-white bg-dark border-0">
+            <div class="card-header">
+                <h6 class="card-header-title mb-0">Notificaciones</h6>
+            </div>
+            <div class="card-body p-0">
+                <!-- Contenido Scrollable con SimpleBar -->
+                <div class="scrollbar-overlay" style="height: 300px;" data-simplebar>
+                    <div class="simplebar-wrapper">
+                        <div class="simplebar-height-auto-observer-wrapper">
+                            <div class="simplebar-height-auto-observer"></div>
+                        </div>
+                        <div class="simplebar-mask">
+                            <div class="simplebar-offset">
+                                <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content">
+                                    <div class="simplebar-content p-3">
+
+                                        <!-- Ejemplos de Notificaciones -->
+                                        <div class="notification-card read mb-3">
+                                            <h4 class="fs-5 text-black mb-2">Usuario</h4>
+                                            <p class="fs-6 text-muted mb-1">
+                                                Ha dejado un comentario en Contenido
+                                                <span class="ms-2 text-400 fs-7">10m</span>
+                                            </p>
+                                        </div>
+
+                                        <!-- Añadir más ejemplos según sea necesario -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>
+
+
+
+
+                        <!-- lista de notificaciones -->
+
+
+
+                            <!--div class="notifications list-group">
+                                <a href="#" class="notifications list-group-item list-group-item-action active">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <p class="mb-1"><b>Usuario</b> dio like a <b>Contenido</b></p>
+                                    </div>
+                                </a>
+                                <a href="#" class="notifications list-group-item list-group-item-action active">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <p class="mb-1"><b>Contenido</b> ha sido aprobado</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="notifications list-group-item list-group-item-action active">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <p class="mb-1"><b>Contenido</b> ha sido rechazado</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="notifications list-group-item list-group-item-action active">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <p class="mb-1"><b>Usuario</b> ha dejado un comentario en <b>Contenido</b></p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="">Ver todas</a-->
+
                     </li>
                     <!-- usuario activo -->
                     <li class="nav-item dropdown d-none d-md-inline-block p-md-2">
