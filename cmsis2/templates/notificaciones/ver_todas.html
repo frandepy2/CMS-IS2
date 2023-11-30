@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <div class="mx-n4 mx-lg-n6 mb-5 border-300">
+        {% for notificacion in notificaciones %}
+            <a class="d-flex align-items-center justify-content-between py-3 px-lg-6 px-4 mr-5 ml-2 mb-1 border-bottom rounded notification-card {% if notificacion.leido %}read{% else %}unread{% endif %}" href="{% url 'leer_notificacion' notificacion.id %}">
+                <div class="d-flex">
+                    <div class=" flex-1 mt-2">
+                        <h6>{{ notificacion.titulo }}</h6>
+                        <p>
+                            {{ notificacion.mensaje }}
+                        </p>
+                        <span class="text-muted">{{ notificacion.fecha }}</span>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+{% endblock %}
