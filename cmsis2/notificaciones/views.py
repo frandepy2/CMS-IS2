@@ -1,6 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
+from django.urls import reverse
+import time
 from .models import Notificacion
 from usuarios.models import Usuario
 
@@ -39,7 +41,7 @@ def obtener_notificaciones(request, usuario_id):
         return JsonResponse({"error": "Usuario no encontrado"}, status=404)
 
 
-def marcar_como_leido(request, notificacion_id):
+def leer_notificacion(request, notificacion_id):
     """
     Marca una notificación como leída.
 
@@ -47,7 +49,21 @@ def marcar_como_leido(request, notificacion_id):
     :param notificacion_id: El ID de la notificación que se marcará como leída.
     :return: Una respuesta HTTP indicando que la operación fue exitosa.
     """
-    notificacion = Notificacion.objects.get(id=notificacion_id)
-    notificacion.leido = True
-    notificacion.save()
-    return HttpResponse("OK", status=200)
+
+    try:
+        # Obtiene la notificación correspondiente
+        notificacion = Notificacion.objects.get(id=notificacion_id)
+
+        # Marca como leída la notificación
+        notificacion.leido = True
+        notificacion.save()
+
+        # Redirige a la vista ver_contenido del contenido correspondiente a la notificación
+        return redirect(reverse('ver_contenido', kwargs={'contenido_id': notificacion.contenido.id}))
+    except Notificacion.DoesNotExist:
+        return HttpResponse("Notificación no encontrada", status=404)
+
+
+def ver_todas(request):
+    page_title = 'Notificaciones'
+    return render(request, 'notificaciones/ver_todas.html', {'page_title': page_title})

@@ -11,7 +11,7 @@ class Notificacion(models.Model):
     contenido = models.ForeignKey(Contenido, on_delete=models.PROTECT, null=True, blank=True)
     titulo = models.CharField(max_length=255, null=True , blank=True)
     mensaje = models.CharField(max_length=255, null=True,  blank=True)
-    fecha = models.DateTimeField(auto_now=True)
+    fecha = models.DateTimeField(auto_now_add=True)
     leido = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
