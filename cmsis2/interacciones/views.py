@@ -5,6 +5,9 @@ from .forms import ComentarioForm
 from .models import Accion
 from django.shortcuts import redirect
 
+from notificaciones.utils import crear_notificacion
+
+
 @login_required
 def crear_comentario(request, contenido_id):
     """
@@ -31,6 +34,14 @@ def crear_comentario(request, contenido_id):
 
             contenido.cantidad_comentarios += 1
             contenido.save()
+
+            crear_notificacion(
+                emisor=request.user,
+                receptor=contenido.autor,
+                contenido=contenido,
+                titulo=f"Nuevo comentario",
+                mensaje=f"{comentario.autor.username} agrego un nuevo comentario en tu contenido {contenido.nombre}"
+            )
 
             return redirect('ver_contenido', contenido_id = contenido_id)
         else:
@@ -59,6 +70,14 @@ def dar_me_gusta(request, contenido_id):
 
         contenido.cantidad_me_gusta += 1
         contenido.save()
+
+        crear_notificacion(
+            emisor=request.user,
+            receptor=contenido.autor,
+            contenido=contenido,
+            titulo=f"Nuevo Like",
+            mensaje=f"{request.user.username} dio like a tu contenido {contenido.nombre}"
+        )
 
     return redirect('ver_contenido', contenido_id = contenido_id)  # Redirige al usuario a la página del contenido
 
