@@ -65,5 +65,16 @@ def leer_notificacion(request, notificacion_id):
 
 
 def ver_todas(request):
+    """
+    Renderiza la página de visualización de todas las notificaciones.
+
+    Esta vista toma una solicitud HTTP y devuelve una respuesta renderizando la plantilla 'notificaciones/ver_todas.html'.
+    Además, se incluye el título de la página como parte del contexto.
+
+    :param request: La solicitud HTTP.
+    :type request: HttpRequest
+    :return: La respuesta renderizada con la plantilla y el contexto.
+    :rtype: HttpResponse
+    """
     page_title = 'Notificaciones'
     return render(request, 'notificaciones/ver_todas.html', {'page_title': page_title})
